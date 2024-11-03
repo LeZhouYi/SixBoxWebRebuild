@@ -1,0 +1,22 @@
+/core:核心代码
+    /config: 配置相关
+    /database: 数据库相关
+    /route: 接口相关
+    /common: 通用代码
+    /log: 日志相关
+/data:存储数据位置
+/sources:资源文件
+
+一、环境
+1、python 3.12
+2、pip install -r ./requirements.txt
+二、数据库
+file_system: 文件表
+    id: 数据ID，一般为时间戳+4位随机数
+    name: 文件名/文件夹名
+    path: 仅文件，对应文件在本地的实际路径
+    parentId: 所属文件夹的ID
+    type: 基础的为FILE,FOLDER
+
+注意事项：
+1、common下的文件不能引用log
