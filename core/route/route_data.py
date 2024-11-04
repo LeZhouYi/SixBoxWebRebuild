@@ -13,7 +13,10 @@ ReportInfo = {
     "006": "新增成功",
     "007": "文件不能为空",
     "008": "文件类型不在白名单中",
-    "009": "文件夹不存在"
+    "009": "文件夹不存在",
+    "010": "Token无效",
+    "011": "Token过期",
+    "012": "文件不存在"
 }
 
 FsServer = FileSystemServer(get_config_path("file_sys_db_path"))

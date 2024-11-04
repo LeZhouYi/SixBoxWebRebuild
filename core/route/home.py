@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 
-HomeBp = Blueprint('home', __name__)
+HomeBp = Blueprint("home", __name__)
 
 
 @HomeBp.route("/home.html")

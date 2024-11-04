@@ -1,0 +1,23 @@
+/*----默认主题----*/
+:root {
+}
+
+.background_body {
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-image 1s ease-in-out;
+}
+
+@media (max-width: 767px){
+}
+
+@media (min-width: 768px) and (max-width: 969px){
+}
+
+@media (min-width: 970px) and (max-width: 1169px){
+}
+
+@media (min-width: 1170px){
+}

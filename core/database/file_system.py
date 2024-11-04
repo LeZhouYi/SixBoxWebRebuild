@@ -52,13 +52,10 @@ class FileSystemServer:
         :return: False表示不存在
         """
         with self.thread_lock:
-            try:
-                data = self.db.get(self.query.id == data_id)
-                if "type" in data and data["type"] == FileType.FOLDER:
-                    return True
-            except KeyError:
-                return False
-        return False
+            data = self.db.get(self.query.id == data_id)
+            if data is not None and "type" in data and data["type"] == FileType.FOLDER:
+                return True
+            return False
 
     def add(self, data: dict):
         """

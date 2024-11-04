@@ -7,7 +7,7 @@ from typing import Optional
 import jwt
 from tinydb import TinyDB, Query
 
-from core.common.route_utils import gen_id
+from core.common.route_utils import gen_id, is_key_str_empty
 from core.config.config import get_config
 
 JWT_SECRET_KEY = get_config("jwt_secret_key")
@@ -30,30 +30,59 @@ class SessionServer:
     def add_data(self, data: dict) -> dict:
         """
         新增，并返回token
-        :param data: 应包含 user_id和 client_ip
-        :return: access_token和refresh_token
+        :param data: 应包含 userId和 clientIp
+        :return: accessToken和refreshToken
         """
-        user_id = data["user_id"]
+        user_id = data["userId"]
+        client_ip = data["clientIp"]
         access_token = self.generate_access_token(user_id)
         refresh_token = self.generate_refresh_token()
-        with self.thread_lock:
-            self.db.insert({
-                "id": gen_id(),
-                "user_id": user_id,
-                "client_ip": data["client_ip"],
-                "access_token": access_token,
-                "refresh_token": refresh_token
-            })
-        return {
-            "access_token": access_token,
-            "refresh_token": refresh_token
+        return_body = {
+            "accessToken": access_token,
+            "refreshToken": refresh_token
         }
+        with self.thread_lock:
+            data = self.db.search((self.query.userId == user_id) & (self.query.clientIp == client_ip))
+            if len(data) > 0:
+                data[0].update(return_body)
+                self.db.update(data[0], (self.query.userId == user_id) & (self.query.clientIp == client_ip))
+            else:
+                insert_data = {
+                    "id": gen_id(),
+                    "userId": user_id,
+                    "clientIp": client_ip
+                }
+                insert_data.update(return_body)
+                self.db.insert(insert_data)
+        return return_body
+
+    def verify(self, token: str, client_ip: str) -> tuple[bool, str | dict]:
+        """解码并验证Token"""
+        try:
+            decoded = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
+            if is_key_str_empty(decoded, "userId"):
+                return False, "TOKEN INVALID"
+            user_id = decoded["userId"]
+            with self.thread_lock:
+                data = self.db.get((self.query.userId == user_id) & (self.query.clientIp == client_ip))
+                if data is None:
+                    return False, "TOKEN INVALID"
+            return True, decoded
+        except jwt.ExpiredSignatureError:
+            return False, "TOKEN EXPIRED"
+        except jwt.InvalidTokenError:
+            return False, "TOKEN INVALID"
+
+    def delete(self, user_id: str, client_ip: str):
+        """删除登录数据"""
+        with self.thread_lock:
+            self.db.remove(self.query.userId == user_id and self.query.clientIp == client_ip)
 
     @staticmethod
     def generate_access_token(user_id: str) -> str:
         """生成access_token"""
         payload = {
-            "user_id": user_id,
+            "userId": user_id,
             "exp": datetime.datetime.now(datetime.UTC) + datetime.timedelta(seconds=JWT_EXP_DELTA_SECONDS)
         }
         token = jwt.encode(payload, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
@@ -76,15 +105,13 @@ class UserServer:
         self.db = TinyDB(db_path)
         self.query = Query()
         self.thread_lock = threading.Lock()
-        self.hash_algorithm = hashlib.sha256()
 
         if len(self.db.all()) == 0:
-            self.hash_algorithm.update("1234567a".encode("utf-8"))
             self.db.insert({
-                "id": 1,
+                "id": "1",
                 "name": "admin",
                 "account": "admin",
-                "password": self.hash_algorithm.hexdigest()
+                "password": self.hash_encrypt("1234567a")
             })
 
     def is_user_exist(self, account: str, password: str) -> Optional[str]:
@@ -95,10 +122,14 @@ class UserServer:
         :return: 若匹配则返回user id
         """
         with self.thread_lock:
-            self.hash_algorithm.update(password.encode("utf-8"))
-            password = self.hash_algorithm.hexdigest()
-            try:
-                data = self.db.get(self.query.account == account and self.query.password == password)
-            except KeyError:
-                return None
-        return data["id"]
+            password = self.hash_encrypt(password)
+            data = self.db.get((self.query.account == account) & (self.query.password == password))
+            if data is not None:
+                return data["id"]
+
+    @staticmethod
+    def hash_encrypt(value: str) -> str:
+        """哈希加密"""
+        hash_coder = hashlib.sha256()
+        hash_coder.update(value.encode("utf-8"))
+        return hash_coder.hexdigest()

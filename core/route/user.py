@@ -1,13 +1,14 @@
-from flask import Blueprint, request, jsonify
+import flask
+from flask import Blueprint, request, jsonify, Response
 
-from core.common.route_utils import is_key_str_empty, gen_fail_response, get_client_ip
-
+from core.common.route_utils import is_key_str_empty, gen_fail_response, get_client_ip, gen_success_response, \
+    get_bearer_token
 from core.route.route_data import ReportInfo, UsrServer, SessServer
 
-UserBp = Blueprint('user', __name__)
+UserBp = Blueprint("user", __name__)
 
 
-@UserBp.route("/sessions", methods=["POST"])
+@UserBp.route("/api/v1/sessions", methods=["POST"])
 def login():
     """登录"""
     data = request.json
@@ -22,7 +23,32 @@ def login():
     # 生成Token
     client_ip = get_client_ip(request)
     response = SessServer.add_data({
-        "user_id": user_id,
-        "client_ip": client_ip
+        "userId": user_id,
+        "clientIp": client_ip
     })
     return jsonify(response)
+
+
+@UserBp.route("/api/v1/sessions", methods=["DELETE"])
+def logout():
+    """登出"""
+    verify_result = verify_token(request)
+    if isinstance(verify_result[0], Response):
+        return verify_result
+    SessServer.delete(user_id=verify_result[0], client_ip=verify_result[1])
+    return gen_success_response("登出成功")
+
+
+def verify_token(request_in: flask.request) -> tuple[Response, int] | tuple[str, str]:
+    """验证Token"""
+    token = get_bearer_token(request_in)
+    if token is None:
+        return gen_fail_response(ReportInfo["010"], 401)
+    client_ip = get_client_ip(request_in)
+    result, data_or_info = SessServer.verify(token, client_ip)
+    if result is False:
+        if data_or_info == "TOKEN INVALID":
+            return gen_fail_response(ReportInfo["010"], 401)
+        elif data_or_info == "TOKEN EXPIRED":
+            return gen_fail_response(ReportInfo["011"], 401)
+    return data_or_info["userId"], client_ip

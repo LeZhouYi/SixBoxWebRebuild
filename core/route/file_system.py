@@ -1,21 +1,46 @@
+import mimetypes
 import os.path
 
-from flask import Blueprint, request
+from flask import Blueprint, request, Response, send_file
 from werkzeug.datastructures import FileStorage
 
-from core.common.file_utils import get_file_ext
+from core.common.file_utils import get_file_ext, get_binary_io, get_stream_io
 from core.common.route_utils import gen_fail_response, is_str_empty, gen_id, gen_success_response
 from core.config.config import get_config_path, get_config
 from core.database.file_system import FileType
 from core.log.log import logger
 from core.route.route_data import ReportInfo, FsServer, FsConfig
+from core.route.user import verify_token
 
-FileSystemBp = Blueprint('file_system', __name__)
+FileSystemBp = Blueprint("file_system", __name__)
 
 
-@FileSystemBp.route("api/v1/filesys/files", method=["POST"])
+@FileSystemBp.route("/api/v1/static/<filename>", methods=["GET"])
+def download_static_file(filename: str):
+    """下载静态资源文件"""
+    if is_str_empty(filename):
+        return gen_fail_response(ReportInfo["012"], 404)
+    if filename.find("/") > -1:
+        return gen_fail_response(ReportInfo["012"], 404)
+    static_path = get_config_path("file_static_path")
+    file_path = os.path.join(static_path, filename)
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        try:
+            mime_type, _ = mimetypes.guess_type(file_path)
+            return Response(get_stream_io(file_path), mimetype=mime_type)
+        except Exception as e:
+            return gen_fail_response(str(e), 500)
+    return gen_fail_response(ReportInfo["012"], 404)
+
+
+@FileSystemBp.route("/api/v1/filesys/files", methods=["POST"])
 def add_file():
     """新增文件"""
+    # verify
+    verify_result = verify_token(request)
+    if isinstance(verify_result[0], Response):
+        return verify_result
+
     # 获取并检查数据
     file = request.files.get("file")
     if not file:

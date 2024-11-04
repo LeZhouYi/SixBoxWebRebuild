@@ -1,5 +1,6 @@
 import time
 from random import Random
+from typing import Optional
 
 import flask
 from flask import Response, jsonify
@@ -12,9 +13,9 @@ def gen_id() -> str:
     return "%s%s" % (int(time.time()), str(Rand.randint(100, 999)))
 
 
-def gen_fail_response(text: str) -> tuple[Response, int]:
+def gen_fail_response(text: str, error_code: int = 400) -> tuple[Response, int]:
     """生成400 response"""
-    return jsonify({"status": "Fail", "message": text}), 400
+    return jsonify({"status": "Fail", "message": text}), error_code
 
 
 def gen_success_response(text: str) -> Response:
@@ -49,3 +50,10 @@ def get_client_ip(request: flask.request) -> str:
     else:
         client_ip = request.remote_addr
     return client_ip
+
+
+def get_bearer_token(request: flask.request) -> Optional[str]:
+    """获取bearer类型的token"""
+    auth_header = request.headers.get('Authorization')
+    if auth_header:
+        return auth_header.split(" ")[-1]
