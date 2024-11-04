@@ -1,8 +1,8 @@
 from core.common.file_utils import load_json_data
 from core.config.config import get_config_path
 from core.database.file_system import FileSystemServer
-from core.database.user import UserServer
 from core.database.user import SessionServer
+from core.database.user import UserServer
 
 ReportInfo = {
     "001": "帐号不能为空",
@@ -17,6 +17,10 @@ ReportInfo = {
     "010": "Token无效",
     "011": "Token过期",
     "012": "文件不存在"
+}
+
+HtmlText = {
+    "001": "六号盒子-首页"
 }
 
 FsServer = FileSystemServer(get_config_path("file_sys_db_path"))

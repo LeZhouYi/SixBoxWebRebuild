@@ -1,10 +1,10 @@
 import mimetypes
 import os.path
 
-from flask import Blueprint, request, Response, send_file
+from flask import Blueprint, request, Response
 from werkzeug.datastructures import FileStorage
 
-from core.common.file_utils import get_file_ext, get_binary_io, get_stream_io
+from core.common.file_utils import get_file_ext, get_stream_io
 from core.common.route_utils import gen_fail_response, is_str_empty, gen_id, gen_success_response
 from core.config.config import get_config_path, get_config
 from core.database.file_system import FileType
