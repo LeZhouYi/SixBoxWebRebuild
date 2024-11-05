@@ -1,0 +1,17 @@
+<div class="side_bar_container">
+    <div class="side_bar_logo">
+        <img src="/sources?filename=icons/logo.png">
+    </div>
+    <dd class="side_bar_list">
+        {% for side_bar_item in side_bar_items %}
+        <dl>
+            <div class="side_bar_list_item">
+                <div class="side_bar_icon">
+                    {{side_bar_item.icon|safe}}
+                </div>
+                <a>{{side_bar_item.title}}</a>
+            </div>
+        </dl>
+        {% endfor %}
+    </dd>
+</div>
