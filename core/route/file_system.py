@@ -4,7 +4,7 @@ import os.path
 from flask import Blueprint, request, Response
 from werkzeug.datastructures import FileStorage
 
-from core.common.file_utils import get_file_ext, get_stream_io
+from core.common.file_utils import get_file_ext, get_stream_io, is_path_within_folder
 from core.common.route_utils import gen_fail_response, is_str_empty, gen_id, gen_success_response
 from core.config.config import get_config_path, get_config
 from core.database.file_system import FileType
@@ -15,16 +15,15 @@ from core.route.user import verify_token
 FileSystemBp = Blueprint("file_system", __name__)
 
 
-@FileSystemBp.route("/api/v1/static/<filename>", methods=["GET"])
-def download_static_file(filename: str):
+@FileSystemBp.route("/sources", methods=["GET"])
+def download_static_file():
     """下载静态资源文件"""
+    filename = request.args.get('filename')
     if is_str_empty(filename):
-        return gen_fail_response(ReportInfo["012"], 404)
-    if filename.find("/") > -1:
         return gen_fail_response(ReportInfo["012"], 404)
     static_path = get_config_path("file_static_path")
     file_path = os.path.join(static_path, filename)
-    if os.path.exists(file_path) and os.path.isfile(file_path):
+    if os.path.exists(file_path) and os.path.isfile(file_path) and is_path_within_folder(static_path, file_path):
         try:
             mime_type, _ = mimetypes.guess_type(file_path)
             return Response(get_stream_io(file_path), mimetype=mime_type)

@@ -19,10 +19,6 @@ ReportInfo = {
     "012": "文件不存在"
 }
 
-HtmlText = {
-    "001": "六号盒子-首页"
-}
-
 FsServer = FileSystemServer(get_config_path("file_sys_db_path"))
 FsConfig = load_json_data(get_config_path("file_sys_config_path"))
 

@@ -42,3 +42,24 @@ def get_stream_io(file_path: str, chunk_size: int = 1024) -> Generator[bytes, An
             if not data:
                 break
             yield data
+
+
+def is_path_within_folder(file_path, folder_path) -> bool:
+    """
+    判断文件是否在指定文件夹内
+    @param file_path:
+    @param folder_path:
+    @return: true表示在文件夹内
+    """
+    try:
+        relative_path = os.path.relpath(folder_path, file_path)
+    except ValueError:
+        return False
+    return not relative_path.startswith("..")
+
+
+def get_svg_content(file_path):
+    """获取本地的svg"""
+    with open(file_path, 'r', encoding='utf-8') as file:
+        svg_content = file.read()
+    return svg_content
