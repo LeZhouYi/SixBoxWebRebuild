@@ -13,7 +13,13 @@ def home_page():
     static_path = get_config_path("file_static_path")
     data = {
         "title": "六号盒子",
-        "js_file": "js/sixbox/home.js"
+        "js_file": "js/sixbox/home.js",
+        "side_bar_items": [
+            {
+                "icon": get_svg_content(os.path.join(static_path, "icons/open_folder.svg")),
+                "title": "文件管理器"
+            }
+        ]
     }
     return render_template("home.html", **data)
 

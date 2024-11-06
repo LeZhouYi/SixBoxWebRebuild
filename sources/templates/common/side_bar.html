@@ -1,15 +1,17 @@
 <div class="side_bar_container">
     <div class="side_bar_logo">
+        <img src="/sources?filename=icons/logo.png" class="side_bar_logo_img">
     </div>
     <dd class="side_bar_list">
-        <dl class="side_bar_row">
-            <div class="side_bar_item">
-                <div class="side_bar_icon">
+        {% for side_bar_item in side_bar_items %}
+            <dl class="side_bar_row">
+                <div class="side_bar_item">
+                    <div class="side_bar_icon">
+                        {{side_bar_item.icon|safe}}
+                    </div>
+                    <a class="side_bar_text">{{side_bar_item.title}}</a>
                 </div>
-                <a class="side_bar_text">文件管理器</a>
-            </div>
-        </dl>
-        <dl class="side_bar_row">
-        </dl>
+            </dl>
+        {% endfor %}
     </dd>
 </div>
