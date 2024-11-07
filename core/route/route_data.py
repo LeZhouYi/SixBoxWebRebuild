@@ -25,3 +25,10 @@ FsConfig = load_json_data(get_config_path("file_sys_config_path"))
 UsrServer = UserServer(get_config_path("user_db_path"))
 
 SessServer = SessionServer(get_config_path("session_db_path"))
+
+API_PREFIX = "/api/v1"
+
+
+def gen_prefix_api(api_str: str) -> str:
+    """生成添加了前缀的api路由"""
+    return API_PREFIX + api_str

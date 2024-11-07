@@ -9,7 +9,7 @@ from core.common.route_utils import gen_fail_response, is_str_empty, gen_id, gen
 from core.config.config import get_config_path, get_config
 from core.database.file_system import FileType
 from core.log.log import logger
-from core.route.route_data import ReportInfo, FsServer, FsConfig
+from core.route.route_data import ReportInfo, FsServer, FsConfig, gen_prefix_api
 from core.route.user import verify_token
 
 FileSystemBp = Blueprint("file_system", __name__)
@@ -32,7 +32,7 @@ def download_static_file():
     return gen_fail_response(ReportInfo["012"], 404)
 
 
-@FileSystemBp.route("/api/v1/filesys/files", methods=["POST"])
+@FileSystemBp.route(gen_prefix_api("/filesys/files"), methods=["POST"])
 def add_file():
     """新增文件"""
     # verify

@@ -1,0 +1,15 @@
+<div class="login_image"></div>
+<div class="login_panel">
+    <div class="login_logo">
+        <img src="/sources?filename=icons/logo.png" class="login_logo_img">
+    </div>
+    <form action="{{login_api}}" method="post" class="login_form" id="login_form">
+        <label for="account" class="login_label">帐号</label>
+        <input type="text" id="account" name="account" required placeholder="请输入帐号" class="login_field_input" autocomplete="username">
+        <label for="password" class="login_label">密码</label>
+        <input type="password" id="password" name="password" required placeholder="请输入密码" class="login_field_input" autocomplete="current-password">
+        <div class="login_button_panel">
+            <input type="submit" value="登录" class="login_button">
+        </div>
+    </form>
+</div>

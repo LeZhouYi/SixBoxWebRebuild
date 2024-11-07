@@ -9,10 +9,12 @@
 /*--默认主题--*/
 :root{
     --web-background-color: #C5EBE2;
-    --element-gap: 29px;
     --element-margin: 15px;
+    --element-gap: 29px;
+    --element-white-color: white;
 
     --border-radius: 16px;
+    --border-min-radius: 12px;
 
     --header-height: 77px;
     --header-icon-size: 48px;
@@ -23,12 +25,24 @@
     --side-bar-item-gap: 3px;
 
     --icon-base-size: 32px;
+    --icon-min-size: 25px;
 
     --file-enum-width: 245px;
     --file-enum-button-width: 204px;
     --file-enum-item-height: 48px;
-
     --file-search-height: 37px;
+    --file-item-height: 48px;
+
+    --login-panel-width: 800px;
+    --login-item-width: 285px;
+    --login-item-height: 44px;
+    --login-text-size: 16px;
+
+    --message-item-width: 285px;
+    --message-item-height: 48px;
+    --error-background-color: #FCDCDD;
+    --error-border-color: #FC9C9E;
+    --error-text-color: #F2323F;
 
     --button-blue-color: #363B64;
 
@@ -37,11 +51,23 @@
     --text-white-color: white;
     --text-base-size: 15px;
     --text-header-size: 29px;
+    --text-media-size: 24px;
+}
 
+.default_body{
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-image 1s ease-in-out;
+    margin: 0px;
+    display: flex;
+    font-family: 'poppins';
+    background-color: var(--element-white-color);
 }
 
 .background_body{
-    height: 100vh;
+    height: 100%;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -52,6 +78,7 @@
     background-color: var(--web-background-color);
 }
 
+/*----侧边导航栏----*/
 .side_bar_container{
     height: 100%;
     width: var(--side-bar-width);
@@ -116,6 +143,8 @@
     font-size: var(--text-base-size);
 }
 
+
+/*----文件管理系统----*/
 .file_sys_container{
     height: 100%;
     flex-grow: 1;
@@ -157,7 +186,7 @@
 }
 .file_sys_menu{
     width: 100%;
-    background-color: white;
+    background-color: var(--element-white-color);
     border-radius: var(--border-radius);
     box-sizing: border-box;
     margin-bottom: var(--element-margin);
@@ -217,24 +246,234 @@
 .file_sys_search_bar{
     height: var(--file-search-height);
     width: 100%;
-    background-color: white;
     border-radius: var(--border-radius);
     margin-bottom: var(--element-gap);
+    display: flex;
+}
+.file_path_bar{
+    height: 100%;
+    flex-grow: 1;
+    background-color: var(--text-white-color);
+    border-radius: var(--border-min-radius);
+}
+.file_search_bar{
+    height: 100%;
+    width: var(--file-enum-width);
+    background-color: var(--text-white-color);
+    margin-left: var(--element-gap);
+    border-radius: var(--border-min-radius);
+    padding-left: var(--border-min-radius);
+    padding-right: var(--border-min-radius);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+.file_search_icon{
+    height: var(--icon-min-size);
+    width: var(--icon-min-size);
+}
+.file_search_input{
+    height: 100%;
+    flex-grow: 1;
+    border-width: 0px;
+    padding-left: var(--border-min-radius);
+    padding-right: var(--border-min-radius);
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-size: var(--text-base-size);
+}
+.file_search_input::focus-visible{
+    outline: none;
 }
 .file_sys_list_body{
     width: 100%;
     flex-grow: 1;
-    background-color: white;
+    background-color: var(--element-white-color);
     border-radius: var(--border-radius);
     margin-bottom: var(--element-margin);
     box-sizing: border-box;
+    padding-top: var(--border-radius);
+    padding-bottom: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+}
+.file_list_title{
+    width: 100%;
+    height: var(--file-item-height);
+    font-size: var(--text-media-size);
+    color: var(--text-black-color);
+    font-weight: bold;
+    align-items: center;
+    display:flex;
+    padding-left: var(--element-gap);
+    padding-right: var(--element-gap);
+    box-sizing: border-box;
+}
+.file_table_header{
+    width: 100%;
+    height: var(--file-item-height);
+    display: grid;
+    align-items: center;
+    border-bottom: 2px solid var(--text-gray-color);
+    padding-left: var(--element-gap);
+    padding-right: var(--element-gap);
+    box-sizing: border-box;
+    grid-template-columns: 5fr 5fr 2fr 2fr 1fr;
+}
+.file_table_header_text{
+    min-width: var(--icon-base-size);
+    color: var(--text-black-color);
+}
+.file_table_body{
+    width: 100%;
+    flex-grow: 1;
+    box-sizing: border-box;
+    padding-left: var(--element-gap);
+    padding-right: var(--element-gap);
+}
+.file_table_item{
+    width: 100%;
+    height: var(--file-item-height);
+}
+.file_page_bar{
+    width: 100%;
+    height: var(--file-item-height);
+    box-sizing: border-box;
+    padding-left: var(--element-gap);
+    padding-right: var(--element-gap);
+    border-top: 2px solid var(--text-gray-color);
+}
+
+/*----登录页面----*/
+.login_image{
+    height: 100%;
+    flex-grow: 1;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-image 1s ease-in-out;
+}
+.login_panel{
+    height: 100%;
+    max-width: var(--login-panel-width);
+    min-width: calc( var(--login-item-width) + var(--element-gap) * 2 );
+    width: 40%;
+    background-color: var(--element-white-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+}
+.login_logo{
+    max-width: var(--login-item-width);
+    width: 100%;
+    margin-bottom: var(--element-gap);
+}
+.login_logo_img{
+    width: 100%;
+}
+.login_form{
+    width: var(--login-item-width);
+}
+.login_label{
+    height: var(--login-item-height);
+    font-size: var(--login-text-size);
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+.login_field_input{
+    width: 100%;
+    height: var(--login-item-height);
+    font-size: var(--login-text-size);
+    margin-bottom: var(--element-gap);
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+    border-radius: var(--border-min-radius);
+    border-color: var(--text-black-color);
+    box-sizing: border-box;
+}
+.login_button_panel{
+    width: 100%;
+    margin-top: var(--element-gap);
+    box-sizing: border-box;
+}
+.login_button{
+    width: 100%;
+    height: var(--login-item-height);
+    font-size: var(--login-text-size);
+    box-sizing: border-box;
+    border: 0px;
+    background-color: var(--button-blue-color);
+    border-radius: var(--border-min-radius);
+    color: var(--text-white-color);
+}
+
+/*----消息弹窗----*/
+.error_message_container{
+    min-width: calc(var(--message-item-width) + var(--element-gap) * 2 );
+    max-width: calc(100% - var(--element-gap)* 2);
+
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 1;
+    left:50%;
+    transform: translateX(-50%);
+}
+.error_message_item{
+    min-width: calc(var(--message-item-width) + var(--element-gap) * 2 );
+    max-width: calc(100% - var(--element-gap)* 2);
+    min-height: var(--message-item-height);
+    background-color: var(--error-background-color);
+    font-size: var(--text-base-size);
+    color: var(--error-text-color);
+    display: flex;
+    align-items: center;
+    margin-top: var(--element-gap);
+    animation: slide-down 0.5s ease-out forwards, fade-out 3s ease-in-out forwards;
+    border-radius: var(--border-min-radius);
+    border: 2px solid var(--error-border-color);
+    box-sizing: border-box;
+    padding-left: var(--border-min-radius);
+    padding-right: var(--border-min-radius);
+}
+@keyframes slide-down{
+    from{
+        opacity: 0,
+        transform: translateY(-20px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes fade-out{
+    from{
+        opacity: 1,
+    }
+    to{
+        opacity: 0;
+    }
 }
 
 
-@media (max-width: 767px){
+.hidden{
+    display: none;
 }
 
-@media (min-width: 768px) and (max-width: 969px){
+@media (max-width: 767px) or (max-device-width: 767px){
+    .login_image{
+        display: none;
+    }
+    .login_panel{
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+@media ((min-width: 768px) and (max-width: 969px)) or ((min-device-width: 768px) and (max-device-width: 969px)){
 }
 
 @media (min-width: 970px) and (max-width: 1169px){
