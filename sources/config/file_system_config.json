@@ -1,5 +1,5 @@
 {
     "file_white_list": [
-        "png"
+        "png","jpg","jpeg"
     ]
 }

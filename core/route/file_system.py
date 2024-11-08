@@ -1,7 +1,7 @@
 import mimetypes
 import os.path
 
-from flask import Blueprint, request, Response
+from flask import Blueprint, request, Response, jsonify
 from werkzeug.datastructures import FileStorage
 
 from core.common.file_utils import get_file_ext, get_stream_io, is_path_within_folder
@@ -32,7 +32,7 @@ def download_static_file():
     return gen_fail_response(ReportInfo["012"], 404)
 
 
-@FileSystemBp.route(gen_prefix_api("/filesys/files"), methods=["POST"])
+@FileSystemBp.route(gen_prefix_api("/files"), methods=["POST"])
 def add_file():
     """新增文件"""
     # verify
@@ -59,6 +59,7 @@ def add_file():
     filepath = os.path.join(get_config_path("file_save_path"), local_name)
     try:
         file.save(filepath)
+        file_size = os.path.getsize(filepath)
     except Exception as e:
         logger.error("保存文件%s失败：%s" % (file.filename, e))
         return gen_fail_response(ReportInfo["004"])
@@ -67,10 +68,23 @@ def add_file():
         "name": filename,
         "type": FileType.FILE,
         "parentId": parent_id,
-        "path": "%s/%s" % (get_config("file_save_path"), local_name)
+        "path": "%s/%s" % (get_config("file_save_path"), local_name),
+        "size": file_size
     }
     FsServer.add(db_data)
     return gen_success_response(ReportInfo["006"])
+
+
+@FileSystemBp.route(gen_prefix_api("/folders/<folder_id>"), methods=["GET"])
+def get_folder_content(folder_id: str):
+    """获取文件"""
+    # verify
+    verify_result = verify_token(request)
+    if isinstance(verify_result[0], Response):
+        return verify_result
+    if is_str_empty(folder_id) or not FsServer.is_folder_exist(folder_id):
+        return gen_fail_response(ReportInfo["009"])
+    return jsonify(FsServer.get_folder_detail(folder_id))
 
 
 def check_file_ext(file: FileStorage) -> bool:
@@ -82,3 +96,4 @@ def check_file_ext(file: FileStorage) -> bool:
     white_list = FsConfig["file_white_list"]
     if file.filename is None or get_file_ext(file.filename).lower() not in white_list:
         return False
+    return True

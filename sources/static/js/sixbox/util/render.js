@@ -20,13 +20,27 @@ export function resizeFullScreen(){
     bodyContainer.style.height = String(document.documentElement.clientHeight)+"px";
 }
 
-export function displayErrorMessage(errorMessageText){
+export function displayErrorMessage(errorMessageText, iconUrl="sources?filename=icons/alert.png", removeTime=5000){
     /*显示错误信息*/
     let errorsContainer = document.querySelector(".error_message_container");
     if (errorsContainer){
-        const errorMessage = document.createElement('div');
-        errorMessage.textContent = errorMessageText;
-        errorMessage.classList.add('error_message_item');
+        const errorIcon = document.createElement("img");
+        errorIcon.classList.add("error_message_icon");
+        errorIcon.src = iconUrl;
+
+        const errorText = document.createElement("div");
+        errorText.classList.add("error_message_text");
+        errorText.textContent = errorMessageText;
+
+        const errorMessage = document.createElement("div");
+        errorMessage.classList.add("error_message_item");
+        errorMessage.appendChild(errorIcon);
+        errorMessage.appendChild(errorText);
+
         errorsContainer.appendChild(errorMessage);
+
+//        setTimeout(()=>{
+//            errorMessage.remove();
+//        }, removeTime);
     }
 }

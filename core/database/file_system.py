@@ -1,8 +1,10 @@
 import threading
+import time
 
 from tinydb import TinyDB, Query
 
 from core.common import route_utils
+from core.common.route_utils import extra_data_by_list
 
 
 class FileType:
@@ -42,7 +44,9 @@ class FileSystemServer:
                 "name": "根目录",
                 "type": FileType.FOLDER,
                 "parentId": None,
-                "path": None
+                # "path": None,
+                "updateTime": str(time.time()),
+                # "size": None
             })
 
     def is_folder_exist(self, data_id: str) -> bool:
@@ -57,6 +61,21 @@ class FileSystemServer:
                 return True
             return False
 
+    def get_folder_detail(self, data_id: str) -> dict:
+        """获取文件夹详情及该文件夹下的内容"""
+        key_list = ["id", "name", "parentId", "type", "updateTime", "size"]
+        return_data = {}
+        with self.thread_lock:
+            folder_data = self.db.get(self.query.id == data_id)
+            folder_data = extra_data_by_list(folder_data, key_list)
+            return_data.update(folder_data)
+            contents = []
+            content_data = self.db.search(self.query.parentId == data_id)
+            for data_item in content_data:
+                contents.append(extra_data_by_list(data_item, key_list))
+            return_data["contents"] = contents
+        return return_data
+
     def add(self, data: dict):
         """
         新增
@@ -64,4 +83,5 @@ class FileSystemServer:
         :return:
         """
         data["id"] = route_utils.gen_id()
+        data["updateTime"] = str(time.time())
         self.db.insert(data)

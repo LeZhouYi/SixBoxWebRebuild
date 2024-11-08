@@ -2,8 +2,9 @@ import { setBackgroundImage,resizeFullScreen,displayErrorMessage } from "./util/
 import { throttle } from "./util/func.js";
 import { ApiError,postJson } from "./util/requestor.js"
 
+
 window.onload = function() {
-    resizeFullScreen()
+    resizeFullScreen();
     setBackgroundImage("login_image", "url('/sources?filename=images/background.jpg')");
 };
 
@@ -16,16 +17,17 @@ document.getElementById("login_form").addEventListener("submit", function(event)
     const formData = {
         account: document.getElementById("account").value,
         password: document.getElementById("password").value
-    }
+    };
     postJson("/api/v1/sessions", formData).then(data=>{
-
+        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("refreshToken", data.refreshToken);
+        window.location.href = "/home.html";
     })
     .catch(error=>{
         if (error instanceof ApiError){
             displayErrorMessage(error.responseData.message);
-        }
-        else{
-            displayErrorMessage(error.message);
+        }else{
+            displayErrorMessage(error);
         }
     });
 });

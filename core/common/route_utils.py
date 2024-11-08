@@ -57,3 +57,12 @@ def get_bearer_token(request: flask.request) -> Optional[str]:
     auth_header = request.headers.get('Authorization')
     if auth_header:
         return auth_header.split(" ")[-1]
+
+
+def extra_data_by_list(data: dict, key_list: list) -> dict:
+    """提取特定字段"""
+    return_data = {}
+    for key in key_list:
+        if key in data:
+            return_data[key] = data[key]
+    return return_data
