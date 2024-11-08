@@ -1,6 +1,7 @@
-import { resizeFullScreen,displayErrorMessage } from "./util/render.js";
+import { hiddenClass,resizeFullScreen,displayErrorMessage } from "./util/render.js";
 import { throttle } from "./util/func.js";
 import { ApiError, getJsonWithBear } from "./util/requestor.js";
+import { initSideBar } from "./common/sidebar.js";
 
 const fileTypeMap = {
     "0": {
@@ -15,9 +16,7 @@ const fileTypeMap = {
 
 window.onload = function() {
     checkLocalStorage();
-
-    document.getElementById("side_bar_file_sys").classList.add("active");
-
+    initSideBar("fileSystem");
     updateFileList();
     resizeFullScreen();
 };
@@ -26,9 +25,16 @@ window.addEventListener("resize", throttle(function(){
     resizeFullScreen("bodyContainer");
 }), 200);
 
-document.getElementById("side_bar_file_sys").addEventListener("click", function(event){
-    console.log("test");
-    window.location = window.location.href;
+document.getElementById("file_sys_side_button").addEventListener("click", function(event){
+    /*切换隐藏或显示侧边栏*/
+    var sideBarElement = document.getElementById("side_bar_container");
+    if(sideBarElement){
+        if(sideBarElement.classList.contains(hiddenClass)){
+            sideBarElement.classList.remove(hiddenClass);
+        }else if(!sideBarElement.classList.contains(hiddenClass)){
+            sideBarElement.classList.add(hiddenClass);
+        }
+    }
 });
 
 function updateFileList(){

@@ -1,4 +1,4 @@
-const hiddenClass = "hidden";
+export const hiddenClass = "hidden";
 
 export function setBackgroundImage(className, fileUrl){
     /*
@@ -39,8 +39,8 @@ export function displayErrorMessage(errorMessageText, iconUrl="sources?filename=
 
         errorsContainer.appendChild(errorMessage);
 
-//        setTimeout(()=>{
-//            errorMessage.remove();
-//        }, removeTime);
+        setTimeout(()=>{
+            errorMessage.remove();
+        }, removeTime);
     }
 }
