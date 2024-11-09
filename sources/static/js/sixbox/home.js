@@ -15,10 +15,20 @@ const fileTypeMap = {
 }
 
 window.onload = function() {
+    /*检查并初始化存储数据*/
     checkLocalStorage();
+
+    /*侧边栏初始化*/
     initSideBar("fileSystem");
+
+    /*页面功能*/
     updateFileList();
+
+    /*页面调整*/
     resizeFullScreen();
+
+    /*动画相关初始化*/
+    document.getElementById("file_sys_container").classList.add("left_trans");
 };
 
 window.addEventListener("resize", throttle(function(){
@@ -28,11 +38,16 @@ window.addEventListener("resize", throttle(function(){
 document.getElementById("file_sys_side_button").addEventListener("click", function(event){
     /*切换隐藏或显示侧边栏*/
     var sideBarElement = document.getElementById("side_bar_container");
-    if(sideBarElement){
-        if(sideBarElement.classList.contains(hiddenClass)){
-            sideBarElement.classList.remove(hiddenClass);
-        }else if(!sideBarElement.classList.contains(hiddenClass)){
-            sideBarElement.classList.add(hiddenClass);
+    var fileSysContainer = document.getElementById("file_sys_container");
+    var sidebarHidden = "sidebar_hide";
+    var hideWithSidebar = "hide_with_sidebar";
+    if(sideBarElement && fileSysContainer){
+        if(sideBarElement.classList.contains(sidebarHidden)){
+            sideBarElement.classList.remove(sidebarHidden);
+            fileSysContainer.classList.remove(hideWithSidebar);
+        }else if(!sideBarElement.classList.contains(sidebarHidden)){
+            sideBarElement.classList.add(sidebarHidden);
+            fileSysContainer.classList.add(hideWithSidebar);
         }
     }
 });

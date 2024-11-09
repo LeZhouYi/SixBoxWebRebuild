@@ -33,6 +33,7 @@
     --file-search-height: 37px;
     --file-item-height: 56px;
     --file-text-size: 16px;
+    --file_pop_width: 360px;
 
     --login-panel-width: 800px;
     --login-item-width: 285px;
@@ -46,7 +47,7 @@
     --error-text-color: #F2323F;
 
     --button-blue-color: #363B64;
-    --button-active-color: #D0F0F7;
+    --button-active-color: #EDCED2;
 
     --text-gray-color: #A098AE;
     --text-black-color: #363B64;
@@ -91,6 +92,8 @@
     box-sizing: border-box;
     display: grid;
     grid-template-rows: var(--header-height) 1fr;
+    transition: transform 1s ease;
+    position: fixed;
 }
 .side_bar_logo{
     min-width: var(--side-bar-item-width);
@@ -128,6 +131,7 @@
     color: var(--text-gray-color);
     border-radius: var(--border-radius);
     padding-right: var(--border-radius);
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 .side_bar_item.active{
     height: 100%;
@@ -139,6 +143,7 @@
     color: var(--text-white-color);
     border-radius: var(--border-radius);
     padding-right: var(--border-radius);
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 .side_bar_item:hover {
     background-color: white;
@@ -173,6 +178,7 @@
     flex-grow: 1;
     display: grid;
     grid-template-rows: var(--header-height) 1fr;
+    margin-left: var(--side-bar-width);
 }
 .file_sys_header{
     height: 100%;
@@ -189,10 +195,12 @@
     align-items: center;
     margin-top: auto;
     margin-bottom: auto;
+    background-color: var(--element-white-color);
+    border-radius: var(--border-radius);
+    transition: background-color 0.5s ease;
 }
 .file_sys_side_button:hover{
     background-color: var(--button-active-color);
-    border-radius: var(--border-radius);
 }
 .file_sys_side_icon{
     width: var(--header-icon-size);
@@ -212,10 +220,18 @@
 .file_sys_header_icon{
     height: var(--header-icon-size);
     width: var(--header-icon-size);
+    border-radius: var(--border-radius);
+    transition: background-color 0.5s ease;
+}
+.file_sys_header_icon:hover{
+    background-color: var(--button-active-color);
 }
 .file_sys_header_icon>img{
     height: var(--header-icon-size);
     width: var(--header-icon-size);
+}
+.file_sys_header_icon>img:hover{
+    mix-blend-mode: multiply;
 }
 .file_sys_body{
     height: 100%;
@@ -246,6 +262,13 @@
     border-radius: var(--border-radius);
     color: var(--text-white-color);
     font-size: var(--text-base-size);
+    box-sizing: border-box;
+    border: 2px solid var(--button-blue-color);
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+.file_sys_menu_button:hover{
+    background-color: var(--element-white-color);
+    color: var(--text-black-color);
 }
 .file_sys_menu_label{
     width: var(--file-enum-button-width);
@@ -261,6 +284,13 @@
     height: var(--file-enum-item-height);
     display: flex;
     align-items: center;
+    background-color: var(--element-white-color);
+    color: var(--text-gray-color);
+    border-radius: var(--border-radius);
+    transition: background-color 0.5s ease;
+}
+.file_sys_menu_item:hover{
+    background-color: var(--button-active-color);
 }
 .file_sys_menu_icon{
     width: var(--icon-base-size);
@@ -278,7 +308,6 @@
 .file_sys_menu_text{
     font-size: var(--text-base-size);
     margin-right: var(--element-margin);
-    color: var(--text-gray-color);
 }
 
 .file_sys_panel{
@@ -432,6 +461,20 @@
     padding-right: var(--element-gap);
     border-top: 2px solid var(--text-gray-color);
 }
+.file_add_container{
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 1;
+    left:50%;
+    top: 50%;
+    transform: translateX(-50%), translateY(-50%);
+}
+.file_add_content{
+    width: var(--file_pop_width);
+    background-color: white;
+    border: 2px solid var(--web-background-color);
+}
 
 /*----登录页面----*/
 .login_image{
@@ -498,7 +541,7 @@
     min-height: var(--login-item-height);
     font-size: var(--login-text-size);
     box-sizing: border-box;
-    border: 0px;
+    border: 2px solid var(--button-blue-color);
     background-color: var(--button-blue-color);
     border-radius: var(--border-min-radius);
     color: var(--text-white-color);
@@ -506,6 +549,12 @@
     white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+.login_button:hover{
+    border: 2px solid var(--button-blue-color);
+    background-color: var(--element-white-color);
+    color: var(--text-black-color);
 }
 
 /*----消息弹窗----*/
@@ -570,17 +619,26 @@
 }
 
 
+/*用于动态控制*/
 .hidden{
-    display: none;
+    display: none;  /*隐藏元素*/
 }
 .clickable{
-    cursor: pointer;
+    cursor: pointer;  /*使鼠标手势变为可操作的手势*/
 }
-.show_flex{
-    display: flex;
+.sidebar_hide{
+    transform: translateX(-100%);  /*将侧边栏移出*/
+}
+.hide_with_sidebar{
+    margin-left: 0; /*将页面主内容移回*/
+}
+.left_trans{
+    transition: margin-left 1s ease;  /*左移动画效果，用于js中，在初始完成后再手动添加*/
 }
 
+/*用于响应式*/
 @media (max-width: 399px), (max-device-width: 399px){
+    /*登录相关*/
     .login_image{
         display: none;
     }
@@ -588,9 +646,14 @@
         width: 100%;
         max-width: 100%;
     }
+    /*侧边栏*/
     .side_bar_container{
-        position: fixed;
-        display: none;
+        transform: translateX(-100%);
+        display: hidden;
+    }
+    /*文件管理器*/
+    .file_sys_container{
+        margin-left: 0;
     }
     .file_sys_menu{
         display: none;
@@ -620,25 +683,13 @@
     .file_table_header{
         grid-template-columns: 5fr 2fr;
     }
-    .file_table_header>*:nth-child(2) {
-        display: none;
-    }
-    .file_table_header>*:nth-child(3) {
-        display: none;
-    }
-    .file_table_header>*:nth-child(4) {
+    .file_table_header>*:nth-child(2),.file_table_header>*:nth-child(3),.file_table_header>*:nth-child(4){
         display: none;
     }
     .file_table_item{
         grid-template-columns: 5fr 2fr;
     }
-    .file_table_item>*:nth-child(2) {
-        display: none;
-    }
-    .file_table_item>*:nth-child(3) {
-        display: none;
-    }
-    .file_table_item>*:nth-child(4) {
+    .file_table_item>*:nth-child(2),.file_table_item>*:nth-child(3),.file_table_item>*:nth-child(4){
         display: none;
     }
     .file_sys_header{
@@ -649,6 +700,13 @@
         padding-left: var(--element-margin);
         padding-right: var(--element-margin);
     }
+    .file_sys_header>*:nth-child(3),.file_sys_header>*:nth-child(4),.file_sys_header>*:nth-child(5){
+        display: none;
+    }
+    .file_sys_header{
+        grid-template-columns: var(--header-icon-size) 1fr;
+    }
+    /*错误消息*/
     .error_message_container{
         min-width: calc(100% - var(--element-margin)* 3 - var(--icon-min-size));
         max-width: calc(100% - var(--element-margin)* 3 - var(--icon-min-size));
@@ -661,6 +719,7 @@
 }
 
 @media (min-width: 400px) and (max-width: 767px), (min-device-width: 400px) and (max-device-width: 767px){
+    /*登录相关*/
     .login_image{
         display: none;
     }
@@ -668,9 +727,14 @@
         width: 100%;
         max-width: 100%;
     }
+    /*侧边栏*/
     .side_bar_container{
-        position: fixed;
-        display: none;
+        transform: translateX(-100%);
+        display: hidden;
+    }
+    /*文件管理器*/
+    .file_sys_container{
+        margin-left: 0;
     }
     .file_sys_menu{
         display: none;
@@ -712,16 +776,26 @@
 }
 
 @media (min-width: 768px) and (max-width: 969px), ((min-device-width: 768px) and (max-device-width: 969px)){
+    /*侧边栏*/
     .side_bar_container{
-        position: fixed;
-        display: none;
+        transform: translateX(-100%);
+        display: hidden;
+    }
+    /*文件管理器*/
+    .file_sys_container{
+        margin-left: 0;
     }
 }
 
 @media (min-width: 970px) and (max-width: 1169px), ((min-device-width: 970px) and (max-device-width: 1169px)){
+    /*侧边栏*/
     .side_bar_container{
-        position: fixed;
-        display: none;
+        transform: translateX(-100%);
+        display: hidden;
+    }
+    /*文件管理器*/
+    .file_sys_container{
+        margin-left: 0;
     }
 }
 
