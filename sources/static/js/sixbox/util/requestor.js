@@ -1,3 +1,5 @@
+import * as axios from "../../axios/axios.min.js";
+
 const whiteCode = ["400"]
 
 export class ApiError extends Error{
