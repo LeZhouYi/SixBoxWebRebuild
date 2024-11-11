@@ -16,7 +16,7 @@
     </div>
     <div class="file_sys_body">
         <div class="file_sys_menu">
-            <button class="file_sys_menu_button clickable">+上传</button>
+            <button class="file_sys_menu_button clickable">+新增</button>
             <div class="file_sys_menu_label">
                 <span>菜单</span>
             </div>
@@ -60,5 +60,15 @@
 </div>
 <div class="file_add_container">
     <div class="file_add_content">
+        <div class="file_add_header">新增文件</div>
+        <form class="file_add_form">
+            <label for="file_add_name" class="file_add_label">文件名</label>
+            <input id="file_add_name" type="text" required placeholder="请输入文件名" class="file_add_field">
+            <label for="file_add_folder_select" class="file_add_label">文件夹</label>
+            <input id="file_add_folder_select" type="text" required placeholder="请输入并选择文件夹" class="file_add_field">
+            <label for="file_add_select" class="file_add_label">文件</label>
+            <input id="file_add_select" type="file" required placeholder="请选择文件" class="file_add_select">
+            <input id="file_add_confirm" type="submit" value="确认" class="file_add_button">
+        </form>
     </div>
 </div>

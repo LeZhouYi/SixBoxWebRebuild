@@ -33,7 +33,7 @@
     --file-search-height: 37px;
     --file-item-height: 56px;
     --file-text-size: 16px;
-    --file_pop_width: 360px;
+    --file-pop-width: 600px;
 
     --login-panel-width: 800px;
     --login-item-width: 285px;
@@ -468,12 +468,84 @@
     z-index: 1;
     left:50%;
     top: 50%;
-    transform: translateX(-50%), translateY(-50%);
+    transform: translate(-50%, -50%);
 }
 .file_add_content{
-    width: var(--file_pop_width);
+    width: var(--file-pop-width);
     background-color: white;
-    border: 2px solid var(--web-background-color);
+    border: 4px solid var(--text-black-color);
+    display: flex;
+    flex-direction: column;
+    padding: var(--element-gap);
+    border-radius: var(--border-radius);
+}
+.file_add_header{
+    width: 100%;
+    height: var(--header-height);
+    font-size: var(--text-media-size);
+    font-weight: bold;
+    color: var(--text-black-color);
+}
+.file_add_form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.file_add_label{
+    width: 100%;
+    min-height: var(--login-item-height);
+    font-size: var(--login-text-size);
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding-bottom: var(--element-margin);
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.file_add_field{
+    width: 100%;
+    height: var(--login-item-height);
+    font-size: var(--login-text-size);
+    margin-bottom: var(--element-gap);
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+    border-radius: var(--border-min-radius);
+    border-color: var(--text-black-color);
+    box-sizing: border-box;
+    font-family: 'poppins';
+}
+.file_add_select{
+    width: 100%;
+    height: var(--login-item-height);
+    font-size: var(--login-text-size);
+    margin-bottom: var(--element-gap);
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+    border-radius: var(--border-min-radius);
+    border-color: var(--text-black-color);
+    box-sizing: border-box;
+    font-family: 'poppins';
+}
+.file_add_button{
+    width: 100%;
+    min-height: var(--login-item-height);
+    font-size: var(--login-text-size);
+    box-sizing: border-box;
+    border: 2px solid var(--button-blue-color);
+    background-color: var(--button-blue-color);
+    border-radius: var(--border-min-radius);
+    color: var(--text-white-color);
+    padding: var(--element-margin);
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+.file_add_button:hover{
+    border: 2px solid var(--button-blue-color);
+    background-color: var(--element-white-color);
+    color: var(--text-black-color);
 }
 
 /*----登录页面----*/
