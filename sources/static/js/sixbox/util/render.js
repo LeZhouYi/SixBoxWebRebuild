@@ -1,3 +1,5 @@
+import { requestConfig, ApiError } from "./requestor.js";
+
 export const hiddenClass = "hidden";
 
 export function setBackgroundImage(className, fileUrl){
@@ -6,7 +8,7 @@ export function setBackgroundImage(className, fileUrl){
     className: 元素类名
     fileName: 文件URL
     */
-    var elements = document.getElementsByClassName(className);
+    let elements = document.getElementsByClassName(className);
     Array.from(elements).forEach(element => {
         if(!element.classList.contains(hiddenClass)){
             element.style.backgroundImage = fileUrl;
@@ -20,7 +22,7 @@ export function resizeFullScreen(){
     bodyContainer.style.height = String(document.documentElement.clientHeight)+"px";
 }
 
-export function displayErrorMessage(errorMessageText, iconUrl="sources?filename=icons/alert.png", removeTime=5000){
+export function displayErrorMessage(errorMessageText, iconUrl="sources?filename=icons/alert.png", removeTime=4500){
     /*显示错误信息*/
     let errorsContainer = document.querySelector(".error_message_container");
     if (errorsContainer){
@@ -42,5 +44,20 @@ export function displayErrorMessage(errorMessageText, iconUrl="sources?filename=
         setTimeout(()=>{
             errorMessage.remove();
         }, removeTime);
+    }
+}
+
+export function displayError(error){
+    /*显示错误*/
+    if (error instanceof ApiError){
+        if (error.errorKey==="REFRESH FAIL"){
+            setTimeout(function(){
+                window.location = requestConfig.authErrorRoute;
+            }, 2000);
+        }else{
+            displayErrorMessage(error.errorData.message);
+        }
+    }else{
+        displayErrorMessage(error);
     }
 }

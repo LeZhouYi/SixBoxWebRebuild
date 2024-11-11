@@ -64,13 +64,37 @@ class SessionServer:
                 return False, "TOKEN INVALID"
             user_id = decoded["userId"]
             with self.thread_lock:
-                data = self.db.get((self.query.userId == user_id) & (self.query.clientIp == client_ip))
+                data = self.db.get((self.query.userId == user_id) & (self.query.clientIp == client_ip)
+                                   & (self.query.accessToken == token))
                 if data is None:
                     return False, "TOKEN INVALID"
             return True, decoded
         except jwt.ExpiredSignatureError:
             return False, "TOKEN EXPIRED"
         except jwt.InvalidTokenError:
+            return False, "TOKEN INVALID"
+
+    def verify_refresh(self, refresh_token: str, client_ip: str) -> tuple[bool, str | dict]:
+        """验证refresh token 并重新生成 access token"""
+        with self.thread_lock:
+            data = self.db.get((self.query.clientIp == client_ip) & (self.query.refreshToken == refresh_token))
+            if data is None:
+                return False, "TOKEN INVALID"
+        try:
+            access_token = data["accessToken"]
+            decoded = jwt.decode(access_token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
+            if is_key_str_empty(decoded, "userId"):
+                return False, "TOKEN INVALID"
+            user_id = decoded["userId"]
+            access_token = self.generate_access_token(user_id)
+            return_body = {
+                "accessToken": access_token,
+                "refreshToken": refresh_token
+            }
+            data.update(return_body)
+            self.db.update(data, (self.query.userId == user_id) & (self.query.clientIp == client_ip))
+            return True, return_body
+        except jwt.ExpiredSignatureError or jwt.InvalidTokenError:
             return False, "TOKEN INVALID"
 
     def delete(self, user_id: str, client_ip: str):

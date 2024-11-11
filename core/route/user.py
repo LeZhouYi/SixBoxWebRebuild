@@ -50,6 +50,20 @@ def logout():
     return gen_success_response("登出成功")
 
 
+@UserBp.route(gen_prefix_api("/refresh"), methods=["POST"])
+def refresh():
+    """刷新Token"""
+    data = request.json
+    if is_key_str_empty(data, "refreshToken"):
+        return gen_fail_response(ReportInfo["010"])
+    client_ip = get_client_ip(request)
+    result, data_or_info = SessServer.verify_refresh(data["refreshToken"], client_ip)
+    if result is False:
+        if data_or_info == "TOKEN INVALID":
+            return gen_fail_response(ReportInfo["010"], 400)
+    return jsonify(data_or_info)
+
+
 def verify_token(request_in: flask.request) -> tuple[Response, int] | tuple[str, str]:
     """验证Token"""
     token = get_bearer_token(request_in)
