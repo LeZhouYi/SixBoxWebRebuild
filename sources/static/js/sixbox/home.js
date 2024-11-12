@@ -29,11 +29,65 @@ window.onload = function() {
 
     /*动画相关初始化*/
     document.getElementById("file_sys_container").classList.add("left_trans");
+    document.getElementById("side_bar_container").classList.remove(hiddenClass);
 };
 
 window.addEventListener("resize", throttle(function(){
     resizeFullScreen("bodyContainer");
 }), 200);
+
+document.getElementById("file_add_icon").addEventListener("click", function(event){
+    /*点击新增文件的切换按钮*/
+    let addFileFormElement = document.getElementById("file_add_form");
+    let addFolderFormElement = document.getElementById("folder_add_form");
+    let addHeaderText = document.getElementById("file_add_header_text");
+    if(addFileFormElement.classList.contains(hiddenClass)){
+        addFileFormElement.classList.remove(hiddenClass);
+        addFolderFormElement.classList.add(hiddenClass);
+        file_add_header_text.textContent="新增文件";
+    }else{
+        addFileFormElement.classList.add(hiddenClass);
+        addFolderFormElement.classList.remove(hiddenClass);
+        file_add_header_text.textContent="新增文件夹";
+    }
+})
+
+document.getElementById("file_add_icon").addEventListener("mouseenter", function(event){
+    /*鼠标悬停在新增文件夹图标*/
+    let addFormElement = document.getElementById("file_add_form");
+    let hoverElement = event.target;
+    if(addFormElement.classList.contains(hiddenClass)){
+        hoverElement.src = "/sources?filename=icons/add_file.png";
+    }else{
+        hoverElement.src = "/sources?filename=icons/add_folder.png";
+    }
+});
+
+document.getElementById("file_add_icon").addEventListener("mouseleave", function(event){
+    /*鼠标离开在新增文件夹图标*/
+    let addFormElement = document.getElementById("file_add_form");
+    let hoverElement = event.target;
+    if(addFormElement.classList.contains(hiddenClass)){
+        hoverElement.src = "/sources?filename=icons/add_file_blue.png";
+    }else{
+        hoverElement.src = "/sources?filename=icons/add_folder_blue.png";
+    }
+});
+
+document.getElementById("file_add_select_element").addEventListener("change", function(event){
+    /*点击选择文件*/
+    if (event.target.files && event.target.files.length > 0){
+        let fileName = event.target.files[0].name;
+        document.getElementById("file_add_select").value = fileName;
+    } else{
+        document.getElementById("file_add_select").value = "";
+    }
+});
+
+document.getElementById("file_add_item_button").addEventListener("click", function(event){
+    /*点击新增选择文件*/
+    document.getElementById("file_add_select_element").click();
+});
 
 document.getElementById("file_sys_side_button").addEventListener("click", function(event){
     /*切换隐藏或显示侧边栏*/
@@ -65,7 +119,7 @@ async function updateFileList(){
         });
     }
     catch(error){
-        displayError(displayError);
+        displayError(error);
     }
 }
 

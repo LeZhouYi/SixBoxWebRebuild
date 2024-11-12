@@ -8,53 +8,63 @@
 
 /*--默认主题--*/
 :root{
-    --web-background-color: #C5EBE2;
-    --element-margin: 15px;
-    --element-gap: 29px;
-    --element-white-color: white;
 
+    /*颜色*/
+    --theme-main-color: #C5EBE2; /*主题色*/
+    --theme-part-color: #363B64;    /*次主题色*/
+    --theme-background-color: white; /*主题背景色*/
+    --theme-active-color: #EDCED2;  /*主题激活色*/
+    --error-background-color: #FCDCDD;  /*警告背景色*/
+    --error-border-color: #FC9C9E;  /*警告边框色*/
+    --error-text-color: #F2323F;    /*警告文本颜色*/
+    --text-remark-color: #A098AE;   /*提示&备注文本色*/
+    --text-main-color: #363B64;     /*文本主题色*/
+    --text-active-color: white;     /*文本激活色*/
+
+    /*间距*/
+    --element-margin: 15px;  /*基础边缘，适用于小设备或间隔较小*/
+    --element-gap: 29px;    /*基础间距，适用于大设备或间隔较大*/
+    --element-list-gap: 3px;    /*列表间距*/
+
+    /*圆角边距*/
+    --border-icon-radius: 21px; /*适用于--header-icon-size*/
     --border-radius: 16px;
     --border-min-radius: 12px;
+    --border-base-width: 2px;
+    --border-popup-width: 4px;
 
-    --header-height: 77px;
+    /*圆标大小*/
     --header-icon-size: 48px;
+    --icon-base-size: 32px; /*基础图标大小*/
+    --icon-min-size: 25px;  /*小形图标大小*/
 
-    --side-bar-width: 264px;
-    --side-bar-item-width: 154px;
-    --side-bar-row-height: 44px;
-    --side-bar-item-gap: 3px;
+    /*字体大小*/
+    --main-text-size: 16px; /*正文*/
+    --text-label-size: 15px; /*标签文本*/
+    --text-header-size: 29px;   /*大标题*/
+    --text-media-size: 24px;    /*次级标题*/
 
-    --icon-base-size: 32px;
-    --icon-min-size: 25px;
-
-    --file-enum-width: 245px;
-    --file-enum-button-width: 204px;
-    --file-enum-item-height: 48px;
-    --file-search-height: 37px;
-    --file-item-height: 56px;
-    --file-text-size: 16px;
-    --file-pop-width: 600px;
-
-    --login-panel-width: 800px;
-    --login-item-width: 285px;
-    --login-item-height: 44px;
-    --login-text-size: 16px;
-
-    --message-item-width: 285px;
-    --message-item-height: 48px;
-    --error-background-color: #FCDCDD;
-    --error-border-color: #FC9C9E;
-    --error-text-color: #F2323F;
-
-    --button-blue-color: #363B64;
-    --button-active-color: #EDCED2;
-
-    --text-gray-color: #A098AE;
-    --text-black-color: #363B64;
-    --text-white-color: white;
-    --text-base-size: 15px;
-    --text-header-size: 29px;
-    --text-media-size: 24px;
+    /*元素宽高*/
+    /*通用*/
+    --header-height: 77px;  /*标题栏*/
+    --pop-form-width: 640px;    /*表单类型弹窗宽*/
+    --message-item-width: 285px;    /*消息类型弹窗宽*/
+    --message-item-height: 48px;    /*消息类型弹窗高*/
+    /*侧边栏*/
+    --side-bar-width: 264px;    /*侧边栏*/
+    --side-bar-item-width: 154px;   /*侧边栏元素宽*/
+    --side-bar-row-height: 44px;    /*侧边栏行高*/
+    /*文件系统*/
+    --file-enum-width: 245px;   /*文件菜单栏*/
+    --file-enum-button-width: 204px;    /*文件菜单栏按钮宽*/
+    --file-enum-item-height: 48px;  /*文件菜单栏行高*/
+    --file-search-height: 37px; /*搜索栏高*/
+    --file-item-height: 56px;   /*文件行高*/
+    --file-item-button-width: 204px; /*表单按钮*/
+    /*登录页*/
+    --login-panel-width: 800px; /*登录栏宽*/
+    --login-item-width: 285px;  /*登录元素宽*/
+    --login-item-height: 44px;  /*登录元素高*/
 }
 
 .default_body{
@@ -66,7 +76,7 @@
     margin: 0px;
     display: flex;
     font-family: 'poppins';
-    background-color: var(--element-white-color);
+    background-color: var(--theme-background-color);
 }
 
 .background_body{
@@ -78,14 +88,14 @@
     margin: 0px;
     display: flex;
     font-family: 'poppins';
-    background-color: var(--web-background-color);
+    background-color: var(--theme-main-color);
 }
 
 /*----侧边导航栏----*/
 .side_bar_container{
     height: 100%;
     width: var(--side-bar-width);
-    border-right: 2px solid black;
+    border-right: var(--border-base-width) solid black;
     padding-left: var(--element-gap);
     padding-right: var(--element-gap);
     padding-bottom: var(--element-margin);
@@ -119,8 +129,8 @@
 .side_bar_row{
     height: var(--side-bar-row-height);
     width: 100%;
-    margin-block-start: var(--side-bar-item-gap);
-    margin-block-end: var(--side-bar-item-gap);
+    margin-block-start: var(--element-list-gap);
+    margin-block-end: var(--element-list-gap);
 }
 .side_bar_item:not(.active){
     height: 100%;
@@ -128,7 +138,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--text-gray-color);
+    color: var(--text-remark-color);
     border-radius: var(--border-radius);
     padding-right: var(--border-radius);
     transition: background-color 0.5s ease, color 0.5s ease;
@@ -139,15 +149,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: var(--button-blue-color);
-    color: var(--text-white-color);
+    background-color: var(--theme-part-color);
+    color: var(--text-active-color);
     border-radius: var(--border-radius);
     padding-right: var(--border-radius);
     transition: background-color 0.5s ease, color 0.5s ease;
 }
 .side_bar_item:hover {
     background-color: white;
-    color: var(--text-black-color);
+    color: var(--text-main-color);
 }
 .side_bar_icon{
     width: var(--icon-base-size);
@@ -168,7 +178,7 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    font-size: var(--text-base-size);
+    font-size: var(--text-label-size);
 }
 
 
@@ -195,12 +205,12 @@
     align-items: center;
     margin-top: auto;
     margin-bottom: auto;
-    background-color: var(--element-white-color);
+    background-color: var(--theme-background-color);
     border-radius: var(--border-radius);
     transition: background-color 0.5s ease;
 }
 .file_sys_side_button:hover{
-    background-color: var(--button-active-color);
+    background-color: var(--theme-active-color);
 }
 .file_sys_side_icon{
     width: var(--header-icon-size);
@@ -212,7 +222,7 @@
     width:100%;
     font-size: var(--text-header-size);
     font-weight: bold;
-    color: var(--text-black-color);
+    color: var(--text-main-color);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -224,7 +234,7 @@
     transition: background-color 0.5s ease;
 }
 .file_sys_header_icon:hover{
-    background-color: var(--button-active-color);
+    background-color: var(--theme-active-color);
 }
 .file_sys_header_icon>img{
     height: var(--header-icon-size);
@@ -246,7 +256,7 @@
 }
 .file_sys_menu{
     width: 100%;
-    background-color: var(--element-white-color);
+    background-color: var(--theme-background-color);
     border-radius: var(--border-radius);
     box-sizing: border-box;
     margin-bottom: var(--element-margin);
@@ -258,23 +268,23 @@
 .file_sys_menu_button{
     width: var(--file-enum-button-width);
     height: var(--file-enum-item-height);
-    background-color: var(--button-blue-color);
+    background-color: var(--theme-part-color);
     border-radius: var(--border-radius);
-    color: var(--text-white-color);
-    font-size: var(--text-base-size);
+    color: var(--text-active-color);
+    font-size: var(--text-label-size);
     box-sizing: border-box;
-    border: 2px solid var(--button-blue-color);
+    border: var(--border-base-width) solid var(--theme-part-color);
     transition: background-color 0.5s ease, color 0.5s ease;
 }
 .file_sys_menu_button:hover{
-    background-color: var(--element-white-color);
-    color: var(--text-black-color);
+    background-color: var(--theme-background-color);
+    color: var(--text-main-color);
 }
 .file_sys_menu_label{
     width: var(--file-enum-button-width);
     height: var(--file-enum-item-height);
-    font-size: var(--text-base-size);
-    color: var(--text-gray-color);
+    font-size: var(--text-label-size);
+    color: var(--text-remark-color);
     display: flex;
     align-items: end;
     margin-left: var(--element-gap);
@@ -284,13 +294,13 @@
     height: var(--file-enum-item-height);
     display: flex;
     align-items: center;
-    background-color: var(--element-white-color);
-    color: var(--text-gray-color);
+    background-color: var(--theme-background-color);
+    color: var(--text-remark-color);
     border-radius: var(--border-radius);
     transition: background-color 0.5s ease;
 }
 .file_sys_menu_item:hover{
-    background-color: var(--button-active-color);
+    background-color: var(--theme-active-color);
 }
 .file_sys_menu_icon{
     width: var(--icon-base-size);
@@ -306,7 +316,7 @@
     height: var(--icon-base-size);
 }
 .file_sys_menu_text{
-    font-size: var(--text-base-size);
+    font-size: var(--text-label-size);
     margin-right: var(--element-margin);
 }
 
@@ -326,13 +336,13 @@
 .file_path_bar{
     height: 100%;
     flex-grow: 1;
-    background-color: var(--text-white-color);
+    background-color: var(--text-active-color);
     border-radius: var(--border-min-radius);
 }
 .file_search_bar{
     height: 100%;
     width: var(--file-enum-width);
-    background-color: var(--text-white-color);
+    background-color: var(--text-active-color);
     margin-left: var(--element-gap);
     border-radius: var(--border-min-radius);
     padding-left: var(--border-min-radius);
@@ -351,7 +361,7 @@
     border-width: 0px;
     padding-top: 0px;
     padding-bottom: 0px;
-    font-size: var(--text-base-size);
+    font-size: var(--text-label-size);
 }
 .file_search_input:focus-visible{
     outline: none;
@@ -359,7 +369,7 @@
 .file_sys_list_body{
     width: 100%;
     flex-grow: 1;
-    background-color: var(--element-white-color);
+    background-color: var(--theme-background-color);
     border-radius: var(--border-radius);
     margin-bottom: var(--element-margin);
     box-sizing: border-box;
@@ -372,7 +382,7 @@
     width: 100%;
     height: var(--file-item-height);
     font-size: var(--text-media-size);
-    color: var(--text-black-color);
+    color: var(--text-main-color);
     font-weight: bold;
     align-items: center;
     display:flex;
@@ -386,7 +396,7 @@
     display: grid;
     grid-gap: var(--element-margin);
     align-items: center;
-    border-bottom: 2px solid var(--text-gray-color);
+    border-bottom: var(--border-base-width) solid var(--text-remark-color);
     padding-left: var(--element-gap);
     padding-right: var(--element-gap);
     box-sizing: border-box;
@@ -398,7 +408,7 @@
 }
 .file_table_header_text{
     min-width: var(--icon-base-size);
-    color: var(--text-black-color);
+    color: var(--text-main-color);
 }
 .file_table_body{
     width: 100%;
@@ -408,7 +418,7 @@
 .file_table_item{
     width: 100%;
     height: var(--file-item-height);
-    border-bottom: 1px dotted var(--text-gray-color);
+    border-bottom: 1px dotted var(--text-remark-color);
     display:grid;
     grid-template-columns: 5fr 5fr 2fr 2fr 1fr;
     grid-gap: var(--element-margin);
@@ -433,15 +443,15 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: var(--file-text-size);
-    color: var(--text-black-color);
+    font-size: var(--main-text-size);
+    color: var(--text-main-color);
 }
 .file_text_div{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: var(--file-text-size);
-    color: var(--text-black-color);
+    font-size: var(--main-text-size);
+    color: var(--text-main-color);
 }
 .file_control_div{
     width: 100%;
@@ -459,9 +469,13 @@
     box-sizing: border-box;
     padding-left: var(--element-gap);
     padding-right: var(--element-gap);
-    border-top: 2px solid var(--text-gray-color);
+    border-top: var(--border-base-width) solid var(--text-remark-color);
 }
 .file_add_container{
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    align-items: center;
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -471,20 +485,34 @@
     transform: translate(-50%, -50%);
 }
 .file_add_content{
-    width: var(--file-pop-width);
+    width: var(--pop-form-width);
     background-color: white;
-    border: 4px solid var(--text-black-color);
+    border: var(--border-popup-width) solid var(--text-main-color);
     display: flex;
     flex-direction: column;
     padding: var(--element-gap);
     border-radius: var(--border-radius);
+    box-sizing: border-box;
+    transition: height 1s ease, width 1s ease;
 }
 .file_add_header{
     width: 100%;
     height: var(--header-height);
     font-size: var(--text-media-size);
     font-weight: bold;
-    color: var(--text-black-color);
+    color: var(--text-main-color);
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--element-gap);
+}
+.file_add_header_text{
+    width: 100%;
+    font-size: var(--text-header-size);
+    font-weight: bold;
+    color: var(--text-main-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .file_add_form{
     width: 100%;
@@ -494,7 +522,7 @@
 .file_add_label{
     width: 100%;
     min-height: var(--login-item-height);
-    font-size: var(--login-text-size);
+    font-size: var(--main-text-size);
     display: flex;
     align-items: center;
     box-sizing: border-box;
@@ -506,46 +534,86 @@
 .file_add_field{
     width: 100%;
     height: var(--login-item-height);
-    font-size: var(--login-text-size);
+    font-size: var(--main-text-size);
     margin-bottom: var(--element-gap);
     padding-left: var(--element-margin);
     padding-right: var(--element-margin);
     border-radius: var(--border-min-radius);
-    border-color: var(--text-black-color);
+    border-color: var(--text-main-color);
     box-sizing: border-box;
     font-family: 'poppins';
 }
 .file_add_select{
     width: 100%;
     height: var(--login-item-height);
-    font-size: var(--login-text-size);
+    font-size: var(--main-text-size);
     margin-bottom: var(--element-gap);
     padding-left: var(--element-margin);
     padding-right: var(--element-margin);
     border-radius: var(--border-min-radius);
-    border-color: var(--text-black-color);
+    border-color: var(--text-main-color);
     box-sizing: border-box;
     font-family: 'poppins';
 }
-.file_add_button{
-    width: 100%;
-    min-height: var(--login-item-height);
-    font-size: var(--login-text-size);
+.file_add_item_button{
+    width: var(--file-item-button-width);
+    height: var(--login-item-height);
+    margin-bottom: var(--element-gap);
+    font-size: var(--main-text-size);
     box-sizing: border-box;
-    border: 2px solid var(--button-blue-color);
-    background-color: var(--button-blue-color);
+    border: var(--border-base-width) solid var(--theme-part-color);
+    background-color: var(--theme-part-color);
     border-radius: var(--border-min-radius);
-    color: var(--text-white-color);
-    padding: var(--element-margin);
-    white-space: normal;
+    color: var(--text-active-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+.file_add_item_button:hover{
+    border: var(--border-base-width) solid var(--theme-part-color);
+    background-color: var(--theme-background-color);
+    color: var(--text-main-color);
+}
+.file_add_button{
+    width: var(--file-item-button-width);
+    height: var(--login-item-height);
+    margin-top: var(--element-gap);
+    margin-bottom: var(--element-gap);
+    font-size: var(--main-text-size);
+    box-sizing: border-box;
+    border: var(--border-base-width) solid var(--theme-part-color);
+    background-color: var(--theme-part-color);
+    border-radius: var(--border-min-radius);
+    color: var(--text-active-color);
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     transition: background-color 0.5s ease, color 0.5s ease;
 }
 .file_add_button:hover{
-    border: 2px solid var(--button-blue-color);
-    background-color: var(--element-white-color);
-    color: var(--text-black-color);
+    border: var(--border-base-width) solid var(--theme-part-color);
+    background-color: var(--theme-background-color);
+    color: var(--text-main-color);
+}
+.file_add_item{
+    display: flex;
+    grid-template-columns: 1fr var(--file-item-button-width);
+    grid-gap: var(--element-gap);
+}
+.file_button_row{
+    display: flex;
+}
+.file_button_row>*:nth-child(1){
+    margin-right: var(--element-gap);
+}
+.file_add_icon{
+    width: var(--header-icon-size);
+    height: var(--header-icon-size);
+    margin-left: var(--element-margin);
+    box-sizing: border-box;
+    border: var(--border-base-width) solid var(--theme-part-color);
+    border-radius: var(--border-icon-radius);
 }
 
 /*----登录页面----*/
@@ -562,7 +630,7 @@
     max-width: var(--login-panel-width);
     min-width: calc( var(--login-item-width) + var(--element-gap) * 2 );
     width: 40%;
-    background-color: var(--element-white-color);
+    background-color: var(--theme-background-color);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -582,7 +650,7 @@
 }
 .login_label{
     min-height: var(--login-item-height);
-    font-size: var(--login-text-size);
+    font-size: var(--main-text-size);
     display: flex;
     align-items: center;
     box-sizing: border-box;
@@ -594,12 +662,12 @@
 .login_field_input{
     width: 100%;
     height: var(--login-item-height);
-    font-size: var(--login-text-size);
+    font-size: var(--main-text-size);
     margin-bottom: var(--element-gap);
     padding-left: var(--element-margin);
     padding-right: var(--element-margin);
     border-radius: var(--border-min-radius);
-    border-color: var(--text-black-color);
+    border-color: var(--text-main-color);
     box-sizing: border-box;
     font-family: 'poppins';
 }
@@ -611,12 +679,12 @@
 .login_button{
     width: 100%;
     min-height: var(--login-item-height);
-    font-size: var(--login-text-size);
+    font-size: var(--main-text-size);
     box-sizing: border-box;
-    border: 2px solid var(--button-blue-color);
-    background-color: var(--button-blue-color);
+    border: var(--border-base-width) solid var(--theme-part-color);
+    background-color: var(--theme-part-color);
     border-radius: var(--border-min-radius);
-    color: var(--text-white-color);
+    color: var(--text-active-color);
     padding: var(--element-margin);
     white-space: normal;
     overflow: hidden;
@@ -624,9 +692,9 @@
     transition: background-color 0.5s ease, color 0.5s ease;
 }
 .login_button:hover{
-    border: 2px solid var(--button-blue-color);
-    background-color: var(--element-white-color);
-    color: var(--text-black-color);
+    border: var(--border-base-width) solid var(--theme-part-color);
+    background-color: var(--theme-background-color--theme-background-color);
+    color: var(--text-main-color);
 }
 
 /*----消息弹窗----*/
@@ -652,7 +720,7 @@
     margin-top: var(--element-margin);
     animation: slide-down 0.5s ease-out forwards, fade-out 5s ease-in-out forwards;
     border-radius: var(--border-min-radius);
-    border: 2px solid var(--error-border-color);
+    border: var(--border-base-width) solid var(--error-border-color);
     box-sizing: border-box;
     padding-left: var(--element-margin);
     padding-right: var(--element-margin);
@@ -683,7 +751,7 @@
 .error_message_text{
     width: 100%;
     flex-grow: 1;
-    font-size: var(--text-base-size);
+    font-size: var(--text-label-size);
     color: var(--error-text-color);
     white-space: normal;
     padding-top: var(--element-margin);
@@ -778,6 +846,10 @@
     .file_sys_header{
         grid-template-columns: var(--header-icon-size) 1fr;
     }
+    .file_add_content{
+        width: 100%;
+        max-width: calc( 100% - 2 * var(--element-margin) );
+    }
     /*错误消息*/
     .error_message_container{
         min-width: calc(100% - var(--element-margin)* 3 - var(--icon-min-size));
@@ -844,6 +916,10 @@
     }
     .file_table_item>*:nth-child(3) {
         display: none;
+    }
+    .file_add_content{
+        width: 100%;
+        max-width: calc( 100% - 2 * var(--element-gap) );
     }
 }
 
