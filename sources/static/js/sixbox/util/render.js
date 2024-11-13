@@ -22,9 +22,34 @@ export function resizeFullScreen(){
     bodyContainer.style.height = String(document.documentElement.clientHeight)+"px";
 }
 
+export function displayMessage(messageText, iconUrl="sources?filename=icons/correct.png", removeTime=4500){
+    /*显示普通消息，一般是成功操作的提示*/
+    let messageContainer = document.querySelector(".message_container");
+    if (messageContainer){
+        const messageIcon = document.createElement("img");
+        messageIcon.classList.add("message_icon");
+        messageIcon.src = iconUrl;
+
+        const showText = document.createElement("div");
+        showText.classList.add("message_text");
+        showText.textContent = messageText;
+
+        const showMessage = document.createElement("div");
+        showMessage.classList.add("message_item");
+        showMessage.appendChild(messageIcon);
+        showMessage.appendChild(showText);
+
+        messageContainer.appendChild(showMessage);
+
+        setTimeout(()=>{
+            showMessage.remove();
+        }, removeTime);
+    }
+}
+
 export function displayErrorMessage(errorMessageText, iconUrl="sources?filename=icons/alert.png", removeTime=4500){
     /*显示错误信息*/
-    let errorsContainer = document.querySelector(".error_message_container");
+    let errorsContainer = document.querySelector(".message_container");
     if (errorsContainer){
         const errorIcon = document.createElement("img");
         errorIcon.classList.add("error_message_icon");

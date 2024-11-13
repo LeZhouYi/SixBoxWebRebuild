@@ -13,7 +13,10 @@ export function initSideBar(nowPage){
             var element = document.getElementById(elementId);
             if (element){
                 element.addEventListener("click", function(event){
-                    window.location = sideBarValue.url;
+                    let currentUrl = `${window.location.pathname}`;
+                    if (currentUrl!==sideBarValue.url){
+                        window.location = sideBarValue.url;
+                    }
                 });
                 if(nowPage===nowPage){
                     element.classList.add("active");

@@ -1,5 +1,8 @@
 {
-    "file_white_list": [
-        "png","jpg","jpeg"
-    ]
+    "file_white_list": {
+        "photo": ["png","jpg","jpeg","gif","svg","bmp","tiff"],
+        "data": ["zip","rar"],
+        "audio": ["mp3"],
+        "video": ["mp4"]
+    }
 }

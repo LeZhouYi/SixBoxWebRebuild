@@ -13,13 +13,15 @@
     --theme-main-color: #C5EBE2; /*主题色*/
     --theme-part-color: #363B64;    /*次主题色*/
     --theme-background-color: white; /*主题背景色*/
-    --theme-active-color: #EDCED2;  /*主题激活色*/
+    --theme-active-color: #F4F7F9;  /*主题激活色*/
     --error-background-color: #FCDCDD;  /*警告背景色*/
     --error-border-color: #FC9C9E;  /*警告边框色*/
     --error-text-color: #F2323F;    /*警告文本颜色*/
     --text-remark-color: #A098AE;   /*提示&备注文本色*/
     --text-main-color: #363B64;     /*文本主题色*/
     --text-active-color: white;     /*文本激活色*/
+    --message-text-color: #3DBA4E;
+    --message-background-color: #DCFAE0;
 
     /*间距*/
     --element-margin: 15px;  /*基础边缘，适用于小设备或间隔较小*/
@@ -288,6 +290,7 @@
     display: flex;
     align-items: end;
     margin-left: var(--element-gap);
+    margin-bottom: var(--element-list-gap);
 }
 .file_sys_menu_item{
     width: var(--file-enum-button-width);
@@ -297,10 +300,11 @@
     background-color: var(--theme-background-color);
     color: var(--text-remark-color);
     border-radius: var(--border-radius);
-    transition: background-color 0.5s ease;
+    border: var(--border-base-width) solid var(--theme-background-color);
+    transition: border-color 0.5s ease;
 }
 .file_sys_menu_item:hover{
-    background-color: var(--theme-active-color);
+    border-color: var(--theme-part-color);
 }
 .file_sys_menu_icon{
     width: var(--icon-base-size);
@@ -427,6 +431,9 @@
     box-sizing: border-box;
     align-items: center;
 }
+.file_table_item:hover{
+    background-color: var(--theme-active-color);
+}
 .file_name_div{
     height: 100%;
     width: 100%;
@@ -470,19 +477,6 @@
     padding-left: var(--element-gap);
     padding-right: var(--element-gap);
     border-top: var(--border-base-width) solid var(--text-remark-color);
-}
-.file_add_container{
-    width: 100%;
-    max-height: 100%;
-    overflow-y: auto;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    z-index: 1;
-    left:50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
 }
 .file_add_content{
     width: var(--pop-form-width);
@@ -540,8 +534,22 @@
     padding-right: var(--element-margin);
     border-radius: var(--border-min-radius);
     border-color: var(--text-main-color);
+    border-width: var(--border-base-width);
     box-sizing: border-box;
     font-family: 'poppins';
+}
+.file_add_choose{
+    width: 100%;
+    height: var(--login-item-height);
+    font-size: var(--main-text-size);
+    margin-bottom: var(--element-gap);
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+    border-radius: var(--border-min-radius);
+    border-color: var(--text-main-color);
+    box-sizing: border-box;
+    font-family: 'poppins';
+    border-width: var(--border-base-width);
 }
 .file_add_select{
     width: 100%;
@@ -698,8 +706,8 @@
 }
 
 /*----消息弹窗----*/
-.error_message_container{
-    min-width: calc(var(--message-item-width) + var(--element-gap) * 3 + var(--icon-min-size));
+.message_container{
+    min-width: calc(var(--message-item-width) + var(--element-gap) * 3 + var(--icon-base-size));
     max-width: calc(100% - var(--element-gap)* 2);
 
     display: flex;
@@ -709,9 +717,25 @@
     left:50%;
     transform: translateX(-50%);
 }
+.message_item{
+    width: 100%;
+    min-width: calc(var(--message-item-width) + var(--element-gap) * 3 + var(--icon-base-size));
+    max-width: calc(100% - var(--element-gap)* 2);
+    min-height: var(--message-item-height);
+    background-color: var(--message-background-color);
+    display: flex;
+    align-items: start;
+    margin-top: var(--element-margin);
+    animation: slide-down 0.5s ease-out forwards, fade-out 5s ease-in-out forwards;
+    border-radius: var(--border-min-radius);
+    border: var(--border-base-width) solid var(--message-text-color);
+    box-sizing: border-box;
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+}
 .error_message_item{
     width: 100%;
-    min-width: calc(var(--message-item-width) + var(--element-gap) * 3 + var(--icon-min-size));
+    min-width: calc(var(--message-item-width) + var(--element-gap) * 3 + var(--icon-base-size));
     max-width: calc(100% - var(--element-gap)* 2);
     min-height: var(--message-item-height);
     background-color: var(--error-background-color);
@@ -743,10 +767,24 @@
         opacity: 0;
     }
 }
-.error_message_icon{
-    width: var(--icon-min-size);
-    padding-top: var(--element-margin);
+.message_icon{
+    width: var(--icon-base-size);
+    padding-top: 8px;
     margin-right: var(--element-margin);
+}
+.error_message_icon{
+    width: var(--icon-base-size);
+    padding-top: 8px;
+    margin-right: var(--element-margin);
+}
+.message_text{
+    width: 100%;
+    flex-grow: 1;
+    font-size: var(--text-label-size);
+    color: var(--message-text-color);
+    white-space: normal;
+    padding-top: var(--element-margin);
+    padding-bottom: var(--element-margin);
 }
 .error_message_text{
     width: 100%;
@@ -758,6 +796,20 @@
     padding-bottom: var(--element-margin);
 }
 
+/*弹窗*/
+.popup_container{
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 1;
+    left:50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
 
 /*用于动态控制*/
 .hidden{
@@ -851,9 +903,14 @@
         max-width: calc( 100% - 2 * var(--element-margin) );
     }
     /*错误消息*/
-    .error_message_container{
-        min-width: calc(100% - var(--element-margin)* 3 - var(--icon-min-size));
-        max-width: calc(100% - var(--element-margin)* 3 - var(--icon-min-size));
+    .message_container{
+        min-width: calc(100% - var(--element-margin)* 3 - var(--icon-base-size));
+        max-width: calc(100% - var(--element-margin)* 3 - var(--icon-base-size));
+    }
+    .message_item{
+        min-width: 100%;
+        max-width: 100%;
+        width: 100%;
     }
     .error_message_item{
         min-width: 100%;
@@ -906,15 +963,15 @@
         width: 100%;
     }
     .file_table_header{
-        grid-template-columns: 5fr 5fr 2fr 2fr;
+        grid-template-columns: 5fr 5fr 2fr;
     }
-    .file_table_header>*:nth-child(3) {
+    .file_table_header>*:nth-child(3), .file_table_header>*:nth-child(4){
         display: none;
     }
     .file_table_item{
-        grid-template-columns: 5fr 5fr 2fr 2fr;
+        grid-template-columns: 5fr 5fr 2fr;
     }
-    .file_table_item>*:nth-child(3) {
+    .file_table_item>*:nth-child(3), .file_table_item>*:nth-child(4) {
         display: none;
     }
     .file_add_content{

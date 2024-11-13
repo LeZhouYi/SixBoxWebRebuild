@@ -16,11 +16,11 @@
     </div>
     <div class="file_sys_body">
         <div class="file_sys_menu">
-            <button class="file_sys_menu_button clickable">+新增</button>
+            <button class="file_sys_menu_button clickable" id="file_add_pop_button">+新增</button>
             <div class="file_sys_menu_label">
                 <span>菜单</span>
             </div>
-            <div class="file_sys_menu_item">
+            <div class="file_sys_menu_item clickable" id="all_file_button">
                 <div class="file_sys_menu_icon">
                     <img src="/sources?filename=icons/all_file.png">
                 </div>
@@ -58,8 +58,8 @@
         </div>
     </div>
 </div>
-<div class="file_add_container">
-    <div class="file_add_content">
+<div class="popup_container">
+    <div class="file_add_content hidden" id="file_add_content">
         <div class="file_add_header">
             <a class="file_add_header_text" id="file_add_header_text">新增文件</a>
             <img class="file_add_icon" src="/sources?filename=icons/add_folder_blue.png" id="file_add_icon">
@@ -68,7 +68,8 @@
             <label for="file_add_name" class="file_add_label">文件名</label>
             <input id="file_add_name" type="text" required placeholder="请输入文件名" class="file_add_field">
             <label for="file_add_folder_select" class="file_add_label">文件夹</label>
-            <input id="file_add_folder_select" type="text" required placeholder="请输入并选择文件夹" class="file_add_field">
+            <select id="file_add_folder_select" required class="file_add_choose">
+            </select>
             <label for="file_add_select" class="file_add_label">文件</label>
             <div class="file_add_item">
                 <input id="file_add_select" type="text" required readonly placeholder="请选择文件" class="file_add_field">
@@ -84,7 +85,8 @@
             <label for="folder_add_name" class="file_add_label">文件夹名</label>
             <input id="folder_add_name" type="text" required placeholder="请输入文件夹名" class="file_add_field">
             <label for="folder_add_folder_select" class="file_add_label">文件夹</label>
-            <input id="folder_add_folder_select" type="text" required placeholder="请输入并选择文件夹" class="file_add_field">
+            <select id="folder_add_folder_select" required class="file_add_choose">
+            </select>
             <div class="file_button_row">
                 <input id="folder_add_confirm" type="submit" value="确认" class="file_add_button">
                 <input id="folder_add_cancel" type="button" value="取消" class="file_add_button">

@@ -1,6 +1,6 @@
-import { hiddenClass,resizeFullScreen,displayError } from "./util/render.js";
+import { hiddenClass,resizeFullScreen,displayError,displayErrorMessage,displayMessage } from "./util/render.js";
 import { throttle } from "./util/func.js";
-import { getJsonWithAuth } from "./util/requestor.js";
+import { getJsonWithAuth,postFormWithAuth,postJsonWithAuth } from "./util/requestor.js";
 import { initSideBar } from "./common/sidebar.js";
 
 const fileTypeMap = {
@@ -36,21 +36,99 @@ window.addEventListener("resize", throttle(function(){
     resizeFullScreen("bodyContainer");
 }), 200);
 
+document.getElementById("all_file_button").addEventListener("click", function(event){
+    /*点击所有文件*/
+    localStorage.setItem("nowFolderId", "1");
+    updateFileList();
+});
+
+document.getElementById("folder_add_form").addEventListener("submit", function(event){
+    /*点击新增文件夹*/
+    event.preventDefault();
+    const formData = {
+        name: document.getElementById("folder_add_name").value,
+        parentId: document.getElementById("folder_add_folder_select").value
+    };
+    postJsonWithAuth("/folders", formData).then(data=>{
+        displayMessage(data.message);
+        document.getElementById("file_add_content").classList.add(hiddenClass);
+        updateFileList();
+    })
+    .catch(error=>{
+        displayError(error);
+    });
+});
+
+document.getElementById("file_add_form").addEventListener("submit", function(event){
+    /*点击新增文件*/
+    event.preventDefault();
+    let fileElement = document.getElementById("file_add_select_element");
+    if(!fileElement.files || fileElement.files.length<1){
+        displayErrorMessage("未选择文件");
+    }
+    let formData = new FormData();
+    formData.append("file", fileElement.files[0]);
+    formData.append("name", document.getElementById("file_add_name").value);
+    formData.append("parentId", document.getElementById("file_add_folder_select").value);
+    postFormWithAuth("/files", formData).then(data=>{
+        displayMessage(data.message);
+        document.getElementById("file_add_content").classList.add(hiddenClass);
+        updateFileList();
+    })
+    .catch(error=>{
+        displayError(error);
+    });
+});
+
+document.getElementById("file_add_pop_button").addEventListener("click", function(event){
+    /*点击弹出新增文件弹窗*/
+    let fileAddContent = document.getElementById("file_add_content");
+    if(fileAddContent.classList.contains(hiddenClass)){
+        loadFolderSelect("file_add_folder_select");
+        loadFolderSelect("folder_add_folder_select");
+        fileAddContent.classList.remove(hiddenClass);
+    }
+    /*动画相关*/
+    let addFileFormElement = document.getElementById("file_add_form");
+    if(addFileFormElement.classList.contains(hiddenClass)){
+        fileAddContent.style.height = "508px";
+    }else{
+        fileAddContent.style.height = "625px";
+    }
+});
+
+document.getElementById("file_add_cancel").addEventListener("click", function(event){
+    /*点击取消新增文件弹窗按钮*/
+    let fileAddContent = document.getElementById("file_add_content");
+    fileAddContent.classList.add(hiddenClass);
+});
+
+document.getElementById("folder_add_cancel").addEventListener("click", function(event){
+    /*点击取消新增文件弹窗按钮*/
+    let fileAddContent = document.getElementById("file_add_content");
+    fileAddContent.classList.add(hiddenClass);
+});
+
 document.getElementById("file_add_icon").addEventListener("click", function(event){
     /*点击新增文件的切换按钮*/
     let addFileFormElement = document.getElementById("file_add_form");
     let addFolderFormElement = document.getElementById("folder_add_form");
     let addHeaderText = document.getElementById("file_add_header_text");
+    let fileAddContent = document.getElementById("file_add_content");
     if(addFileFormElement.classList.contains(hiddenClass)){
         addFileFormElement.classList.remove(hiddenClass);
         addFolderFormElement.classList.add(hiddenClass);
         file_add_header_text.textContent="新增文件";
+        /*动画相关*/
+        fileAddContent.style.height = "625px";
     }else{
         addFileFormElement.classList.add(hiddenClass);
         addFolderFormElement.classList.remove(hiddenClass);
         file_add_header_text.textContent="新增文件夹";
+        /*动画相关*/
+        fileAddContent.style.height = "508px";
     }
-})
+});
 
 document.getElementById("file_add_icon").addEventListener("mouseenter", function(event){
     /*鼠标悬停在新增文件夹图标*/
@@ -111,12 +189,52 @@ async function updateFileList(){
     const nowFolderId = localStorage.getItem("nowFolderId");
 
     try {
-        const data = await getJsonWithAuth(`/folders/${nowFolderId}`);
+        const data = await getJsonWithAuth(`/folders/${nowFolderId}?_page=0&_limit=10`);
         let contents = data.contents;
         let fileListTable = document.getElementById("file_table_body");
+        fileListTable.innerHTML = null;
         contents.forEach(content => {
             fileListTable.appendChild(createFileItem(content));
         });
+    }
+    catch(error){
+        displayError(error);
+    }
+}
+
+async function loadFolderSelect(dataListId){
+    /*为特定元素提供候选输入*/
+    const nowFolderId = localStorage.getItem("nowFolderId");
+    try {
+        const data = await getJsonWithAuth(`/folders/${nowFolderId}?type=0`);
+        let contents = data.contents;
+        let selectElement = document.getElementById(dataListId);
+        selectElement.innerHTML = null;
+        /*默认选项*/
+        let defaultOptGroup = document.createElement("optgroup");
+        defaultOptGroup.setAttribute("label", "默认");
+        let defaultOption = document.createElement("option");
+        defaultOption.value = data.id;
+        defaultOption.text = data.name;
+        defaultOptGroup.appendChild(defaultOption);
+        selectElement.appendChild(defaultOptGroup);
+        /*额外选项*/
+        let otherOptGroup = document.createElement("optgroup");
+        otherOptGroup.setAttribute("label", data.name);
+        let folderCount = 0;
+        contents.forEach(content => {
+            if(content.type==="0"){
+                folderCount = folderCount + 1;
+                let otherOption = document.createElement("option");
+                otherOption.value = content.id;
+                otherOption.text = content.name;
+                otherOptGroup.appendChild(otherOption);
+            }
+        });
+        if(folderCount>0){
+            selectElement.appendChild(otherOptGroup);
+        }
+        selectElement.value = data.id;
     }
     catch(error){
         displayError(error);
@@ -132,6 +250,7 @@ function createFileItem(fileData){
 
     let fileNameDiv = document.createElement("div");
     fileNameDiv.classList.add("file_name_div");
+    fileNameDiv.classList.add("clickable");
     let fileIcon = document.createElement("img");
     fileIcon.classList.add("file_name_icon");
     fileIcon.src = getSuitFileIcon(fileType);
@@ -140,6 +259,11 @@ function createFileItem(fileData){
     fileName.classList.add("file_name_text");
     fileName.textContent = fileData.name;
     fileNameDiv.appendChild(fileName);
+
+    /*绑定事件*/
+    if(fileType==="0"){
+        bindClickFolder(fileNameDiv, fileData.id);
+    }
 
     fileItem.appendChild(fileNameDiv);
 
@@ -170,6 +294,14 @@ function createFileItem(fileData){
     return fileItem;
 }
 
+function bindClickFolder(element, folderId){
+    /*绑定文件夹点击事件*/
+    element.addEventListener("click", function(event){
+        localStorage.setItem("nowFolderId", folderId);
+        updateFileList();
+    });
+}
+
 function timeStampToText(timeStamp){
     /*将以秒单位的时间戳转成具体的样式文本*/
     let date = new Date(parseInt(timeStamp)*1000);
@@ -191,7 +323,7 @@ function formatFileSize(fileSize){
     let fileSizeTexts = ["B","KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
     for(let i = 0; i < fileSizeTexts.length; i++){
         if(fileSize < 1024){
-            return fileSize.toFixed(2).toString()+fileSizeTexts[i];
+            return fileSize.toFixed(2).toString()+" "+fileSizeTexts[i];
         }else{
             fileSize = fileSize/1024;
         }

@@ -11,6 +11,9 @@ class FileType:
     """文件类型"""
     FOLDER = "0"
     FILE = "1"
+    PHOTO = "2"
+    MUSIC = "3"
+    VIDEO = "4"
 
     @staticmethod
     def is_exits(value: str) -> bool:
@@ -61,7 +64,7 @@ class FileSystemServer:
                 return True
             return False
 
-    def get_folder_detail(self, data_id: str) -> dict:
+    def get_folder_detail(self, data_id: str, search_type: str, page: int, limit: int) -> dict:
         """获取文件夹详情及该文件夹下的内容"""
         key_list = ["id", "name", "parentId", "type", "updateTime", "size"]
         return_data = {}
@@ -70,11 +73,22 @@ class FileSystemServer:
             folder_data = extra_data_by_list(folder_data, key_list)
             return_data.update(folder_data)
             contents = []
-            content_data = self.db.search(self.query.parentId == data_id)
+            query_search = (self.query.parentId == data_id)
+            if search_type is not None:
+                query_search = query_search & (self.query.type == search_type)
+            content_data = self.db.search(query_search)
+            content_data = sorted(content_data, key=self.default_sort_key)
+            if page is not None and limit is not None:
+                content_data = content_data[page * limit:(page + 1) * limit]
             for data_item in content_data:
                 contents.append(extra_data_by_list(data_item, key_list))
             return_data["contents"] = contents
         return return_data
+
+    @staticmethod
+    def default_sort_key(data):
+        """默认排序"""
+        return int(data["type"]), data["name"]
 
     def add(self, data: dict):
         """

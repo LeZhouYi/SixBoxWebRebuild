@@ -16,7 +16,8 @@ ReportInfo = {
     "009": "文件夹不存在",
     "010": "Token无效",
     "011": "Token过期",
-    "012": "文件不存在"
+    "012": "文件不存在",
+    "013": "文件夹名不能为空"
 }
 
 FsServer = FileSystemServer(get_config_path("file_sys_db_path"))
