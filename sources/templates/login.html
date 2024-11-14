@@ -1,5 +1,13 @@
-{% extends 'common/web_base.html' %}
+{% extends 'common/page_web_base.html' %}
+
+{% block css_file %}
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/login_style.css')}}"/>
+{% endblock %}
+
 {% block body_content %}
-    {% include 'common/login.html' %}
-    {% include 'common/error_message.html' %}
+    {% include 'common/page_login.html' %}
+{% endblock %}
+
+{% block js_file %}
+<script type="module" src="{{url_for('static', filename='/js/sixbox/login.js')}}"></script>
 {% endblock %}

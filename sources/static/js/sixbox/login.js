@@ -5,7 +5,7 @@ import { postJson } from "./util/requestor.js"
 
 window.onload = function() {
     resizeFullScreen();
-    setBackgroundImage("login_image", "url('/sources?filename=images/background.jpg')");
+    setBackgroundImage("login_background_image", "url('/sources?filename=images/background.jpg')");
 };
 
 window.addEventListener("resize", throttle(function(){

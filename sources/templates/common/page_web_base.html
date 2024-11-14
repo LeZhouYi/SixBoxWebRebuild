@@ -2,20 +2,19 @@
 <html lang="ch">
 <head>
     <meta charset="UTF-8"/>
-    <title>六号盒子</title>
+    <title>{% block page_title %}六号盒子{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="web icon" href="/sources?filename=icons/favicon.ico">
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/styles.css')}}"/>
+    {% block css_file %}{% endblock %}
 </head>
-<body class="block_transition {{body_class}}">
+<body class="block_transition {% block body_class %}body_default{% endblock %}">
 
 {% block body_content %}
 <!-- 主体内容 -->
 {% endblock %}
 
-<script>
-
-</script>
-<script type="module" src="{{url_for('static', filename=js_file)}}"></script>
+{% block js_file %}
+{% endblock %}
 </body>
 </html>

@@ -11,12 +11,7 @@ UserBp = Blueprint("user", __name__)
 @UserBp.route("/login.html")
 def login_page():
     """登录页"""
-    data = {
-        "js_file": "js/sixbox/login.js",
-        "body_class": "default_body",
-        "login_api": gen_prefix_api("/sessions")
-    }
-    return render_template("login.html", **data)
+    return render_template("login.html")
 
 
 @UserBp.route(gen_prefix_api("/sessions"), methods=["POST"])
