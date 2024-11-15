@@ -1,0 +1,147 @@
+:root{
+    --file-sys-header-height: 110px;
+    --file-enum-width: 245px;   /*文件菜单栏*/
+    --file-enum-button-width: 204px;    /*文件菜单栏按钮宽*/
+    --file-enum-item-height: 48px;  /*文件菜单栏行高*/
+    --file-search-height: 37px; /*搜索栏高*/
+    --file-item-height: 56px;   /*文件行高*/
+    --file-item-button-width: 204px; /*表单按钮*/
+}
+
+.file_sys_container{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: var(--file-sys-header-height) 1fr;
+}
+.file_sys_header{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: var(--header-icon-size) 1fr repeat(3, var(--header-icon-size));
+    align-items: center;
+    justify-content: center;
+    padding: var(--element-gap);
+    box-sizing: border-box;
+    grid-gap: var(--element-margin);
+}
+.file_sys_header_icon:hover{
+    background-color: var(--theme-active-color);
+    border: 2px solid var(--theme-part-color);
+}
+.file_sys_header_icon{
+    height: var(--header-icon-size);
+    width: var(--header-icon-size);
+    border-radius: var(--border-radius);
+    transition: background-color 0.5s ease;
+    background-color: var(--theme-background-color);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.file_sys_header_icon>img{
+    height: var(--header-icon-size);
+    width: var(--header-icon-size);
+}
+.file_sys_header_icon>img:hover{
+    mix-blend-mode: multiply;
+}
+.file_sys_header_title{
+    width:100%;
+    font-size: var(--text-header-size);
+    font-weight: bold;
+    color: var(--text-main-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file_sys_body{
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: var(--file-enum-width) 1fr;
+    grid-column-gap: var(--element-gap);
+    box-sizing: border-box;
+    padding-left: var(--element-gap);
+    padding-bottom: var(--element-margin);
+    padding-right: var(--element-gap);
+}
+.file_sys_menu{
+    width: 100%;
+    height: 100%;
+    background-color: var(--theme-background-color);
+    border-radius: var(--border-radius);
+    box-sizing: border-box;
+    justify-content: center;
+    display: grid;
+    grid-template-rows: var(--file-enum-item-height) 1fr;
+    padding-top: var(--element-margin);
+    padding-bottom: var(--element-margin);
+    grid-gap: var(--element-margin);
+}
+.file_sys_menu_button{
+    width: var(--file-enum-button-width);
+    height: var(--file-enum-item-height);
+    background-color: var(--theme-part-color);
+    border-radius: var(--border-radius);
+    color: var(--text-active-color);
+    font-size: var(--text-label-size);
+    box-sizing: border-box;
+    border: var(--border-base-width) solid var(--theme-part-color);
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+.file_sys_menu_button:hover{
+    background-color: var(--theme-active-color);
+    color: var(--text-main-color);
+}
+.file_sys_menu_list{
+    height: 100%;
+    max-height: 100%;
+    flex-direction: column;
+    overflow-y: auto;
+}
+.file_sys_menu_label{
+    width: var(--file-enum-button-width);
+    height: var(--file-enum-item-height);
+    font-size: var(--text-label-size);
+    color: var(--text-remark-color);
+    display: flex;
+    align-items: end;
+    box-sizing: border-box;
+    padding-left: var(--element-margin);
+    margin-bottom: var(--element-list-gap);
+}
+.file_sys_menu_item{
+    width: var(--file-enum-button-width);
+    height: var(--file-enum-item-height);
+    display: flex;
+    align-items: center;
+    background-color: var(--theme-background-color);
+    color: var(--text-remark-color);
+    border-radius: var(--border-radius);
+    border: var(--border-base-width) solid var(--theme-background-color);
+    transition: border-color 0.5s ease, background-color 0.5s ease;
+}
+.file_sys_menu_item:hover{
+    background-color: var(--theme-active-color);
+    border-color: var(--theme-part-color);
+}
+.file_sys_menu_icon{
+    width: var(--icon-base-size);
+    height: var(--icon-base-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: var(--element-margin);
+    margin-right: var(--element-margin);
+}
+.file_sys_menu_icon>img{
+    width: var(--icon-base-size);
+    height: var(--icon-base-size);
+}
+.file_sys_menu_text{
+    font-size: var(--text-label-size);
+    margin-right: var(--element-margin);
+}

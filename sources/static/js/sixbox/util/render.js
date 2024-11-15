@@ -74,7 +74,6 @@ export function displayErrorMessage(errorMessageText, iconUrl="sources?filename=
 
 export function displayError(error){
     /*显示错误*/
-    console.log(error);
     if (error instanceof ApiError){
         if (error.errorKey==="REFRESH FAIL"){
             setTimeout(function(){

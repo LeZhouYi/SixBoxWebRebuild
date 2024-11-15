@@ -1,5 +1,5 @@
 :root{
-    --login-panel-width: 600px; /*登录栏宽*/
+    --login-panel-width: 500px; /*登录栏宽*/
     --login-item-width: 285px;  /*登录元素宽*/
     --login-item-height: 44px;  /*登录元素高*/
     --login-logo-height: 200px; /*Logo最小高*/
@@ -45,14 +45,17 @@
     max-width: var(--login-item-width);
 }
 .login_form{
+    /*登录表单*/
     display: flex;
     width: 100%;
     flex-direction: column;
-    width: var(--login-item-width);
     min-height: var(--login-form-height);
     align-items:center;
 }
 .login_label{
+    /*标签*/
+    width: 100%;
+    max-width: var(--login-item-width);
     min-height: var(--login-item-height);
     font-size: var(--main-text-size);
     display: flex;
@@ -64,7 +67,9 @@
     text-overflow: ellipsis;
 }
 .login_field_input{
+    /*输入框*/
     width: 100%;
+    max-width: var(--login-item-width);
     height: var(--login-item-height);
     font-size: var(--main-text-size);
     margin-bottom: var(--element-gap);
@@ -76,11 +81,14 @@
     font-family: 'poppins';
 }
 .login_button_panel{
+    /*登录按钮容器*/
     width: 100%;
+    max-width: var(--login-item-width);
     margin-top: var(--element-gap);
     box-sizing: border-box;
 }
 .login_button{
+    /*登录按钮*/
     width: 100%;
     min-height: var(--login-item-height);
     font-size: var(--main-text-size);
@@ -99,4 +107,20 @@
     border: var(--border-base-width) solid var(--theme-part-color);
     background-color: var(--theme-active-color);
     color: var(--text-main-color);
+}
+
+/*响应式*/
+@media (max-width: 999px), (max-device-width: 999px){
+    .login_body_container{
+        grid-template-columns: 1fr;
+    }
+    .login_background_image{
+        display: none;
+    }
+    .login_panel{
+        width: 100%;
+        padding-left: var(--element-gap);
+        padding-right: var(--element-gap);
+        box-sizing: border-box;
+    }
 }

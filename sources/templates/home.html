@@ -1,6 +1,18 @@
-{% extends 'common/web_base.html' %}
+{% extends 'common/page_web_base.html' %}
+
+{% block css_file %}
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/file_sys_style.css')}}"/>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/side_bar_style.css')}}"/>
+{% endblock %}
+
+{% block body_class %}body_theme{% endblock %}
+
 {% block body_content %}
-    {% include 'common/side_bar.html' %}
-    {% include 'file_system/file_system.html' %}
-    {% include 'common/error_message.html' %}
+    {% include 'common/comp_side_bar.html' %}
+    {% include 'common/page_file_system.html' %}
+    {% include 'common/comp_popup_message.html' %}
+{% endblock %}
+
+{% block js_file %}
+    <script type="module" src="{{url_for('static', filename='/js/sixbox/home.js')}}"></script>
 {% endblock %}

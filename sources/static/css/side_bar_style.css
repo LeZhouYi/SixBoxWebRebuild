@@ -1,0 +1,115 @@
+/*----侧边导航栏----*/
+:root{
+    /*侧边栏*/
+    --side-bar-width: 264px;    /*侧边栏*/
+    --side-bar-item-width: 154px;   /*侧边栏元素宽*/
+    --side-bar-row-height: 54px;    /*侧边栏行高*/
+    --side-bar-item-gap: 15px;  /*侧边栏item间隔*/
+    --side-bar-font-size: 17px; /*侧边栏文本大小*/
+}
+.side_bar_container{
+    /*侧边栏容器*/
+    height: 100%;
+    width: var(--side-bar-width);
+    border-right: var(--border-base-width) solid black;
+    padding-left: var(--element-gap);
+    padding-right: var(--element-gap);
+    padding-top: var(--element-margin);
+    padding-bottom: var(--element-margin);
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: var(--header-height) 1fr;
+    transition: transform 1s ease;
+    position: fixed;
+}
+.side_bar_logo{
+    /*侧边栏Logo*/
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.side_bar_logo_img{
+    /*侧边栏Logo图片*/
+    width: 100%;
+}
+.side_bar_list{
+    /*侧边栏列表栏*/
+    min-width: var(--side-bar-item-width);
+    width: 100%;
+    height: 100%;
+    margin-inline-start: 0px;
+    display: flex;
+    flex-direction: column;
+    padding-top: var(--element-margin);
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+.side_bar_list::-webkit-scrollbar{
+    /*侧边栏列表栏，隐藏滚动条*/
+    width: 0px;
+}
+.side_bar_row{
+    /*item容器，所有side_bar_item应为其子元素*/
+    height: var(--side-bar-row-height);
+    width: 100%;
+    margin-block-start: var(--element-list-gap);
+    margin-block-end: var(--element-list-gap);
+}
+.side_bar_item{
+    /*侧边栏item*/
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: var(--border-radius);
+    transition: background-color 0.5s ease, color 0.5s ease;
+    box-sizing: border-box;
+    margin-bottom: var(--side-bar-item-gap);
+    border-radius: var(--border-radius);
+}
+.side_bar_item:not(.active){
+    color: var(--text-remark-color);
+}
+.side_bar_item.active{
+    color: var(--text-active-color);
+    background-color: var(--theme-part-color);
+}
+.side_bar_item:hover {
+    background-color: var(--theme-active-color);
+    color: var(--text-main-color);
+}
+.side_bar_icon{
+    /*侧边栏item图标*/
+    width: var(--icon-base-size);
+    margin-left: var(--element-margin);
+    margin-right: var(--element-margin);
+    display:flex;
+    align-items: center;
+}
+.side_bar_icon>img{
+    /*侧边栏item图标图片*/
+    width: var(--icon-base-size);
+    height: var(--icon-base-size);
+}
+.side_bar_text{
+    /*侧边栏item文本*/
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: var(--side-bar-font-size);
+}
+
+.side_bar_expand{
+    /*侧边栏占居的空间*/
+    margin-left: var(--side-bar-width);
+}
+.side_bar_hidden{
+    /*隐藏侧边栏*/
+    transform: translateX(-100%);  /*将侧边栏移出*/
+}

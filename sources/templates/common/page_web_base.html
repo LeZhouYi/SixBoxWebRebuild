@@ -5,8 +5,8 @@
     <title>{% block page_title %}六号盒子{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="web icon" href="/sources?filename=icons/favicon.ico">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/styles.css')}}"/>
     {% block css_file %}{% endblock %}
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/styles.css')}}"/>
 </head>
 <body class="block_transition {% block body_class %}body_default{% endblock %}">
 
