@@ -72,14 +72,29 @@ class FileSystemServer:
             folder_data = self.db.get(self.query.id == data_id)
             folder_data = extra_data_by_list(folder_data, key_list)
             return_data.update(folder_data)
-            contents = []
+            # 获取文件夹路径
+            parents = []
+            now_parent_id = folder_data["parentId"]
+            while now_parent_id is not None:
+                parent_data = self.db.get(self.query.id == now_parent_id)
+                parents.append(extra_data_by_list(parent_data, key_list))
+                now_parent_id = parent_data["parentId"]
+            parents = list(reversed(parents))
+            return_data["parents"] = parents
+            # 处理子文件夹
             query_search = (self.query.parentId == data_id)
             if search_type is not None:
                 query_search = query_search & (self.query.type == search_type)
             content_data = self.db.search(query_search)
+            # 排序
             content_data = sorted(content_data, key=self.default_sort_key)
+            # 计算总数
+            return_data["total"] = len(content_data)
+            # 分页
             if page is not None and limit is not None:
                 content_data = content_data[page * limit:(page + 1) * limit]
+            # 只返回部分字段
+            contents = []
             for data_item in content_data:
                 contents.append(extra_data_by_list(data_item, key_list))
             return_data["contents"] = contents

@@ -107,7 +107,7 @@
 
 .side_bar_expand{
     /*侧边栏占居的空间*/
-    margin-left: var(--side-bar-width);
+    padding-left: var(--side-bar-width);
 }
 .side_bar_hidden{
     /*隐藏侧边栏*/

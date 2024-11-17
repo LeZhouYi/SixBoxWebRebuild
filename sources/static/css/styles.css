@@ -44,6 +44,7 @@
     --text-label-size: 15px; /*标签文本*/
     --text-header-size: 29px;   /*大标题*/
     --text-media-size: 24px;    /*次级标题*/
+    --text-remark-size: 13px;
 
     /*元素宽高*/
     /*通用*/
@@ -188,6 +189,75 @@
     }
 }
 
+/*分页控件*/
+.page_select_container{
+    width: 100%;
+    height: 100%;
+    display:flex;
+    justify-content: end;
+    align-items: center;
+}
+.page_select_icon{
+    width: var(--icon-base-size);
+    height: var(--icon-base-size);
+    display: flex;
+    align-items: center;
+    margin-left: calc( var(--element-margin) / 2);
+    margin-right: calc( var(--element-margin) / 2);
+    box-sizing: border-box;
+    border: 2px solid var(--text-remark-color);
+    border-radius: var(--border-min-radius);
+    background-color: var(--theme-background-color);
+    transition: border-color 1s ease, background-color 1s ease;
+}
+.page_select_icon:hover{
+    background-color: var(--theme-active-color);
+    border-color: var(--theme-part-color);
+}
+.page_select_img{
+    width: 100%;
+    height: 100%;
+}
+.page_select_img:hover{
+    mix-blend-mode: multiply;
+}
+.page_select_text{
+    color: var(--text-main-color);
+    font-size: var(--main-text-size);
+}
+.page_select_input{
+    width: 44px;
+    color: var(--text-main-color);
+    font-size: var(--main-text-size);
+    height: var(--icon-base-size);
+    padding-block: 0px;
+    padding-inline: 0px;
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+    border: 2px solid var(--text-remark-color);
+    border-radius: var(--border-min-radius);
+    box-sizing: border-box;
+    transition: width 0.5s ease;
+}
+.page_select_limit{
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+.page_select_limit_list{
+    width: 84px;
+    color: var(--text-main-color);
+    font-size: var(--main-text-size);
+    height: var(--icon-base-size);
+    padding-block: 0px;
+    padding-inline: 0px;
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+    border: 2px solid var(--text-remark-color);
+    border-radius: var(--border-min-radius);
+    box-sizing: border-box;
+}
+
 /*用于动态控制*/
 .hidden{
     /*隐藏元素*/
@@ -196,9 +266,9 @@
 .clickable{
     cursor: pointer;  /*使鼠标手势变为可操作的手势*/
 }
-.margin_trans{
+.padding_trans{
     /*边缘变换动画*/
-    transition: margin 1s ease;
+    transition: padding 1s ease;
 }
 
 /*响应式*/
