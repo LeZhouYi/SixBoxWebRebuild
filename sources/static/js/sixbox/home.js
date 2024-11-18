@@ -51,7 +51,7 @@ document.getElementById("folder_add_form").addEventListener("submit", function(e
     };
     postJsonWithAuth("/folders", formData).then(data=>{
         displayMessage(data.message);
-        document.getElementById("file_add_content").classList.add(hiddenClass);
+        document.getElementById("file_add_popup_overlay").classList.add(hiddenClass);
         updateFileList();
     })
     .catch(error=>{
@@ -72,7 +72,7 @@ document.getElementById("file_add_form").addEventListener("submit", function(eve
     formData.append("parentId", document.getElementById("file_add_folder_select").value);
     postFormWithAuth("/files", formData).then(data=>{
         displayMessage(data.message);
-        document.getElementById("file_add_content").classList.add(hiddenClass);
+        document.getElementById("file_add_popup_overlay").classList.add(hiddenClass);
         updateFileList();
     })
     .catch(error=>{
@@ -82,31 +82,32 @@ document.getElementById("file_add_form").addEventListener("submit", function(eve
 
 document.getElementById("file_add_pop_button").addEventListener("click", function(event){
     /*点击弹出新增文件弹窗*/
+    let fileAddOverlay = document.getElementById("file_add_popup_overlay");
     let fileAddContent = document.getElementById("file_add_content");
-    if(fileAddContent.classList.contains(hiddenClass)){
+    if(fileAddOverlay.classList.contains(hiddenClass)){
         loadFolderSelect("file_add_folder_select");
         loadFolderSelect("folder_add_folder_select");
-        fileAddContent.classList.remove(hiddenClass);
+        fileAddOverlay.classList.remove(hiddenClass);
     }
     /*动画相关*/
     let addFileFormElement = document.getElementById("file_add_form");
     if(addFileFormElement.classList.contains(hiddenClass)){
-        fileAddContent.style.height = "508px";
+        fileAddContent.style.height = "498px";
     }else{
-        fileAddContent.style.height = "625px";
+        fileAddContent.style.height = "615px";
     }
 });
 
 document.getElementById("file_add_cancel").addEventListener("click", function(event){
     /*点击取消新增文件弹窗按钮*/
-    let fileAddContent = document.getElementById("file_add_content");
-    fileAddContent.classList.add(hiddenClass);
+    let fileAddOverlay = document.getElementById("file_add_popup_overlay");
+    fileAddOverlay.classList.add(hiddenClass);
 });
 
 document.getElementById("folder_add_cancel").addEventListener("click", function(event){
     /*点击取消新增文件弹窗按钮*/
-    let fileAddContent = document.getElementById("file_add_content");
-    fileAddContent.classList.add(hiddenClass);
+    let fileAddOverlay = document.getElementById("file_add_popup_overlay");
+    fileAddOverlay.classList.add(hiddenClass);
 });
 
 document.getElementById("file_add_icon").addEventListener("click", function(event){
@@ -120,13 +121,13 @@ document.getElementById("file_add_icon").addEventListener("click", function(even
         addFolderFormElement.classList.add(hiddenClass);
         file_add_header_text.textContent="新增文件";
         /*动画相关*/
-        fileAddContent.style.height = "625px";
+        fileAddContent.style.height = "615px";
     }else{
         addFileFormElement.classList.add(hiddenClass);
         addFolderFormElement.classList.remove(hiddenClass);
         file_add_header_text.textContent="新增文件夹";
         /*动画相关*/
-        fileAddContent.style.height = "508px";
+        fileAddContent.style.height = "498px";
     }
 });
 
@@ -233,6 +234,17 @@ document.getElementById("next_page_button").addEventListener("click", function(e
     if(nowPage <= nowTotalPage-1){
         localStorage.setItem("nowPage", String(nowPage+1));
         updateFileList();
+    }
+});
+
+document.getElementById("file_add_popup_overlay").addEventListener("click", function(event){
+    /*监听元素是否在弹窗外部*/
+    let contentElement = document.getElementById("file_add_content");
+    if (contentElement){
+        if(!contentElement.classList.contains(hiddenClass)&&!contentElement.contains(event.target)){
+            event.target.classList.add(hiddenClass);
+            event.preventDefault();
+        }
     }
 });
 
@@ -379,6 +391,7 @@ function createFileItem(fileData){
 
     let controlDiv = document.createElement("div");
     controlDiv.classList.add("file_control_div");
+    bindClickControl(controlDiv);
     let controlImg = document.createElement("img");
     controlImg.classList.add("file_control_img");
     controlImg.src = "/sources?filename=icons/dots.png";
@@ -387,6 +400,16 @@ function createFileItem(fileData){
     fileItem.appendChild(controlDiv);
 
     return fileItem;
+}
+
+function bindClickControl(element){
+    /*绑定操作点击事件*/
+    element.addEventListener("click", function(event){
+        let container = document.getElementById("file_control_overlay");
+        if (container && container.classList.contains(hiddenClass)){
+            document.getElementById("file_control_overlay").classList.remove(hiddenClass);
+        }
+    });
 }
 
 function bindClickFolder(element, folderId){
