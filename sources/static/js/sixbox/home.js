@@ -1,4 +1,8 @@
-import { hiddenClass,resizeFullScreen,displayError,displayErrorMessage,displayMessage } from "./util/render.js";
+import {
+        hiddenClass,resizeFullScreen,displayError,displayErrorMessage,
+        displayMessage,adjustRelativeLDPopup,addObserveResizeHidden,
+        clickOverlayHidden,clearElementByStart
+    } from "./util/render.js";
 import { throttle } from "./util/func.js";
 import { getJsonWithAuth,postFormWithAuth,postJsonWithAuth } from "./util/requestor.js";
 import { initSideBar } from "./common/sidebar.js";
@@ -6,11 +10,17 @@ import { initSideBar } from "./common/sidebar.js";
 const fileTypeMap = {
     "0": {
         "src": "/sources?filename=icons/all_file.png",
-        "text": "文件夹"
+        "text": "文件夹",
+        "controls": [
+            1
+        ]
     },
     "1": {
         "src": "/sources?filename=icons/file.png",
-        "text": "文件"
+        "text": "文件",
+        "controls": [
+            0,1,2
+        ]
     }
 }
 
@@ -29,6 +39,10 @@ window.onload = function() {
 
     /*动画相关初始化*/
     document.getElementById("file_sys_container").classList.add("padding_trans");
+
+    /*事件相关*/
+    clickOverlayHidden("file_add_popup_overlay", "file_add_content");
+    clickOverlayHidden("file_control_overlay", "file_control_content");
 };
 
 window.addEventListener("resize", throttle(function(){
@@ -237,17 +251,6 @@ document.getElementById("next_page_button").addEventListener("click", function(e
     }
 });
 
-document.getElementById("file_add_popup_overlay").addEventListener("click", function(event){
-    /*监听元素是否在弹窗外部*/
-    let contentElement = document.getElementById("file_add_content");
-    if (contentElement){
-        if(!contentElement.classList.contains(hiddenClass)&&!contentElement.contains(event.target)){
-            event.target.classList.add(hiddenClass);
-            event.preventDefault();
-        }
-    }
-});
-
 function updatePageInput(event){
     /*监听页面输入事件*/
     let value = event.target.value.replace(/\D/g, '');
@@ -293,7 +296,7 @@ async function updateFileList(){
         });
         setTotalPage(data.total,"page_text_id",nowLimit);
 
-        clearFilePathBar("file_path_bar", 1);
+        clearElementByStart("file_path_bar", 1);
         data.parents.forEach(parentData=>{
             addFilePathElement("file_path_bar", parentData.name, parentData.id);
         });
@@ -391,9 +394,10 @@ function createFileItem(fileData){
 
     let controlDiv = document.createElement("div");
     controlDiv.classList.add("file_control_div");
-    bindClickControl(controlDiv);
+    bindClickControl(controlDiv, fileData.type);
     let controlImg = document.createElement("img");
     controlImg.classList.add("file_control_img");
+    controlImg.classList.add("clickable");
     controlImg.src = "/sources?filename=icons/dots.png";
     controlDiv.appendChild(controlImg);
 
@@ -402,12 +406,38 @@ function createFileItem(fileData){
     return fileItem;
 }
 
-function bindClickControl(element){
+function bindClickControl(element, fileType){
     /*绑定操作点击事件*/
     element.addEventListener("click", function(event){
         let container = document.getElementById("file_control_overlay");
         if (container && container.classList.contains(hiddenClass)){
-            document.getElementById("file_control_overlay").classList.remove(hiddenClass);
+            hiddenControlByType("file_control_content", fileType);
+            container.classList.remove(hiddenClass);
+            adjustRelativeLDPopup("file_control_content", event.pageX, event.pageY);
+            addObserveResizeHidden(container);
+        }
+    });
+}
+
+function hiddenControlByType(controlElementId="file_control_content",fileType){
+    /*控制操作弹窗的可操作元素显示*/
+    let controlElement = document.getElementById(controlElementId);
+    if (!controlElement){
+        return;
+    }
+    if(!(fileType in fileTypeMap)){
+        return;
+    }
+    let childNodes = Array.from(controlElement.children);
+    let controls = fileTypeMap[fileType].controls;
+    childNodes.forEach((value, index)=>{
+        console.log(value);
+        if(index in controls){
+            if(value.classList.contains(hiddenClass)){
+                value.classList.remove(hiddenClass);
+            }
+        }else{
+            value.classList.add(hiddenClass);
         }
     });
 }
@@ -515,18 +545,6 @@ function setTotalPage(total, textId="page_text_id", nowLimit="10"){
     if(textElement){
         localStorage.setItem("nowTotalPage", String(totalPage));
         textElement.textContent = `页/共${totalPage}页`;
-    }
-}
-
-function clearFilePathBar(elementId="file_path_bar", minIndex=1){
-    /*清空路径元素*/
-    let pathElement = document.getElementById(elementId);
-    if (!pathElement){
-        return;
-    }
-    let childNodes = pathElement.childNodes;
-    for(let i = childNodes.length - 1; i > minIndex; i--){
-        pathElement.removeChild(childNodes[i]);
     }
 }
 

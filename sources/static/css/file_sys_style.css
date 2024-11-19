@@ -6,6 +6,7 @@
     --file-search-height: 37px; /*搜索栏高*/
     --file-item-height: 56px;   /*文件行高*/
     --file-item-button-width: 204px; /*表单按钮*/
+    --file-control-width: 245px;
 }
 
 .file_sys_container{
@@ -339,7 +340,7 @@
 .file_add_content{
     width: var(--pop-form-width);
     background-color: white;
-    border: 2px solid var(--theme-main-color);
+    border: 2px solid var(--theme-part-color);
     display: flex;
     flex-direction: column;
     padding: var(--element-gap);
@@ -348,13 +349,13 @@
     transition: height 1s ease, width 1s ease;
 }
 .file_control_content{
+    width: var(--file-item-button-width);
     background-color: white;
     border: 2px solid var(--theme-main-color);
-    display: flex;
-    flex-direction: column;
-    padding: var(--element-gap);
     border-radius: var(--border-radius);
     box-sizing: border-box;
+    position: fixed;
+    z-index: 2;
 }
 .file_add_header{
     width: 100%;
@@ -451,7 +452,7 @@
     color: var(--text-main-color);
 }
 .file_add_button{
-    width: var(--file-item-button-width);
+    width: 100%;
     height: 44px;
     margin-top: var(--element-gap);
     margin-bottom: var(--element-gap);
@@ -489,4 +490,33 @@
     box-sizing: border-box;
     border: var(--border-base-width) solid var(--theme-part-color);
     border-radius: var(--border-icon-radius);
+}
+.file_control_item{
+    width: 100%;
+    height: var(--file-item-height);
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    border-radius: var(--border-min-radius);
+    border: 2px solid var(--theme-background-color);
+    background-color: var(--theme-background-color);
+    transition: background-color 1s ease, border-color 1s ease;
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+}
+.file_control_item:hover{
+    background-color: var(--theme-active-color);
+    border-color: var(--theme-part-color);
+}
+.file_control_icon{
+    width: var(--icon-base-size);
+    height: var(--icon-base-size);
+    margin-right: var(--element-margin);
+}
+.file_control_text{
+    font-size: var(--main-text-size);
+    color: var(--text-main-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

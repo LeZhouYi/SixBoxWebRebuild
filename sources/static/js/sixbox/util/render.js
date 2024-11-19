@@ -86,3 +86,85 @@ export function displayError(error){
         displayErrorMessage(error);
     }
 }
+
+export function adjustRelativeLDPopup(popupElementId, startX, startY){
+    /*将弹窗从X,Y调整显示合适的位置，左下角弹出*/
+    let popupElement = document.getElementById(popupElementId);
+    if (!popupElement){
+        return;
+    }
+    let elementWidth = popupElement.offsetWidth;
+    let elementHeight = popupElement.offsetHeight;
+    let innerWidth = window.innerWidth;
+    let innerHeight = window.innerHeight;
+    /*调整元素宽度*/
+    if(elementWidth > innerWidth){
+        popupElement.style.width = "100%";
+    }
+    if(elementHeight > innerHeight){
+        popupElement.style.height = "100%";
+    }
+    elementWidth = popupElement.offsetWidth;
+    elementHeight = popupElement.offsetHeight;
+    /*计算位置*/
+    let x = startX-elementWidth;
+    let y = startY;
+    if (x<0){
+        x = 0;
+    }
+    if (y +elementHeight > innerHeight){
+        y = innerHeight-elementHeight;
+    }
+    popupElement.style.left = x + "px";
+    popupElement.style.top = y + "px";
+}
+
+export function addObserveResizeHidden(element){
+    /*页面变化后隐藏，并移除监听器*/
+    if (!element){
+        return;
+    }
+    let beforeRect = element.getBoundingClientRect()
+    const resizeObserver = new ResizeObserver(entries =>{
+        for (let entry of entries){
+            if(entry.target === element){
+                let entryRect = entry.contentRect;
+                if(entryRect.width!==beforeRect.width || entryRect.height !== beforeRect.height){
+                    element.classList.add(hiddenClass);
+                    resizeObserver.unobserve(element);
+                }
+
+            }
+        }
+    });
+    resizeObserver.observe(element);
+}
+
+export function clickOverlayHidden(overlayId, contentId){
+    /*点击overlay区域将隐藏元素*/
+    let overlayElement = document.getElementById(overlayId);
+    if (overlayElement){
+        overlayElement.addEventListener("click", function(event){
+            /*监听元素是否在弹窗外部*/
+            let contentElement = document.getElementById(contentId);
+            if (contentElement){
+                if(!contentElement.classList.contains(hiddenClass)&&!contentElement.contains(event.target)){
+                    event.target.classList.add(hiddenClass);
+                    event.preventDefault();
+                }
+            }
+        });
+    }
+}
+
+export function clearElementByStart(elementId="file_path_bar", minIndex=1){
+    /*清空路径元素*/
+    let pathElement = document.getElementById(elementId);
+    if (!pathElement){
+        return;
+    }
+    let childNodes = pathElement.children;
+    for(let i = childNodes.length - 1; i > minIndex; i--){
+        pathElement.removeChild(childNodes[i]);
+    }
+}
