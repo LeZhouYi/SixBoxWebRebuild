@@ -431,8 +431,7 @@ function hiddenControlByType(controlElementId="file_control_content",fileType){
     let childNodes = Array.from(controlElement.children);
     let controls = fileTypeMap[fileType].controls;
     childNodes.forEach((value, index)=>{
-        console.log(value);
-        if(index in controls){
+        if(controls.includes(index)){
             if(value.classList.contains(hiddenClass)){
                 value.classList.remove(hiddenClass);
             }

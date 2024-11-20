@@ -120,16 +120,21 @@ export function adjustRelativeLDPopup(popupElementId, startX, startY){
 }
 
 export function addObserveResizeHidden(element){
-    /*页面变化后隐藏，并移除监听器*/
+    /*
+        页面变化后隐藏，并移除监听器
+        添加Math.floor的原因是因为beforeRect和contentRect两者的数值精度不一致
+    */
     if (!element){
         return;
     }
-    let beforeRect = element.getBoundingClientRect()
+    let beforeRect = element.getBoundingClientRect();
+    let beforeWidth = Math.floor(beforeRect.width);
+    let beforeHeight = Math.floor(beforeRect.height);
     const resizeObserver = new ResizeObserver(entries =>{
         for (let entry of entries){
             if(entry.target === element){
                 let entryRect = entry.contentRect;
-                if(entryRect.width!==beforeRect.width || entryRect.height !== beforeRect.height){
+                if(Math.floor(entryRect.width)!==beforeWidth || Math.floor(entryRect.height) !== beforeHeight){
                     element.classList.add(hiddenClass);
                     resizeObserver.unobserve(element);
                 }
@@ -163,7 +168,7 @@ export function clearElementByStart(elementId="file_path_bar", minIndex=1){
     if (!pathElement){
         return;
     }
-    let childNodes = pathElement.children;
+    let childNodes = pathElement.childNodes;
     for(let i = childNodes.length - 1; i > minIndex; i--){
         pathElement.removeChild(childNodes[i]);
     }
