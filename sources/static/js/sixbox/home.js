@@ -1,7 +1,8 @@
 import {
         hiddenClass,resizeFullScreen,displayError,displayErrorMessage,
         displayMessage,adjustRelativeLDPopup,addObserveResizeHidden,
-        clickOverlayHidden,clearElementByStart
+        clickOverlayHidden,clearElementByStart,hiddenElement,
+        displayElement
     } from "./util/render.js";
 import { throttle,loadUrlParamInLocal } from "./util/func.js";
 import {
@@ -14,14 +15,14 @@ const fileTypeMap = {
         "src": "/sources?filename=icons/all_file.png",
         "text": "文件夹",
         "controls": [
-            0,1
+            0,1,3
         ]
     },
     "1": {
         "src": "/sources?filename=icons/file.png",
         "text": "文件",
         "controls": [
-            0,1,2
+            0,1,2,3
         ]
     }
 }
@@ -67,7 +68,7 @@ document.getElementById("folder_add_form").addEventListener("submit", function(e
     };
     postJsonWithAuth("/folders", formData).then(data=>{
         displayMessage(data.message);
-        document.getElementById("file_add_popup_overlay").classList.add(hiddenClass);
+        hiddenElement("file_add_popup_overlay");
         updateFileList();
     })
     .catch(error=>{
@@ -88,7 +89,7 @@ document.getElementById("file_add_form").addEventListener("submit", function(eve
     formData.append("parentId", document.getElementById("file_add_folder_select").value);
     postFormWithAuth("/files", formData).then(data=>{
         displayMessage(data.message);
-        document.getElementById("file_add_popup_overlay").classList.add(hiddenClass);
+        hiddenElement("file_add_popup_overlay");
         updateFileList();
     })
     .catch(error=>{
@@ -98,13 +99,12 @@ document.getElementById("file_add_form").addEventListener("submit", function(eve
 
 document.getElementById("file_add_pop_button").addEventListener("click", function(event){
     /*点击弹出新增文件弹窗*/
-    let fileAddOverlay = document.getElementById("file_add_popup_overlay");
     let fileAddContent = document.getElementById("file_add_content");
-    if(fileAddOverlay.classList.contains(hiddenClass)){
-        loadFolderSelect("file_add_folder_select");
-        loadFolderSelect("folder_add_folder_select");
-        fileAddOverlay.classList.remove(hiddenClass);
-    }
+    displayElement("file_add_popup_overlay", function(){
+        let nowFolderId = localStorage.getItem("nowFolderId");
+        loadFolderSelect("file_add_folder_select",nowFolderId);
+        loadFolderSelect("folder_add_folder_select",nowFolderId);
+    })
     /*动画相关*/
     let addFileFormElement = document.getElementById("file_add_form");
     if(addFileFormElement.classList.contains(hiddenClass)){
@@ -116,14 +116,7 @@ document.getElementById("file_add_pop_button").addEventListener("click", functio
 
 document.getElementById("file_add_cancel").addEventListener("click", function(event){
     /*点击取消新增文件弹窗按钮*/
-    let fileAddOverlay = document.getElementById("file_add_popup_overlay");
-    fileAddOverlay.classList.add(hiddenClass);
-});
-
-document.getElementById("folder_add_cancel").addEventListener("click", function(event){
-    /*点击取消新增文件弹窗按钮*/
-    let fileAddOverlay = document.getElementById("file_add_popup_overlay");
-    fileAddOverlay.classList.add(hiddenClass);
+    hiddenElement("file_add_popup_overlay");
 });
 
 document.getElementById("file_add_icon").addEventListener("click", function(event){
@@ -135,13 +128,13 @@ document.getElementById("file_add_icon").addEventListener("click", function(even
     if(addFileFormElement.classList.contains(hiddenClass)){
         addFileFormElement.classList.remove(hiddenClass);
         addFolderFormElement.classList.add(hiddenClass);
-        file_add_header_text.textContent="新增文件";
+        addHeaderText.textContent="新增文件";
         /*动画相关*/
         fileAddContent.style.height = "615px";
     }else{
         addFileFormElement.classList.add(hiddenClass);
         addFolderFormElement.classList.remove(hiddenClass);
-        file_add_header_text.textContent="新增文件夹";
+        addHeaderText.textContent="新增文件夹";
         /*动画相关*/
         fileAddContent.style.height = "498px";
     }
@@ -320,6 +313,37 @@ document.getElementById("file_download_button").addEventListener("click", functi
     }
 });
 
+document.getElementById("file_edit_button").addEventListener("click", function(event){
+    /*点击编辑*/
+    let popContainer = document.getElementById("file_control_overlay");
+    if (popContainer && !popContainer.classList.contains(hiddenClass)){
+        popContainer.classList.add(hiddenClass);
+    }
+    try{
+        let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+        if (nowControlData.type==="0"){
+            let editPopup = document.getElementById("file_edit_popup_overlay");
+            if(editPopup && editPopup.classList.contains(hiddenClass)){
+                editPopup.classList.remove(hiddenClass);
+            }else{
+                return;
+            }
+            document.getElementById("file_edit_name").value = nowControlData.name;
+            loadFolderSelect("file_edit_folder_select", nowControlData.parentId);
+        }
+    } catch (error){
+        displayErrorMessage(error);
+    }
+});
+
+document.getElementById("file_edit_cancel").addEventListener("click", function(event){
+    /*点击编辑文件取消*/
+    let popContainer = document.getElementById("file_edit_popup_overlay");
+    if (popContainer && popContainer.contains(hiddenClass)){
+        popContainer.classList.add(hiddenClass);
+    }
+});
+
 function updatePageInput(event){
     /*监听页面输入事件*/
     let value = event.target.value.replace(/\D/g, '');
@@ -381,9 +405,8 @@ async function updateFileList(){
     }
 }
 
-async function loadFolderSelect(dataListId){
+async function loadFolderSelect(dataListId, nowFolderId){
     /*为特定元素提供候选输入*/
-    let nowFolderId = localStorage.getItem("nowFolderId");
     try {
         let data = await getJsonWithAuth(`/folders/${nowFolderId}?type=0`);
         let contents = data.contents;

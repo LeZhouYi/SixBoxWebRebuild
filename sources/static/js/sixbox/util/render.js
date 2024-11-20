@@ -151,13 +151,8 @@ export function clickOverlayHidden(overlayId, contentId){
     if (overlayElement){
         overlayElement.addEventListener("click", function(event){
             /*监听元素是否在弹窗外部*/
-            let contentElement = document.getElementById(contentId);
-            if (contentElement){
-                if(!contentElement.classList.contains(hiddenClass)&&!contentElement.contains(event.target)){
-                    event.target.classList.add(hiddenClass);
-                    event.preventDefault();
-                }
-            }
+            hiddenElement(contentId);
+            event.preventDefault();
         });
     }
 }
@@ -172,4 +167,30 @@ export function clearElementByStart(elementId="file_path_bar", minIndex=1){
     for(let i = childNodes.length - 1; i > minIndex; i--){
         pathElement.removeChild(childNodes[i]);
     }
+}
+
+export function hiddenElement(elementId, callback){
+    /*隐藏元素*/
+    let element = document.getElementById(elementId);
+    if (element){
+        element.classList.add(hiddenClass);
+        if(callback){
+            callback();
+        }
+        return true;
+    }
+    return false;
+}
+
+export function displayElement(elementId, callback){
+    /*显示元素*/
+    let element = document.getElementById(elementId);
+    if (element && element.classList.contains(hiddenClass)){
+        element.classList.remove(hiddenClass);
+        if(callback){
+            callback();
+        }
+        return true;
+    }
+    return false;
 }
