@@ -266,6 +266,7 @@
     border: 2px solid var(--text-remark-color);
     border-radius: var(--border-min-radius);
     box-sizing: border-box;
+    margin-right: var(--element-margin);
 }
 
 /*用于动态控制*/

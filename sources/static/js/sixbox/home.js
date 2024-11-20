@@ -3,8 +3,10 @@ import {
         displayMessage,adjustRelativeLDPopup,addObserveResizeHidden,
         clickOverlayHidden,clearElementByStart
     } from "./util/render.js";
-import { throttle } from "./util/func.js";
-import { getJsonWithAuth,postFormWithAuth,postJsonWithAuth } from "./util/requestor.js";
+import { throttle,loadUrlParamInLocal } from "./util/func.js";
+import {
+        getJsonWithAuth,postFormWithAuth,postJsonWithAuth
+    } from "./util/requestor.js";
 import { initSideBar } from "./common/sidebar.js";
 
 const fileTypeMap = {
@@ -12,7 +14,7 @@ const fileTypeMap = {
         "src": "/sources?filename=icons/all_file.png",
         "text": "文件夹",
         "controls": [
-            1
+            0,1
         ]
     },
     "1": {
@@ -251,6 +253,73 @@ document.getElementById("next_page_button").addEventListener("click", function(e
     }
 });
 
+document.getElementById("copy_full_url_button").addEventListener("click", async function(event){
+    /*点击拷贝完整链接*/
+    let popContainer = document.getElementById("file_control_overlay");
+    if (popContainer && !popContainer.classList.contains(hiddenClass)){
+        popContainer.classList.add(hiddenClass);
+    }
+    let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+    let host = window.location.host;
+    try{
+        if (nowControlData.type==="0"){
+            let clipText = `${host}/home.html?nowFolderId=${nowControlData.id}`;
+            await navigator.clipboard.writeText(clipText);
+            displayMessage("已成功复制至剪切板");
+        }else if(nowControlData.type==="1"){
+            let clipText = `${host}/api/v1/files/${nowControlData.id}/download`;
+            await navigator.clipboard.writeText(clipText);
+            displayMessage("已成功复制至剪切板");
+        }
+    } catch (error){
+        displayErrorMessage(error);
+    }
+});
+
+document.getElementById("copy_part_url_button").addEventListener("click", async function(event){
+    /*点击拷贝完整链接*/
+    let popContainer = document.getElementById("file_control_overlay");
+    if (popContainer && !popContainer.classList.contains(hiddenClass)){
+        popContainer.classList.add(hiddenClass);
+    }
+    let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+    try{
+        if (nowControlData.type==="0"){
+            let clipText = `/home.html?nowFolderId=${nowControlData.id}`;
+            await navigator.clipboard.writeText(clipText);
+            displayMessage("已成功复制至剪切板");
+        }else if(nowControlData.type==="1"){
+            let clipText = `/api/v1/files/${nowControlData.id}/download`;
+            await navigator.clipboard.writeText(clipText);
+            displayMessage("已成功复制至剪切板");
+        }
+    } catch (error){
+        displayErrorMessage(error);
+    }
+});
+
+document.getElementById("file_download_button").addEventListener("click", function(event){
+    /*点击下载文件*/
+    let popContainer = document.getElementById("file_control_overlay");
+    if (popContainer && !popContainer.classList.contains(hiddenClass)){
+        popContainer.classList.add(hiddenClass);
+    }
+    let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+    try{
+        if (nowControlData.type==="0"){
+            return;
+        }
+        let accessToken = localStorage.getItem("accessToken");
+        let downloadUrl = `api/v1/files/${nowControlData.id}/download?token=${accessToken}`;
+        let downloadElement = document.createElement("a");
+        downloadElement.href = downloadUrl;
+        downloadElement.click();
+        downloadElement.remove();
+    } catch (error){
+        displayErrorMessage(error);
+    }
+});
+
 function updatePageInput(event){
     /*监听页面输入事件*/
     let value = event.target.value.replace(/\D/g, '');
@@ -394,7 +463,7 @@ function createFileItem(fileData){
 
     let controlDiv = document.createElement("div");
     controlDiv.classList.add("file_control_div");
-    bindClickControl(controlDiv, fileData.type);
+    bindClickControl(controlDiv, fileData);
     let controlImg = document.createElement("img");
     controlImg.classList.add("file_control_img");
     controlImg.classList.add("clickable");
@@ -406,15 +475,16 @@ function createFileItem(fileData){
     return fileItem;
 }
 
-function bindClickControl(element, fileType){
+function bindClickControl(element, fileData){
     /*绑定操作点击事件*/
     element.addEventListener("click", function(event){
         let container = document.getElementById("file_control_overlay");
         if (container && container.classList.contains(hiddenClass)){
-            hiddenControlByType("file_control_content", fileType);
+            hiddenControlByType("file_control_content", fileData.type);
             container.classList.remove(hiddenClass);
             adjustRelativeLDPopup("file_control_content", event.pageX, event.pageY);
             addObserveResizeHidden(container);
+            localStorage.setItem("nowControlData",JSON.stringify(fileData));
         }
     });
 }
@@ -503,6 +573,7 @@ function checkLocalStorage(){
         window.location.href = "/login.html";
     }
 
+    loadUrlParamInLocal(["nowFolderId"]);
     let nowFolderId = localStorage.getItem("nowFolderId");
     if (nowFolderId === null) {
         localStorage.setItem("nowFolderId", "1");

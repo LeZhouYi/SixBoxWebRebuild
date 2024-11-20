@@ -1,5 +1,6 @@
 import threading
 import time
+from typing import Optional
 
 from tinydb import TinyDB, Query
 
@@ -63,6 +64,28 @@ class FileSystemServer:
             if data is not None and "type" in data and data["type"] == FileType.FOLDER:
                 return True
             return False
+
+    def is_file_exist(self, data_id: str) -> bool:
+        """
+        判断该文件是否存在
+        :param data_id:
+        :return: False表示不存在
+        """
+        with self.thread_lock:
+            data = self.db.get(self.query.id == data_id)
+            if data is not None and "type" in data and data["type"] != FileType.FOLDER:
+                return True
+            return False
+
+    def get_data(self, data_id) -> Optional[dict]:
+        """
+        获取文件数据
+        :param data_id:
+        :return:
+        """
+        with self.thread_lock:
+            data = self.db.get(self.query.id == data_id)
+            return data
 
     def get_folder_detail(self, data_id: str, search_type: str, page: int, limit: int) -> dict:
         """获取文件夹详情及该文件夹下的内容"""

@@ -1,12 +1,13 @@
 import mimetypes
 import os.path
+import urllib
 
 from flask import Blueprint, request, Response, jsonify
 from werkzeug.datastructures import FileStorage
 
 from core.common.file_utils import get_file_ext, get_stream_io, is_path_within_folder
 from core.common.route_utils import gen_fail_response, is_str_empty, gen_id, gen_success_response, is_key_str_empty
-from core.config.config import get_config_path, get_config
+from core.config.config import get_config_path
 from core.database.file_system import FileType
 from core.log.log import logger
 from core.route.route_data import ReportInfo, FsServer, FsConfig, gen_prefix_api
@@ -26,10 +27,40 @@ def download_static_file():
     if os.path.exists(file_path) and os.path.isfile(file_path) and is_path_within_folder(static_path, file_path):
         try:
             mime_type, _ = mimetypes.guess_type(file_path)
-            return Response(get_stream_io(file_path), mimetype=mime_type)
+            return Response(get_stream_io(file_path), mimetype=mime_type, headers={
+                "Transfer-Encoding": "chunked",
+                "Content-Type": "application/octet-stream"
+            })
         except Exception as e:
             return gen_fail_response(str(e), 500)
     return gen_fail_response(ReportInfo["012"], 404)
+
+
+@FileSystemBp.route(gen_prefix_api("/files/<file_id>/download"), methods=["GET"])
+def download_file(file_id: str):
+    """下载文件"""
+    # verify
+    verify_result = verify_token(request)
+    if isinstance(verify_result[0], Response):
+        return verify_result
+
+    if is_str_empty(file_id):
+        return gen_fail_response(ReportInfo["012"])
+    if not FsServer.is_file_exist(file_id):
+        return gen_fail_response(ReportInfo["012"])
+    data = FsServer.get_data(file_id)
+    file_path = data["path"]
+    filename = "%s.%s" % (data["name"], get_file_ext(file_path))
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        try:
+            mime_type, _ = mimetypes.guess_type(file_path)
+            return Response(get_stream_io(file_path), mimetype=mime_type, headers={
+                "Content-Disposition": "attachment;filename=%s" % urllib.parse.quote(filename),
+                "Content-Type": "application/octet-stream"
+            })
+        except Exception as e:
+            return gen_fail_response(str(e), 500)
+    return gen_fail_response(ReportInfo["012"])
 
 
 @FileSystemBp.route(gen_prefix_api("/files"), methods=["POST"])
@@ -68,7 +99,7 @@ def add_file():
         "name": filename,
         "type": FileType.FILE,
         "parentId": parent_id,
-        "path": "%s/%s" % (get_config("file_save_path"), local_name),
+        "path": filepath,
         "size": file_size
     }
     FsServer.add(db_data)
