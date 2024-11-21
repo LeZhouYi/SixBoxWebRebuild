@@ -1,14 +1,7 @@
-import {
-        hiddenClass,resizeFullScreen,displayError,displayErrorMessage,
-        displayMessage,adjustRelativeLDPopup,addObserveResizeHidden,
-        clickOverlayHidden,clearElementByStart,hiddenElement,
-        displayElement
-    } from "./util/render.js";
-import { throttle,loadUrlParamInLocal } from "./util/func.js";
-import {
-        getJsonWithAuth,postFormWithAuth,postJsonWithAuth
-    } from "./util/requestor.js";
-import { initSideBar } from "./common/sidebar.js";
+import * as renderUtil from "./util/render.js";
+import * as funcUtil from "./util/func.js";
+import * as requestor from "./util/requestor.js";
+import * as sideBar from "./common/sidebar.js";
 
 const fileTypeMap = {
     "0": {
@@ -32,24 +25,24 @@ window.onload = function() {
     checkLocalStorage();
 
     /*侧边栏初始化*/
-    initSideBar("fileSystem");
+    sideBar.initSideBar("fileSystem");
 
     /*页面功能*/
     updateFileList();
 
     /*页面调整*/
-    resizeFullScreen();
+    renderUtil.resizeFullScreen();
 
     /*动画相关初始化*/
     document.getElementById("file_sys_container").classList.add("padding_trans");
 
     /*事件相关*/
-    clickOverlayHidden("file_add_popup_overlay", "file_add_content");
-    clickOverlayHidden("file_control_overlay", "file_control_content");
+    renderUtil.clickOverlayHidden("file_add_popup_overlay", "file_add_content");
+    renderUtil.clickOverlayHidden("file_control_overlay", "file_control_content");
 };
 
-window.addEventListener("resize", throttle(function(){
-    resizeFullScreen("bodyContainer");
+window.addEventListener("resize", funcUtil.throttle(function(){
+    renderUtil.resizeFullScreen("bodyContainer");
 }), 200);
 
 document.getElementById("all_file_button").addEventListener("click", function(event){
@@ -66,13 +59,13 @@ document.getElementById("folder_add_form").addEventListener("submit", function(e
         name: document.getElementById("folder_add_name").value,
         parentId: document.getElementById("folder_add_folder_select").value
     };
-    postJsonWithAuth("/folders", formData).then(data=>{
-        displayMessage(data.message);
-        hiddenElement("file_add_popup_overlay");
+    requestor.postJsonWithAuth("/folders", formData).then(data=>{
+        renderUtil.displayMessage(data.message);
+        renderUtil.hiddenElementById("file_add_popup_overlay");
         updateFileList();
     })
     .catch(error=>{
-        displayError(error);
+        renderUtil.displayError(error);
     });
 });
 
@@ -81,26 +74,26 @@ document.getElementById("file_add_form").addEventListener("submit", function(eve
     event.preventDefault();
     let fileElement = document.getElementById("file_add_select_element");
     if(!fileElement.files || fileElement.files.length<1){
-        displayErrorMessage("未选择文件");
+        renderUtil.displayErrorMessage("未选择文件");
     }
     let formData = new FormData();
     formData.append("file", fileElement.files[0]);
     formData.append("name", document.getElementById("file_add_name").value);
     formData.append("parentId", document.getElementById("file_add_folder_select").value);
-    postFormWithAuth("/files", formData).then(data=>{
-        displayMessage(data.message);
-        hiddenElement("file_add_popup_overlay");
+    requestor.postFormWithAuth("/files", formData).then(data=>{
+        renderUtil.displayMessage(data.message);
+        renderUtil.hiddenElementById("file_add_popup_overlay");
         updateFileList();
     })
     .catch(error=>{
-        displayError(error);
+        renderUtil.displayError(error);
     });
 });
 
 document.getElementById("file_add_pop_button").addEventListener("click", function(event){
     /*点击弹出新增文件弹窗*/
     let fileAddContent = document.getElementById("file_add_content");
-    displayElement("file_add_popup_overlay", function(){
+    renderUtil.displayElementById("file_add_popup_overlay", function(){
         let nowFolderId = localStorage.getItem("nowFolderId");
         loadFolderSelect("file_add_folder_select",nowFolderId);
         loadFolderSelect("folder_add_folder_select",nowFolderId);
@@ -116,7 +109,7 @@ document.getElementById("file_add_pop_button").addEventListener("click", functio
 
 document.getElementById("file_add_cancel").addEventListener("click", function(event){
     /*点击取消新增文件弹窗按钮*/
-    hiddenElement("file_add_popup_overlay");
+    renderUtil.hiddenElementById("file_add_popup_overlay");
 });
 
 document.getElementById("file_add_icon").addEventListener("click", function(event){
@@ -125,15 +118,14 @@ document.getElementById("file_add_icon").addEventListener("click", function(even
     let addFolderFormElement = document.getElementById("folder_add_form");
     let addHeaderText = document.getElementById("file_add_header_text");
     let fileAddContent = document.getElementById("file_add_content");
-    if(addFileFormElement.classList.contains(hiddenClass)){
-        addFileFormElement.classList.remove(hiddenClass);
-        addFolderFormElement.classList.add(hiddenClass);
+    if(renderUtil.displayElement(addFileFormElement)){
+        renderUtil.hiddenElement(addFolderFormElement);
         addHeaderText.textContent="新增文件";
         /*动画相关*/
         fileAddContent.style.height = "615px";
     }else{
-        addFileFormElement.classList.add(hiddenClass);
-        addFolderFormElement.classList.remove(hiddenClass);
+        renderUtil.hiddenElement(addFileFormElement);
+        renderUtil.displayElement(addFolderFormElement);
         addHeaderText.textContent="新增文件夹";
         /*动画相关*/
         fileAddContent.style.height = "498px";
@@ -248,10 +240,7 @@ document.getElementById("next_page_button").addEventListener("click", function(e
 
 document.getElementById("copy_full_url_button").addEventListener("click", async function(event){
     /*点击拷贝完整链接*/
-    let popContainer = document.getElementById("file_control_overlay");
-    if (popContainer && !popContainer.classList.contains(hiddenClass)){
-        popContainer.classList.add(hiddenClass);
-    }
+    renderUtil.hiddenElementById("file_control_overlay");
     let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
     let host = window.location.host;
     try{
@@ -265,16 +254,13 @@ document.getElementById("copy_full_url_button").addEventListener("click", async 
             displayMessage("已成功复制至剪切板");
         }
     } catch (error){
-        displayErrorMessage(error);
+        renderUtil.displayErrorMessage(error);
     }
 });
 
 document.getElementById("copy_part_url_button").addEventListener("click", async function(event){
     /*点击拷贝完整链接*/
-    let popContainer = document.getElementById("file_control_overlay");
-    if (popContainer && !popContainer.classList.contains(hiddenClass)){
-        popContainer.classList.add(hiddenClass);
-    }
+    renderUtil.hiddenElementById("file_control_overlay");
     let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
     try{
         if (nowControlData.type==="0"){
@@ -287,16 +273,13 @@ document.getElementById("copy_part_url_button").addEventListener("click", async 
             displayMessage("已成功复制至剪切板");
         }
     } catch (error){
-        displayErrorMessage(error);
+        renderUtil.displayErrorMessage(error);
     }
 });
 
 document.getElementById("file_download_button").addEventListener("click", function(event){
     /*点击下载文件*/
-    let popContainer = document.getElementById("file_control_overlay");
-    if (popContainer && !popContainer.classList.contains(hiddenClass)){
-        popContainer.classList.add(hiddenClass);
-    }
+    renderUtil.hiddenElementById("file_control_overlay");
     let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
     try{
         if (nowControlData.type==="0"){
@@ -304,44 +287,32 @@ document.getElementById("file_download_button").addEventListener("click", functi
         }
         let accessToken = localStorage.getItem("accessToken");
         let downloadUrl = `api/v1/files/${nowControlData.id}/download?token=${accessToken}`;
-        let downloadElement = document.createElement("a");
-        downloadElement.href = downloadUrl;
-        downloadElement.click();
-        downloadElement.remove();
+        funcUtil.downloadByA(downloadUrl);
     } catch (error){
-        displayErrorMessage(error);
+        renderUtil.displayErrorMessage(error);
     }
 });
 
 document.getElementById("file_edit_button").addEventListener("click", function(event){
     /*点击编辑*/
-    let popContainer = document.getElementById("file_control_overlay");
-    if (popContainer && !popContainer.classList.contains(hiddenClass)){
-        popContainer.classList.add(hiddenClass);
-    }
+    renderUtil.hiddenElementById("file_control_overlay");
     try{
         let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
         if (nowControlData.type==="0"){
-            let editPopup = document.getElementById("file_edit_popup_overlay");
-            if(editPopup && editPopup.classList.contains(hiddenClass)){
-                editPopup.classList.remove(hiddenClass);
-            }else{
+            if(!renderUtil.displayElementById("file_edit_popup_overlay")){
                 return;
             }
             document.getElementById("file_edit_name").value = nowControlData.name;
             loadFolderSelect("file_edit_folder_select", nowControlData.parentId);
         }
     } catch (error){
-        displayErrorMessage(error);
+        renderUtil.displayErrorMessage(error);
     }
 });
 
 document.getElementById("file_edit_cancel").addEventListener("click", function(event){
     /*点击编辑文件取消*/
-    let popContainer = document.getElementById("file_edit_popup_overlay");
-    if (popContainer && popContainer.contains(hiddenClass)){
-        popContainer.classList.add(hiddenClass);
-    }
+    renderUtil.hiddenElementById("file_edit_popup_overlay");
 });
 
 function updatePageInput(event){
@@ -380,7 +351,7 @@ async function updateFileList(){
         setNowPage("page_input_id", nowPage);
         let pageIndex = parseInt(nowPage)-1;
 
-        let data = await getJsonWithAuth(`/folders/${nowFolderId}?_page=${pageIndex}&_limit=${nowLimit}`);
+        let data = await requestor.getJsonWithAuth(`/folders/${nowFolderId}?_page=${pageIndex}&_limit=${nowLimit}`);
         let contents = data.contents;
         let fileListTable = document.getElementById("file_table_body");
         fileListTable.innerHTML = null;
@@ -389,7 +360,7 @@ async function updateFileList(){
         });
         setTotalPage(data.total,"page_text_id",nowLimit);
 
-        clearElementByStart("file_path_bar", 1);
+        renderUtil.clearElementByStart("file_path_bar", 1);
         data.parents.forEach(parentData=>{
             addFilePathElement("file_path_bar", parentData.name, parentData.id);
         });
@@ -400,7 +371,7 @@ async function updateFileList(){
             localStorage.setItem("nowFolderId", "1")
             updateFileList();
         }else{
-            displayError(error);
+            renderUtil.displayError(error);
         }
     }
 }
@@ -408,7 +379,7 @@ async function updateFileList(){
 async function loadFolderSelect(dataListId, nowFolderId){
     /*为特定元素提供候选输入*/
     try {
-        let data = await getJsonWithAuth(`/folders/${nowFolderId}?type=0`);
+        let data = await requestor.getJsonWithAuth(`/folders/${nowFolderId}?type=0`);
         let contents = data.contents;
         let selectElement = document.getElementById(dataListId);
         selectElement.innerHTML = null;
@@ -451,8 +422,7 @@ function createFileItem(fileData){
     fileItem.classList.add("file_table_item");
 
     let fileNameDiv = document.createElement("div");
-    fileNameDiv.classList.add("file_name_div");
-    fileNameDiv.classList.add("clickable");
+    fileNameDiv.classList.add("file_name_div","clickable");
     let fileIcon = document.createElement("img");
     fileIcon.classList.add("file_name_icon");
     fileIcon.src = getSuitFileIcon(fileType);
@@ -471,7 +441,7 @@ function createFileItem(fileData){
 
     let updateTimeDiv = document.createElement("div");
     updateTimeDiv.classList.add("file_text_div");
-    updateTimeDiv.textContent = timeStampToText(fileData.updateTime);
+    updateTimeDiv.textContent = funcUtil.timeStampToText(fileData.updateTime);
     fileItem.appendChild(updateTimeDiv);
 
     let typeDiv = document.createElement("div");
@@ -481,15 +451,14 @@ function createFileItem(fileData){
 
     let sizeDiv = document.createElement("div");
     sizeDiv.classList.add("file_text_div");
-    sizeDiv.textContent = formatFileSize(fileData.size);
+    sizeDiv.textContent = funcUtil.formatFileSize(fileData.size);
     fileItem.appendChild(sizeDiv);
 
     let controlDiv = document.createElement("div");
     controlDiv.classList.add("file_control_div");
     bindClickControl(controlDiv, fileData);
     let controlImg = document.createElement("img");
-    controlImg.classList.add("file_control_img");
-    controlImg.classList.add("clickable");
+    controlImg.classList.add("file_control_img","clickable");
     controlImg.src = "/sources?filename=icons/dots.png";
     controlDiv.appendChild(controlImg);
 
@@ -501,14 +470,12 @@ function createFileItem(fileData){
 function bindClickControl(element, fileData){
     /*绑定操作点击事件*/
     element.addEventListener("click", function(event){
-        let container = document.getElementById("file_control_overlay");
-        if (container && container.classList.contains(hiddenClass)){
+        renderUtil.displayElement("file_control_overlay", function(){
             hiddenControlByType("file_control_content", fileData.type);
-            container.classList.remove(hiddenClass);
             adjustRelativeLDPopup("file_control_content", event.pageX, event.pageY);
             addObserveResizeHidden(container);
             localStorage.setItem("nowControlData",JSON.stringify(fileData));
-        }
+        });
     });
 }
 
@@ -525,11 +492,9 @@ function hiddenControlByType(controlElementId="file_control_content",fileType){
     let controls = fileTypeMap[fileType].controls;
     childNodes.forEach((value, index)=>{
         if(controls.includes(index)){
-            if(value.classList.contains(hiddenClass)){
-                value.classList.remove(hiddenClass);
-            }
+            renderUtil.displayElement(value);
         }else{
-            value.classList.add(hiddenClass);
+            renderUtil.hiddenElement(value);
         }
     });
 }
@@ -540,34 +505,6 @@ function bindClickFolder(element, folderId){
         localStorage.setItem("nowFolderId", folderId);
         updateFileList();
     });
-}
-
-function timeStampToText(timeStamp){
-    /*将以秒单位的时间戳转成具体的样式文本*/
-    let date = new Date(parseInt(timeStamp)*1000);
-    let year = date.getFullYear();
-    let month = String(date.getMonth() + 1).padStart(2, '0');
-    let day = String(date.getDate()).padStart(2, '0');
-    let hours = String(date.getHours()).padStart(2, '0');
-    let minutes = String(date.getMinutes()).padStart(2, '0');
-    let seconds = String(date.getSeconds()).padStart(2, '0');
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-}
-
-function formatFileSize(fileSize){
-    /*返回对应的格式的存储大小文本*/
-    fileSize = parseInt(fileSize);
-    if (fileSize < 1){
-        return `${fileSize}B`;
-    }
-    let fileSizeTexts = ["B","KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
-    for(let i = 0; i < fileSizeTexts.length; i++){
-        if(fileSize < 1024){
-            return fileSize.toFixed(2).toString()+" "+fileSizeTexts[i];
-        }else{
-            fileSize = fileSize/1024;
-        }
-    }
 }
 
 function getSuitFileText(fileType){
@@ -596,16 +533,10 @@ function checkLocalStorage(){
         window.location.href = "/login.html";
     }
 
-    loadUrlParamInLocal(["nowFolderId"]);
-    let nowFolderId = localStorage.getItem("nowFolderId");
-    if (nowFolderId === null) {
-        localStorage.setItem("nowFolderId", "1");
-    }
+    funcUtil.loadUrlParamInLocal(["nowFolderId"]);
+    funcUtil.checkLocalDefault("nowFolderId", "1");
+    funcUtil.checkLocalDefault("nowLimit", "10");
 
-    let nowLimit = localStorage.getItem("nowLimit");
-    if (nowLimit === null){
-        localStorage.setItem("nowLimit", "10");
-    }
     localStorage.setItem("nowPage", "1");
     localStorage.setItem("nowTotalPage", "1");
 }
@@ -650,8 +581,7 @@ function addFilePathElement(parentId, folderName, folderId){
 
     let folderElement = document.createElement("div");
     folderElement.textContent = folderName;
-    folderElement.classList.add("file_path_text");
-    folderElement.classList.add("clickable");
+    folderElement.classList.add("file_path_text","clickable");
     folderElement.addEventListener("click", function(event){
         let nowFolderId = localStorage.getItem("nowFolderId");
         if (nowFolderId !== folderId){

@@ -1,15 +1,15 @@
-import { setBackgroundImage,resizeFullScreen,displayErrorMessage,displayError } from "./util/render.js";
-import { throttle } from "./util/func.js";
-import { postJson } from "./util/requestor.js"
+import * as renderUtil from "./util/render.js";
+import * as funcUtil from "./util/func.js";
+import * as requestor from "./util/requestor.js";
 
 
 window.onload = function() {
-    resizeFullScreen();
-    setBackgroundImage("login_background_image", "url('/sources?filename=images/background.jpg')");
+    renderUtil.resizeFullScreen();
+    renderUtil.setBackgroundImage("login_background_image", "url('/sources?filename=images/background.jpg')");
 };
 
-window.addEventListener("resize", throttle(function(){
-    resizeFullScreen("bodyContainer");
+window.addEventListener("resize", funcUtil.throttle(function(){
+    renderUtil.resizeFullScreen("bodyContainer");
 }), 200);
 
 document.getElementById("login_form").addEventListener("submit", function(event){
@@ -18,12 +18,12 @@ document.getElementById("login_form").addEventListener("submit", function(event)
         account: document.getElementById("account").value,
         password: document.getElementById("password").value
     };
-    postJson("/sessions", formData).then(data=>{
+    requestor.postJson("/sessions", formData).then(data=>{
         localStorage.setItem("accessToken", data.accessToken);
         localStorage.setItem("refreshToken", data.refreshToken);
         window.location.href = "/home.html";
     })
     .catch(error=>{
-        displayError(error);
+        renderUtil.displayError(error);
     });
 });

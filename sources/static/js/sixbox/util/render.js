@@ -151,7 +151,7 @@ export function clickOverlayHidden(overlayId, contentId){
     if (overlayElement){
         overlayElement.addEventListener("click", function(event){
             /*监听元素是否在弹窗外部*/
-            hiddenElement(contentId);
+            hiddenElementById(contentId);
             event.preventDefault();
         });
     }
@@ -169,7 +169,31 @@ export function clearElementByStart(elementId="file_path_bar", minIndex=1){
     }
 }
 
-export function hiddenElement(elementId, callback){
+export function hiddenElement(element, callback){
+    /*隐藏元素*/
+    if (element){
+        element.classList.add(hiddenClass);
+        if(callback){
+            callback();
+        }
+        return true;
+    }
+    return false;
+}
+
+export function displayElement(element, callback){
+    /*显示元素*/
+    if (element && element.classList.contains(hiddenClass)){
+        element.classList.remove(hiddenClass);
+        if(callback){
+            callback();
+        }
+        return true;
+    }
+    return false;
+}
+
+export function hiddenElementById(elementId, callback){
     /*隐藏元素*/
     let element = document.getElementById(elementId);
     if (element){
@@ -182,7 +206,7 @@ export function hiddenElement(elementId, callback){
     return false;
 }
 
-export function displayElement(elementId, callback){
+export function displayElementById(elementId, callback){
     /*显示元素*/
     let element = document.getElementById(elementId);
     if (element && element.classList.contains(hiddenClass)){
