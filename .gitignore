@@ -5,3 +5,6 @@ __pycache__/
 main.spec
 /build
 /dist
+/sources/static/.webassets-cache
+/sources/static/css/generate
+/sources/static/js/generate

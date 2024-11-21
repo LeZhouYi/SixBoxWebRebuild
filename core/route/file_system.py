@@ -130,6 +130,44 @@ def add_folder():
     return gen_success_response(ReportInfo["006"])
 
 
+@FileSystemBp.route(gen_prefix_api("/folders/<folder_id>"), methods=["PUT"])
+def edit_folder(folder_id: str):
+    """编辑文件夹"""
+    # verify
+    verify_result = verify_token(request)
+    if isinstance(verify_result[0], Response):
+        return verify_result
+    data = request.json
+    if is_key_str_empty(data, "name"):
+        return gen_fail_response(ReportInfo["013"])
+    if is_str_empty(folder_id) or not FsServer.is_folder_exist(folder_id):
+        return gen_fail_response(ReportInfo["009"])
+    if is_key_str_empty(data, "parentId") or not FsServer.is_folder_exist(data["parentId"]):
+        return gen_fail_response(ReportInfo["009"])
+    if data["parentId"] == folder_id:
+        return gen_fail_response(ReportInfo["015"])
+    FsServer.edit_folder(folder_id, data)
+    return gen_success_response(ReportInfo["014"])
+
+
+@FileSystemBp.route(gen_prefix_api("/files/<file_id>"), methods=["PUT"])
+def edit_file(file_id: str):
+    """编辑文件"""
+    # verify
+    verify_result = verify_token(request)
+    if isinstance(verify_result[0], Response):
+        return verify_result
+    data = request.json
+    if is_key_str_empty(data, "name"):
+        return gen_fail_response(ReportInfo["013"])
+    if is_str_empty(file_id) or not FsServer.is_file_exist(file_id):
+        return gen_fail_response(ReportInfo["012"])
+    if is_key_str_empty(data, "parentId") or not FsServer.is_folder_exist(data["parentId"]):
+        return gen_fail_response(ReportInfo["009"])
+    FsServer.edit_file(file_id, data)
+    return gen_success_response(ReportInfo["014"])
+
+
 @FileSystemBp.route(gen_prefix_api("/folders/<folder_id>"), methods=["GET"])
 def get_folder_content(folder_id: str):
     """获取文件"""
@@ -163,3 +201,29 @@ def check_file_ext(file: FileStorage) -> bool:
         if file_ext in value:
             return True
     return False
+
+
+@FileSystemBp.route(gen_prefix_api("/files/<file_id>"), methods=["DELETE"])
+def delete_file(file_id: str):
+    """删除文件"""
+    # verify
+    verify_result = verify_token(request)
+    if isinstance(verify_result[0], Response):
+        return verify_result
+    if is_str_empty(file_id) or not FsServer.is_file_exist(file_id):
+        return gen_fail_response(ReportInfo["012"])
+    FsServer.delete_file(file_id)
+    return gen_success_response(ReportInfo["016"])
+
+
+@FileSystemBp.route(gen_prefix_api("/folders/<folder_id>"), methods=["DELETE"])
+def delete_folder(folder_id: str):
+    """删除文件夹"""
+    # verify
+    verify_result = verify_token(request)
+    if isinstance(verify_result[0], Response):
+        return verify_result
+    if is_str_empty(folder_id) or not FsServer.is_folder_exist(folder_id):
+        return gen_fail_response(ReportInfo["009"])
+    FsServer.delete_file(folder_id)
+    return gen_success_response(ReportInfo["016"])

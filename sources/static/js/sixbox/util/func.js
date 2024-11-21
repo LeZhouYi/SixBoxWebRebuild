@@ -54,7 +54,7 @@ export function downloadByA(downloadUrl){
     downloadElement.remove();
 }
 
-function timeStampToText(timeStamp){
+export function timeStampToText(timeStamp){
     /*将以秒单位的时间戳转成具体的样式文本*/
     let date = new Date(parseInt(timeStamp)*1000);
     let year = date.getFullYear();
@@ -66,7 +66,7 @@ function timeStampToText(timeStamp){
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
-function formatFileSize(fileSize){
+export function formatFileSize(fileSize){
     /*返回对应的格式的存储大小文本*/
     fileSize = parseInt(fileSize);
     if (fileSize < 1){

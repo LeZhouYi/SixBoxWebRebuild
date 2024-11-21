@@ -1,0 +1,69 @@
+/*分页控件*/
+.page_select_container{
+    width: 100%;
+    height: 100%;
+    display:flex;
+    justify-content: end;
+    align-items: center;
+}
+.page_select_icon{
+    width: var(--icon-base-size);
+    height: var(--icon-base-size);
+    display: flex;
+    align-items: center;
+    margin-left: calc( var(--element-margin) / 2);
+    margin-right: calc( var(--element-margin) / 2);
+    box-sizing: border-box;
+    border: 2px solid var(--text-remark-color);
+    border-radius: var(--border-min-radius);
+    background-color: var(--theme-background-color);
+    transition: border-color 1s ease, background-color 1s ease;
+}
+.page_select_icon:hover{
+    background-color: var(--theme-active-color);
+    border-color: var(--theme-part-color);
+}
+.page_select_img{
+    width: 100%;
+    height: 100%;
+}
+.page_select_img:hover{
+    mix-blend-mode: multiply;
+}
+.page_select_text{
+    color: var(--text-main-color);
+    font-size: var(--main-text-size);
+}
+.page_select_input{
+    width: 44px;
+    color: var(--text-main-color);
+    font-size: var(--main-text-size);
+    height: var(--icon-base-size);
+    padding-block: 0px;
+    padding-inline: 0px;
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+    border: 2px solid var(--text-remark-color);
+    border-radius: var(--border-min-radius);
+    box-sizing: border-box;
+    transition: width 0.5s ease;
+}
+.page_select_limit{
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+.page_select_limit_list{
+    width: 84px;
+    color: var(--text-main-color);
+    font-size: var(--main-text-size);
+    height: var(--icon-base-size);
+    padding-block: 0px;
+    padding-inline: 0px;
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+    border: 2px solid var(--text-remark-color);
+    border-radius: var(--border-min-radius);
+    box-sizing: border-box;
+    margin-right: var(--element-margin);
+}

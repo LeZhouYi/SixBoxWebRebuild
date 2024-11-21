@@ -1,3 +1,4 @@
+import copy
 import threading
 import time
 from typing import Optional
@@ -41,7 +42,9 @@ class FileSystemServer:
         self.db = TinyDB(db_path)
         self.query = Query()
         self.thread_lock = threading.Lock()
+        self.init()
 
+    def init(self):
         if len(self.db.all()) == 0:
             self.db.insert({
                 "id": "1",
@@ -137,3 +140,45 @@ class FileSystemServer:
         data["id"] = route_utils.gen_id()
         data["updateTime"] = str(time.time())
         self.db.insert(data)
+
+    def edit_folder(self, folder_id: str, data_input: dict):
+        """编辑文件夹"""
+        with self.thread_lock:
+            data = self.db.get((self.query.id == folder_id) & (self.query.type == FileType.FOLDER))
+            data["name"] = data_input["name"]
+            data["parentId"] = data_input["parentId"]
+            data["updateTime"] = str(time.time())
+            self.db.update(data, (self.query.id == folder_id) & (self.query.type == FileType.FOLDER))
+
+    def edit_file(self, file_id: str, data_input: dict):
+        """编辑文件"""
+        with self.thread_lock:
+            data = self.db.get((self.query.id == file_id) & (self.query.type != FileType.FOLDER))
+            data["name"] = data_input["name"]
+            data["parentId"] = data_input["parentId"]
+            data["updateTime"] = str(time.time())
+            self.db.update(data, (self.query.id == file_id) & (self.query.type != FileType.FOLDER))
+
+    def delete_file(self, file_id: str):
+        """删除文件"""
+        with self.thread_lock:
+            self.db.remove((self.query.id == file_id) & (self.query.type != FileType.FOLDER))
+
+    def delete_folder(self, folder_id: str):
+        """删除文件夹"""
+        with self.thread_lock:
+            will_ids = [folder_id]  # 记录所有需要删除的内容
+            now_search = [folder_id]  # 当前要遍历的文件夹
+            temp_search = []  # 缓存
+            while len(now_search) > 0:
+                for now_id in now_search:
+                    search_datas = self.db.search(self.query.parentId == now_id)
+                    for data_item in search_datas:
+                        will_ids.append(data_item["id"])
+                        if data_item["type"] == FileType.FOLDER:
+                            temp_search.append(data_item["id"])
+                now_search = copy.deepcopy(temp_search)
+                temp_search.clear()
+            for will_id in will_ids:
+                self.db.remove(self.query.id == will_id)
+            self.init()

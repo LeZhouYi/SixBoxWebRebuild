@@ -1,0 +1,79 @@
+/*----消息弹窗----*/
+.message_container{
+    /*消息容器*/
+    min-width: calc(var(--message-item-width) + var(--element-gap) * 3 + var(--icon-base-size));
+    max-width: calc(100% - var(--element-gap)* 2);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 1;
+    top: 0%;
+    left:50%;
+    transform: translateX(-50%);
+}
+.message_item{
+    /*正常的消息容器*/
+    width: 100%;
+    min-width: calc(var(--message-item-width) + var(--element-gap) * 3 + var(--icon-base-size));
+    max-width: calc(100% - var(--element-gap)* 2);
+    min-height: var(--message-item-height);
+    background-color: var(--message-background-color);
+    display: flex;
+    align-items: start;
+    margin-top: var(--element-margin);
+    animation: slide-down 0.5s ease-out forwards, fade-out 5s ease-in-out forwards;
+    border-radius: var(--border-min-radius);
+    border: var(--border-base-width) solid var(--message-text-color);
+    box-sizing: border-box;
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+}
+.error_message_item{
+    /*警告的消息容器*/
+    width: 100%;
+    min-width: calc(var(--message-item-width) + var(--element-gap) * 3 + var(--icon-base-size));
+    max-width: calc(100% - var(--element-gap)* 2);
+    min-height: var(--message-item-height);
+    background-color: var(--error-background-color);
+    display: flex;
+    align-items: start;
+    margin-top: var(--element-margin);
+    animation: slide-down 0.5s ease-out forwards, fade-out 5s ease-in-out forwards;
+    border-radius: var(--border-min-radius);
+    border: var(--border-base-width) solid var(--error-border-color);
+    box-sizing: border-box;
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+}
+.message_icon{
+    /*消息图标*/
+    width: var(--icon-base-size);
+    padding-top: 8px;
+    margin-right: var(--element-margin);
+}
+.error_message_icon{
+    /*警告消息图标*/
+    width: var(--icon-base-size);
+    padding-top: 8px;
+    margin-right: var(--element-margin);
+}
+.message_text{
+    /*消息文本*/
+    width: 100%;
+    flex-grow: 1;
+    font-size: var(--text-label-size);
+    color: var(--message-text-color);
+    white-space: normal;
+    padding-top: var(--element-margin);
+    padding-bottom: var(--element-margin);
+}
+.error_message_text{
+    /*警告消息文本*/
+    width: 100%;
+    flex-grow: 1;
+    font-size: var(--text-label-size);
+    color: var(--error-text-color);
+    white-space: normal;
+    padding-top: var(--element-margin);
+    padding-bottom: var(--element-margin);
+}

@@ -17,7 +17,10 @@ ReportInfo = {
     "010": "Token无效",
     "011": "Token过期",
     "012": "文件不存在",
-    "013": "文件夹名不能为空"
+    "013": "文件夹名不能为空",
+    "014": "编辑成功",
+    "015": "父文件夹不能选择当前编辑的文件夹",
+    "016": "删除成功"
 }
 
 FsServer = FileSystemServer(get_config_path("file_sys_db_path"))

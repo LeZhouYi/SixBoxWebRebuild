@@ -1,5 +1,3 @@
-import { requestConfig, ApiError } from "./requestor.js";
-
 export const hiddenClass = "hidden";
 
 export function setBackgroundImage(className, fileUrl){
@@ -119,6 +117,15 @@ export function adjustRelativeLDPopup(popupElementId, startX, startY){
     popupElement.style.top = y + "px";
 }
 
+export function addObserveResizeHiddenById(elementId){
+    /*
+        页面变化后隐藏，并移除监听器
+        添加Math.floor的原因是因为beforeRect和contentRect两者的数值精度不一致
+    */
+    let element = document.getElementById(elementId);
+    addObserveResizeHidden(element);
+}
+
 export function addObserveResizeHidden(element){
     /*
         页面变化后隐藏，并移除监听器
@@ -151,8 +158,11 @@ export function clickOverlayHidden(overlayId, contentId){
     if (overlayElement){
         overlayElement.addEventListener("click", function(event){
             /*监听元素是否在弹窗外部*/
-            hiddenElementById(contentId);
-            event.preventDefault();
+            let contentElement = document.getElementById(contentId);
+            if (contentElement && !contentElement.contains(event.target)){
+                hiddenElement(overlayElement);
+                event.preventDefault();
+            }
         });
     }
 }
@@ -173,9 +183,7 @@ export function hiddenElement(element, callback){
     /*隐藏元素*/
     if (element){
         element.classList.add(hiddenClass);
-        if(callback){
-            callback();
-        }
+        callback?.();
         return true;
     }
     return false;
@@ -185,9 +193,7 @@ export function displayElement(element, callback){
     /*显示元素*/
     if (element && element.classList.contains(hiddenClass)){
         element.classList.remove(hiddenClass);
-        if(callback){
-            callback();
-        }
+        callback?.();
         return true;
     }
     return false;
@@ -198,9 +204,7 @@ export function hiddenElementById(elementId, callback){
     let element = document.getElementById(elementId);
     if (element){
         element.classList.add(hiddenClass);
-        if(callback){
-            callback();
-        }
+        callback?.();
         return true;
     }
     return false;
@@ -211,10 +215,13 @@ export function displayElementById(elementId, callback){
     let element = document.getElementById(elementId);
     if (element && element.classList.contains(hiddenClass)){
         element.classList.remove(hiddenClass);
-        if(callback){
-            callback();
-        }
+        callback?.();
         return true;
     }
     return false;
+}
+
+export function isHidden(element){
+    /*判断元素是否拥有hidden类*/
+    return element && element.classList.contains(hiddenClass);
 }

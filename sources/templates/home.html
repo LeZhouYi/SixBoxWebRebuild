@@ -1,8 +1,9 @@
 {% extends 'common/page_web_base.html' %}
 
 {% block css_file %}
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/file_sys_style.css')}}"/>
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/side_bar_style.css')}}"/>
+    {% assets "file_system_css" %}
+        <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}"/>
+    {% endassets %}
 {% endblock %}
 
 {% block body_class %}body_theme{% endblock %}
@@ -14,5 +15,7 @@
 {% endblock %}
 
 {% block js_file %}
-    <script type="module" src="{{url_for('static', filename='/js/sixbox/home.js')}}"></script>
+    {% assets "file_system_js" %}
+        <script type="module" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
 {% endblock %}

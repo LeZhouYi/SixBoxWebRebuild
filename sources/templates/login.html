@@ -1,7 +1,9 @@
 {% extends 'common/page_web_base.html' %}
 
 {% block css_file %}
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/login_style.css')}}"/>
+    {% assets "login_css" %}
+        <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}"/>
+    {% endassets %}
 {% endblock %}
 
 {% block body_content %}
@@ -10,5 +12,7 @@
 {% endblock %}
 
 {% block js_file %}
-    <script type="module" src="{{url_for('static', filename='/js/sixbox/login.js')}}"></script>
+    {% assets "login_js" %}
+        <script type="module" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
 {% endblock %}

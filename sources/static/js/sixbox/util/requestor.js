@@ -15,6 +15,29 @@ export class ApiError extends Error{
     }
 }
 
+async function fetchWithRetry(requestFunc,retryTimes=1){
+    /*出现401则重试，成功则返回response*/
+    while(retryTimes>=0){
+        let response = await requestFunc();
+        if (response.ok){
+            return response;
+        }else if (response.status===401){
+            /*重新获取Token*/
+            retryTimes = retryTimes - 1;
+            try{
+                await refreshToken();
+            }catch(error){
+                throw new ApiError(error.message, "REFRESH FAIL");
+            }
+        }else if (whiteErrorCode.includes(response.status)){
+            let data = await response.json();
+            throw new ApiError(`HTTP ERROR: ${response.status}`, "NORMAL ERROR", data);
+        }else{
+            throw new Error(`HTTP ERROR: ${response.status}`);
+        }
+    }
+}
+
 export async function postJson(url, postData){
     /*post传输json数据*/
     const response = await fetch(requestConfig.apiPrefix+url, {
@@ -40,7 +63,7 @@ export async function postJson(url, postData){
 export async function postJsonWithAuth(url,postData){
     /*带重试，Bearer验证的post方法获取Json数据的接口*/
     /*请求*/
-    let requestFunc = async function(url){
+    let requestFunc = async function(){
         let accessToken = localStorage.getItem("accessToken");
         return fetch(requestConfig.apiPrefix+url, {
             method: "POST",
@@ -51,33 +74,34 @@ export async function postJsonWithAuth(url,postData){
             body: JSON.stringify(postData)
         });
     }
-    /*出现401则重试*/
-    let retryTimes = 1;
-    while(retryTimes>=0){
-        let response = await requestFunc(url);
-        if (response.ok){
-            return response.json();
-        }else if (response.status===401){
-            /*重新获取Token*/
-            retryTimes = retryTimes - 1;
-            try{
-                await refreshToken();
-            }catch(error){
-                throw new ApiError(error.message, "REFRESH FAIL");
-            }
-        }else if (whiteErrorCode.includes(response.status)){
-            let data = await response.json();
-            throw new ApiError(`HTTP ERROR: ${response.status}`, "NORMAL ERROR", data);
-        }else{
-            throw new Error(`HTTP ERROR: ${response.status}`);
-        }
+    let response = await fetchWithRetry(requestFunc);
+    let data = await response.json();
+    return data;
+}
+
+export async function putJsonWithAuth(url,postData){
+    /*带重试，Bearer验证的put方法获取Json数据的接口*/
+    /*请求*/
+    let requestFunc = async function(){
+        let accessToken = localStorage.getItem("accessToken");
+        return fetch(requestConfig.apiPrefix+url, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(postData)
+        });
     }
+    let response = await fetchWithRetry(requestFunc);
+    let data = await response.json();
+    return data;
 }
 
 export async function getJsonWithAuth(url){
     /*带重试，Bearer验证的Get方法获取Json数据的接口*/
     /*请求*/
-    let requestFunc = async function(url){
+    let requestFunc = async function(){
         let accessToken = localStorage.getItem("accessToken");
         return fetch(requestConfig.apiPrefix+url, {
             method: "GET",
@@ -87,32 +111,15 @@ export async function getJsonWithAuth(url){
         });
     }
     /*出现401则重试*/
-    let retryTimes = 1;
-    while(retryTimes>=0){
-        let response = await requestFunc(url);
-        if (response.ok){
-            return response.json();
-        }else if (response.status===401){
-            /*重新获取Token*/
-            retryTimes = retryTimes - 1;
-            try{
-                await refreshToken();
-            }catch(error){
-                throw new ApiError(error.message, "REFRESH FAIL");
-            }
-        }else if (whiteErrorCode.includes(response.status)){
-            let data = await response.json();
-            throw new ApiError(`HTTP ERROR: ${response.status}`, "NORMAL ERROR", data);
-        }else{
-            throw new Error(`HTTP ERROR: ${response.status}`);
-        }
-    }
+    let response = await fetchWithRetry(requestFunc);
+    let data = await response.json();
+    return data;
 }
 
 export async function postFormWithAuth(url, formData){
     /*带重试，Bearer验证的POST方法传输form-data数据的接口*/
     /*请求*/
-    let requestFunc = async function(url){
+    let requestFunc = async function(){
         let accessToken = localStorage.getItem("accessToken");
         return fetch(requestConfig.apiPrefix+url, {
             method: "POST",
@@ -122,27 +129,9 @@ export async function postFormWithAuth(url, formData){
             body: formData
         });
     }
-    /*出现401则重试*/
-    let retryTimes = 1;
-    while(retryTimes>=0){
-        let response = await requestFunc(url);
-        if (response.ok){
-            return response.json();
-        }else if (response.status===401){
-            /*重新获取Token*/
-            retryTimes = retryTimes - 1;
-            try{
-                await refreshToken();
-            }catch(error){
-                throw new ApiError(error.message, "REFRESH FAIL");
-            }
-        }else if (whiteErrorCode.includes(response.status)){
-            let data = await response.json();
-            throw new ApiError(`HTTP ERROR: ${response.status}`, "NORMAL ERROR", data);
-        }else{
-            throw new Error(`HTTP ERROR: ${response.status}`);
-        }
-    }
+    let response = await fetchWithRetry(requestFunc);
+    let data = await response.json();
+    return data;
 }
 
 async function refreshToken(){
