@@ -50,8 +50,6 @@
     /*通用*/
     --header-height: 77px;  /*标题栏*/
     --pop-form-width: 640px;    /*表单类型弹窗宽*/
-    --message-item-width: 285px;    /*消息类型弹窗宽*/
-    --message-item-height: 48px;    /*消息类型弹窗高*/
 }
 
 /*通用*/

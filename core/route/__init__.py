@@ -16,18 +16,19 @@ def register_blueprints(app: flask.Flask):
 def register_css_assets(assets: Environment):
     """注册所有css资源"""
     assets.register("login_css", Bundle(
-        "css/styles.css",
         "css/message_style.css",
         "css/login_style.css",
+        "css/styles.css",
         filters="cssmin",
         output="css/generate/login.css"
     ))
     assets.register("file_system_css", Bundle(
-        "css/styles.css",
         "css/message_style.css",
+        "css/confirm_popup_style.css",
         "css/side_bar_style.css",
         "css/page_select_style.css",
         "css/file_sys_style.css",
+        "css/styles.css",
         filters="cssmin",
         output="css/generate/file_system.css"
     ))

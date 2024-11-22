@@ -1,3 +1,8 @@
+:root{
+    --message-item-width: 285px;    /*消息类型弹窗宽*/
+    --message-item-height: 48px;    /*消息类型弹窗高*/
+}
+
 /*----消息弹窗----*/
 .message_container{
     /*消息容器*/
@@ -13,9 +18,6 @@
 }
 .message_item{
     /*正常的消息容器*/
-    width: 100%;
-    min-width: calc(var(--message-item-width) + var(--element-gap) * 3 + var(--icon-base-size));
-    max-width: calc(100% - var(--element-gap)* 2);
     min-height: var(--message-item-height);
     background-color: var(--message-background-color);
     display: flex;
@@ -30,9 +32,6 @@
 }
 .error_message_item{
     /*警告的消息容器*/
-    width: 100%;
-    min-width: calc(var(--message-item-width) + var(--element-gap) * 3 + var(--icon-base-size));
-    max-width: calc(100% - var(--element-gap)* 2);
     min-height: var(--message-item-height);
     background-color: var(--error-background-color);
     display: flex;
@@ -59,7 +58,7 @@
 }
 .message_text{
     /*消息文本*/
-    width: 100%;
+    min-width: var(--message-item-width);
     flex-grow: 1;
     font-size: var(--text-label-size);
     color: var(--message-text-color);
@@ -69,7 +68,7 @@
 }
 .error_message_text{
     /*警告消息文本*/
-    width: 100%;
+    min-width: var(--message-item-width);
     flex-grow: 1;
     font-size: var(--text-label-size);
     color: var(--error-text-color);

@@ -345,6 +345,12 @@ document.getElementById("file_edit_form").addEventListener("submit", function(ev
     }
 });
 
+document.getElementById("file_delete_button").addEventListener("click", function(event){
+    /*点击弹出删除文件确认窗口*/
+    displayElementById("confirm_popup_overlay");
+    document.getElementById("confirm_pop_text").textContent = "确认删除？";
+});
+
 function updatePageInput(event){
     /*监听页面输入事件*/
     let value = event.target.value.replace(/\D/g, '');
