@@ -116,6 +116,24 @@ export async function getJsonWithAuth(url){
     return data;
 }
 
+export async function deleteJsonWithAuth(url){
+    /*带重试，Bearer验证的Delete方法获取Json数据的接口*/
+    /*请求*/
+    let requestFunc = async function(){
+        let accessToken = localStorage.getItem("accessToken");
+        return fetch(requestConfig.apiPrefix+url, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${accessToken}`
+            }
+        });
+    }
+    /*出现401则重试*/
+    let response = await fetchWithRetry(requestFunc);
+    let data = await response.json();
+    return data;
+}
+
 export async function postFormWithAuth(url, formData){
     /*带重试，Bearer验证的POST方法传输form-data数据的接口*/
     /*请求*/

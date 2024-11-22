@@ -1,5 +1,9 @@
+:root{
+    --confirm-button-width: 204px;    /*文件菜单栏按钮宽*/
+    --confirm-item-height: 48px;  /*文件菜单栏行高*/
+}
+
 .confirm_popup_content{
-    width: var(--pop-form-width);
     background-color: white;
     border: 2px solid var(--theme-part-color);
     display: flex;
@@ -8,4 +12,35 @@
     border-radius: var(--border-radius);
     box-sizing: border-box;
     transition: height 1s ease, width 1s ease;
+}
+.confirm_popup_text{
+    width:100%;
+    font-size: var(--text-header-size);
+    font-weight: bold;
+    color: var(--text-main-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: var(--element-gap);
+    display: flex;
+    justify-content: center;
+}
+.confirm_popup_button{
+    width: var(--confirm-button-width);
+    height: var(--confirm-item-height);
+    font-size: var(--main-text-size);
+    box-sizing: border-box;
+    border: var(--border-base-width) solid var(--theme-part-color);
+    background-color: var(--theme-part-color);
+    border-radius: var(--border-min-radius);
+    color: var(--text-active-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+.confirm_popup_button:hover{
+    border: var(--border-base-width) solid var(--theme-part-color);
+    background-color: var(--theme-background-color);
+    color: var(--text-main-color);
 }

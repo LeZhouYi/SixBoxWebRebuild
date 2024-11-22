@@ -225,5 +225,5 @@ def delete_folder(folder_id: str):
         return verify_result
     if is_str_empty(folder_id) or not FsServer.is_folder_exist(folder_id):
         return gen_fail_response(ReportInfo["009"])
-    FsServer.delete_file(folder_id)
+    FsServer.delete_folder(folder_id)
     return gen_success_response(ReportInfo["016"])

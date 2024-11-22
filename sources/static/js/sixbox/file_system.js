@@ -35,6 +35,7 @@ window.onload = function() {
     clickOverlayHidden("file_add_popup_overlay", "file_add_content");
     clickOverlayHidden("file_control_overlay", "file_control_content");
     clickOverlayHidden("file_edit_popup_overlay", "file_edit_content");
+    clickOverlayHidden("confirm_popup_overlay", "confirm_popup_content");
 };
 
 window.addEventListener("resize", throttle(function(){
@@ -43,9 +44,13 @@ window.addEventListener("resize", throttle(function(){
 
 document.getElementById("all_file_button").addEventListener("click", function(event){
     /*点击所有文件*/
-    localStorage.setItem("nowFolderId", "1");
-    localStorage.setItem("nowPage", "1");
-    updateFileList();
+    let nowFolderId = localStorage.getItem("nowFolderId");
+    let nowPage = localStorage.getItem("nowPage");
+    if(nowFolderId!=="1"||nowPage!=="1"){
+        localStorage.setItem("nowFolderId", "1");
+        localStorage.setItem("nowPage", "1");
+        updateFileList();
+    }
 });
 
 document.getElementById("folder_add_form").addEventListener("submit", function(event){
@@ -329,7 +334,6 @@ document.getElementById("file_edit_form").addEventListener("submit", function(ev
         parentId: document.getElementById("file_edit_folder_select").value
     };
     let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
-    console.log("test");
     if(nowControlData.type==="0"){
         putJsonWithAuth(`/folders/${nowControlData.id}`, formData).then(data=>{
             displayMessage(data.message);
@@ -348,8 +352,34 @@ document.getElementById("file_edit_form").addEventListener("submit", function(ev
 document.getElementById("file_delete_button").addEventListener("click", function(event){
     /*点击弹出删除文件确认窗口*/
     displayElementById("confirm_popup_overlay");
+    hiddenElementById("file_control_overlay");
     document.getElementById("confirm_pop_text").textContent = "确认删除？";
 });
+
+document.getElementById("cancel_popup_button").addEventListener("click", function(event){
+    /*点击取消*/
+    hiddenElementById("confirm_popup_overlay");
+});
+
+document.getElementById("confirm_popup_button").addEventListener("click", function(event){
+    /*点击确认删除*/
+    let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+    if (nowControlData.type==="0"){
+        let deleteUrl = `/folders/${nowControlData.id}`;
+        deleteJsonWithAuth(deleteUrl).then(data=>{
+            displayMessage(data.message);
+            hiddenElementById("confirm_popup_overlay");
+            updateFileList();
+        });
+    }else{
+        let deleteUrl = `/files/${nowControlData.id}`;
+        deleteJsonWithAuth(deleteUrl).then(data=>{
+            displayMessage(data.message);
+            hiddenElementById("confirm_popup_overlay");
+            updateFileList();
+        });
+    }
+})
 
 function updatePageInput(event){
     /*监听页面输入事件*/
@@ -403,11 +433,10 @@ async function updateFileList(){
         addFilePathElement("file_path_bar", data.name, data.id);
     }
     catch(error){
+        displayError(error);
         if(localStorage.getItem("nowFolderId") !== "1"){
             localStorage.setItem("nowFolderId", "1")
             updateFileList();
-        }else{
-            displayError(error);
         }
     }
 }

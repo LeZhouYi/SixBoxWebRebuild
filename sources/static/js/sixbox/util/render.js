@@ -145,7 +145,6 @@ export function addObserveResizeHidden(element){
                     element.classList.add(hiddenClass);
                     resizeObserver.unobserve(element);
                 }
-
             }
         }
     });
