@@ -1,11 +1,20 @@
+# 运行环境文件
 .idea
 .venv
-/data
-!/data/static/icons/
+
+# 保留icons
+!/data
+/data/*
+!/data/static
+/data/static/*
+!/data/static/icons
+
+# 运行生成文件
 __pycache__/
-main.spec
-/build
-/dist
 /sources/static/.webassets-cache
 /sources/static/css/generate
 /sources/static/js/generate
+
+# 打包生成文件
+/build
+/dist
