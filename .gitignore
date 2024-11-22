@@ -1,7 +1,7 @@
 .idea
 .venv
 /data
-!/data/static/icons/*
+!/data/static/icons/
 __pycache__/
 main.spec
 /build
