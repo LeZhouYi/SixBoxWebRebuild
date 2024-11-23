@@ -381,6 +381,14 @@ document.getElementById("confirm_popup_button").addEventListener("click", functi
     }
 })
 
+document.getElementById("file_search_input").addEventListener("keydown", function(event){
+    /*输入搜索文件*/
+    if(event.key==="Enter"||event.keyCode===13){
+        console.log("test");
+        event.preventDefault();
+    }
+});
+
 function updatePageInput(event){
     /*监听页面输入事件*/
     let value = event.target.value.replace(/\D/g, '');

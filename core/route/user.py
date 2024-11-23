@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify, Response, render_template
 
 from core.common.route_utils import is_key_str_empty, gen_fail_response, get_client_ip, gen_success_response, \
     get_bearer_token, is_str_empty
-from core.route.route_data import ReportInfo, UsrServer, SessServer, gen_prefix_api
+from core.route.route_data import ReportInfo, UsrServer, SessServer, gen_prefix_api, verify_token
 
 UserBp = Blueprint("user", __name__)
 
@@ -57,20 +57,3 @@ def refresh():
         if data_or_info == "TOKEN INVALID":
             return gen_fail_response(ReportInfo["010"], 400)
     return jsonify(data_or_info)
-
-
-def verify_token(request_in: flask.request) -> tuple[Response, int] | tuple[str, str]:
-    """验证Token"""
-    token = get_bearer_token(request_in)
-    if token is None:
-        token = request_in.args.get("token")
-    if is_str_empty(token):
-        return gen_fail_response(ReportInfo["010"], 401)
-    client_ip = get_client_ip(request_in)
-    result, data_or_info = SessServer.verify(token, client_ip)
-    if result is False:
-        if data_or_info == "TOKEN INVALID":
-            return gen_fail_response(ReportInfo["010"], 401)
-        elif data_or_info == "TOKEN EXPIRED":
-            return gen_fail_response(ReportInfo["011"], 401)
-    return data_or_info["userId"], client_ip

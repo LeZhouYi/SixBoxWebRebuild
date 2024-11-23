@@ -10,8 +10,7 @@ from core.common.route_utils import gen_fail_response, is_str_empty, gen_id, gen
 from core.config.config import get_config_path
 from core.database.file_system import FileType
 from core.log.log import logger
-from core.route.route_data import ReportInfo, FsServer, FsConfig, gen_prefix_api
-from core.route.user import verify_token
+from core.route.route_data import ReportInfo, FsServer, FsConfig, gen_prefix_api, verify_token, verify_page_limit
 
 FileSystemBp = Blueprint("file_system", __name__)
 
@@ -170,7 +169,7 @@ def edit_file(file_id: str):
 
 @FileSystemBp.route(gen_prefix_api("/folders/<folder_id>"), methods=["GET"])
 def get_folder_content(folder_id: str):
-    """获取文件"""
+    """获取文件夹"""
     # verify
     verify_result = verify_token(request)
     if isinstance(verify_result[0], Response):
@@ -178,13 +177,10 @@ def get_folder_content(folder_id: str):
     if is_str_empty(folder_id) or not FsServer.is_folder_exist(folder_id):
         return gen_fail_response(ReportInfo["009"])
     search_type = request.args.get("type")
-    page = request.args.get("_page")
-    if page is not None:
-        page = int(page)
-    limit = request.args.get("_limit")
-    if limit is not None:
-        limit = int(limit)
-    return jsonify(FsServer.get_folder_detail(folder_id, search_type, page, limit))
+    page_result = verify_page_limit(request)
+    if isinstance(page_result[0], Response):
+        return page_result
+    return jsonify(FsServer.get_folder_detail(folder_id, search_type, page_result[0], page_result[1]))
 
 
 def check_file_ext(file: FileStorage) -> bool:
@@ -219,7 +215,6 @@ def delete_file(file_id: str):
 @FileSystemBp.route(gen_prefix_api("/folders/<folder_id>"), methods=["DELETE"])
 def delete_folder(folder_id: str):
     """删除文件夹"""
-    # verify
     verify_result = verify_token(request)
     if isinstance(verify_result[0], Response):
         return verify_result
@@ -227,3 +222,18 @@ def delete_folder(folder_id: str):
         return gen_fail_response(ReportInfo["009"])
     FsServer.delete_folder(folder_id)
     return gen_success_response(ReportInfo["016"])
+
+
+@FileSystemBp.route(gen_prefix_api("/files"), methods=["GET"])
+def search_file():
+    """搜索文件和文件夹"""
+    verify_result = verify_token(request)
+    if isinstance(verify_result[0], Response):
+        return verify_result
+    page_result = verify_page_limit(request)
+    if isinstance(page_result[0], Response):
+        return page_result
+    search_name = request.args.get("nameLike")
+    if is_str_empty(search_name):
+        return gen_fail_response(ReportInfo["021"])
+    return jsonify(FsServer.search_file(search_name, page_result[0], page_result[1]))
