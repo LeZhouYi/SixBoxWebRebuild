@@ -28,14 +28,14 @@ window.onload = function() {
     /*页面调整*/
     resizeFullScreen();
 
-    /*动画相关初始化*/
-    document.getElementById("file_sys_container").classList.add("padding_trans");
-
     /*事件相关*/
     clickOverlayHidden("file_add_popup_overlay", "file_add_content");
     clickOverlayHidden("file_control_overlay", "file_control_content");
     clickOverlayHidden("file_edit_popup_overlay", "file_edit_content");
     clickOverlayHidden("confirm_popup_overlay", "confirm_popup_content");
+
+    /*动画相关初始化*/
+    document.getElementById("file_sys_container").classList.add("padding_trans");
 };
 
 window.addEventListener("resize", throttle(function(){
@@ -180,16 +180,26 @@ document.getElementById("file_add_item_button").addEventListener("click", functi
 document.getElementById("file_sys_side_button").addEventListener("click", function(event){
     /*切换隐藏或显示侧边栏*/
     let sideBarElement = document.getElementById("side_bar_container");
-    let fileSysContainer = document.getElementById("file_sys_container");
-    let sidebarHidden = "side_bar_hidden";  //添加将侧边栏往左移出页面
-    let sideBarExpand = "side_bar_expand";  //添加将页面主内容腾出侧边栏的显示空间
-    if(sideBarElement && fileSysContainer){
-        if(sideBarElement.classList.contains(sidebarHidden)){
-            sideBarElement.classList.remove(sidebarHidden);
-            fileSysContainer.classList.add(sideBarExpand);
-        }else if(!sideBarElement.classList.contains(sidebarHidden)){
-            sideBarElement.classList.add(sidebarHidden);
-            fileSysContainer.classList.remove(sideBarExpand);
+    if (isInClientWidth(0,399)){
+        let sideMobileHidden = "side_mobile_hidden";
+        if (sideBarElement.classList.contains(sideMobileHidden)){
+            sideBarElement.classList.remove(sideMobileHidden);
+            hiddenElement(event.target);
+        }else{
+            sideBarElement.classList.add(sideMobileHidden);
+        }
+    } else{
+        let fileSysContainer = document.getElementById("file_sys_container");
+        let sideBarExpand = "side_bar_expand";  //添加将页面主内容腾出侧边栏的显示空间
+        let sidebarHidden = "side_bar_hidden";  //添加将侧边栏往左移出页面
+        if(sideBarElement && fileSysContainer){
+            if(sideBarElement.classList.contains(sidebarHidden)){
+                sideBarElement.classList.remove(sidebarHidden);
+                fileSysContainer.classList.add(sideBarExpand);
+            }else if(!sideBarElement.classList.contains(sidebarHidden)){
+                sideBarElement.classList.add(sidebarHidden);
+                fileSysContainer.classList.remove(sideBarExpand);
+            }
         }
     }
 });
@@ -645,7 +655,7 @@ function checkLocalStorage(){
 
     loadUrlParamInLocal(["nowFolderId"]);
     checkLocalDefault("nowFolderId", "1");
-    checkLocalDefault("nowLimit", "10");
+    checkLocalDefault("nowLimit", "20");
 
     localStorage.setItem("nowPage", "1");
     localStorage.setItem("nowTotalPage", "1");

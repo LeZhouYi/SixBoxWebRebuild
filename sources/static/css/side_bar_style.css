@@ -113,3 +113,27 @@
     /*隐藏侧边栏*/
     transform: translateX(-100%);  /*将侧边栏移出*/
 }
+.side_mobile_hidden{
+    transform: translateX(-100%);  /*将侧边栏移出*/
+}
+
+/*响应式*/
+@media (max-width: 399px), (max-device-width: 399px){
+    .side_bar_expand{
+        /*侧边栏占居的空间*/
+        padding-left: 0;
+    }
+    .side_bar_container{
+        background-color: var(--theme-main-color);
+    }
+}
+
+@media (min-width: 400px), (min-device-width: 400px) {
+    .side_mobile_hidden{
+        transform: translateX(0);
+    }
+    .side_bar_hidden{
+        /*隐藏侧边栏*/
+        transform: translateX(-100%);  /*将侧边栏移出*/
+    }
+}

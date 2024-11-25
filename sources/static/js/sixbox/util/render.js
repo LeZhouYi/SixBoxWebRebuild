@@ -97,10 +97,10 @@ export function adjustRelativeLDPopup(popupElementId, startX, startY){
     let innerHeight = window.innerHeight;
     /*调整元素宽度*/
     if(elementWidth > innerWidth){
-        popupElement.style.width = "100%";
+        popupElement.style.width = (window.innerWidth - 36) + "px";
     }
     if(elementHeight > innerHeight){
-        popupElement.style.height = "100%";
+        popupElement.style.height = (window.innerHeight - 36) + "px";
     }
     elementWidth = popupElement.offsetWidth;
     elementHeight = popupElement.offsetHeight;
@@ -108,10 +108,10 @@ export function adjustRelativeLDPopup(popupElementId, startX, startY){
     let x = startX-elementWidth;
     let y = startY;
     if (x<0){
-        x = 0;
+        x = 18;
     }
     if (y +elementHeight > innerHeight){
-        y = innerHeight-elementHeight;
+        y = innerHeight-elementHeight - 18;
     }
     popupElement.style.left = x + "px";
     popupElement.style.top = y + "px";
@@ -223,4 +223,13 @@ export function displayElementById(elementId, callback){
 export function isHidden(element){
     /*判断元素是否拥有hidden类*/
     return element && element.classList.contains(hiddenClass);
+}
+
+export function isInClientWidth(start=0,end=399,callback){
+    /*判断当前页面是否在范围宽度内*/
+    let width = document.documentElement.clientWidth;
+    if (width>=start && width <= end){
+        callback?.();
+        return true;
+    }
 }
