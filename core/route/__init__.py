@@ -19,6 +19,7 @@ def register_css_assets(assets: Environment):
         "css/message_style.css",
         "css/login_style.css",
         "css/styles.css",
+        "css/responsive.css",
         filters="cssmin",
         output="css/generate/login.css"
     ))
@@ -29,6 +30,7 @@ def register_css_assets(assets: Environment):
         "css/page_select_style.css",
         "css/file_sys_style.css",
         "css/styles.css",
+        "css/responsive.css",
         filters="cssmin",
         output="css/generate/file_system.css"
     ))

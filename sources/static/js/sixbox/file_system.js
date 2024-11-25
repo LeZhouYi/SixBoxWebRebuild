@@ -33,14 +33,18 @@ window.onload = function() {
     clickOverlayHidden("file_control_overlay", "file_control_content");
     clickOverlayHidden("file_edit_popup_overlay", "file_edit_content");
     clickOverlayHidden("confirm_popup_overlay", "confirm_popup_content");
+    bindSideBarEvent("file_sys_side_button", "file_sys_container");
 
     /*动画相关初始化*/
     document.getElementById("file_sys_container").classList.add("padding_trans");
-};
 
-window.addEventListener("resize", throttle(function(){
-    resizeFullScreen("bodyContainer");
-}), 200);
+    window.addEventListener("resize", throttle(function(){
+        resizeFullScreen("bodyContainer");
+    }), 200);
+    window.addEventListener("resize", throttle(function(){
+        onSideBarReside();
+    }), 2000);
+};
 
 document.getElementById("all_file_button").addEventListener("click", function(event){
     /*点击所有文件*/
@@ -175,33 +179,6 @@ document.getElementById("file_add_select_element").addEventListener("change", fu
 document.getElementById("file_add_item_button").addEventListener("click", function(event){
     /*点击新增选择文件*/
     document.getElementById("file_add_select_element").click();
-});
-
-document.getElementById("file_sys_side_button").addEventListener("click", function(event){
-    /*切换隐藏或显示侧边栏*/
-    let sideBarElement = document.getElementById("side_bar_container");
-    if (isInClientWidth(0,399)){
-        let sideMobileHidden = "side_mobile_hidden";
-        if (sideBarElement.classList.contains(sideMobileHidden)){
-            sideBarElement.classList.remove(sideMobileHidden);
-            hiddenElement(event.target);
-        }else{
-            sideBarElement.classList.add(sideMobileHidden);
-        }
-    } else{
-        let fileSysContainer = document.getElementById("file_sys_container");
-        let sideBarExpand = "side_bar_expand";  //添加将页面主内容腾出侧边栏的显示空间
-        let sidebarHidden = "side_bar_hidden";  //添加将侧边栏往左移出页面
-        if(sideBarElement && fileSysContainer){
-            if(sideBarElement.classList.contains(sidebarHidden)){
-                sideBarElement.classList.remove(sidebarHidden);
-                fileSysContainer.classList.add(sideBarExpand);
-            }else if(!sideBarElement.classList.contains(sidebarHidden)){
-                sideBarElement.classList.add(sidebarHidden);
-                fileSysContainer.classList.remove(sideBarExpand);
-            }
-        }
-    }
 });
 
 document.getElementById("page_input_id").addEventListener("input", function(event){

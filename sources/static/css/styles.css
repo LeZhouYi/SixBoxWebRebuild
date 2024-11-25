@@ -129,6 +129,10 @@
     /*边缘变换动画*/
     transition: padding 1s ease;
 }
+.click_throw{
+    /*点击事件穿透该元素*/
+    pointer-events: none;
+}
 
 /*响应式*/
 @media (max-width: 399px), (max-device-width: 399px){

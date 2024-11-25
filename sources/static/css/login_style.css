@@ -108,19 +108,3 @@
     background-color: var(--theme-active-color);
     color: var(--text-main-color);
 }
-
-/*响应式*/
-@media (max-width: 999px), (max-device-width: 999px){
-    .login_body_container{
-        grid-template-columns: 1fr;
-    }
-    .login_background_image{
-        display: none;
-    }
-    .login_panel{
-        width: 100%;
-        padding-left: var(--element-gap);
-        padding-right: var(--element-gap);
-        box-sizing: border-box;
-    }
-}
