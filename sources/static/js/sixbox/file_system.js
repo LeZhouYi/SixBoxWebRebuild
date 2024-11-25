@@ -46,9 +46,11 @@ document.getElementById("all_file_button").addEventListener("click", function(ev
     /*点击所有文件*/
     let nowFolderId = localStorage.getItem("nowFolderId");
     let nowPage = localStorage.getItem("nowPage");
-    if(nowFolderId!=="1"||nowPage!=="1"){
+    let searchInput = document.getElementById("file_search_input");
+    if(nowFolderId!=="1"||nowPage!=="1"||searchInput.value!==""){
         localStorage.setItem("nowFolderId", "1");
         localStorage.setItem("nowPage", "1");
+        searchInput.value="";
         updateFileList();
     }
 });
@@ -384,9 +386,15 @@ document.getElementById("confirm_popup_button").addEventListener("click", functi
 document.getElementById("file_search_input").addEventListener("keydown", function(event){
     /*输入搜索文件*/
     if(event.key==="Enter"||event.keyCode===13){
-        console.log("test");
         event.preventDefault();
+        event.target.blur();
     }
+});
+
+document.getElementById("file_search_input").addEventListener("blur", function(event){
+    /*失去焦点触发页面输入*/
+    event.preventDefault();
+    updateFileList();
 });
 
 function updatePageInput(event){
@@ -416,6 +424,31 @@ function updatePageInput(event){
 
 async function updateFileList(){
     /*更新文件列表*/
+    try {
+        let searchInput = document.getElementById("file_search_input");
+        if (searchInput.value!==""){
+            let nowPage = localStorage.getItem("nowPage");
+            let nowLimit = localStorage.getItem("nowLimit");
+
+            setPageLimit("page_select_limit",nowLimit);
+            setNowPage("page_input_id", nowPage);
+
+            let pageIndex = parseInt(nowPage)-1;
+            let data = await getJsonWithAuth(`/files?nameLike=${searchInput.value}&_page=${pageIndex}&_limit=${nowLimit}`);
+
+            let contents = data.contents;
+            let fileListTable = document.getElementById("file_table_body");
+            fileListTable.innerHTML = null;
+            contents.forEach(content => {
+                fileListTable.appendChild(createFileItem(content));
+            });
+            setTotalPage(data.total,"page_text_id",nowLimit);
+            return;
+        }
+    }catch(error){
+        displayError(error);
+    }
+
     try {
         let nowFolderId = localStorage.getItem("nowFolderId");
         let nowPage = localStorage.getItem("nowPage");
@@ -452,7 +485,7 @@ async function updateFileList(){
 async function loadFolderSelect(dataListId, nowFolderId, editFolderId=null){
     /*为特定元素提供候选输入*/
     try {
-        let data = await getJsonWithAuth(`/folders/${nowFolderId}?type=0`);
+        let data = await getJsonWithAuth(`/folders/${nowFolderId}?type=0&_page=0&_limit=999`);
         let contents = data.contents;
         let selectElement = document.getElementById(dataListId);
         selectElement.innerHTML = null;
@@ -579,6 +612,7 @@ function bindClickFolder(element, folderId){
     /*绑定文件夹点击事件*/
     element.addEventListener("click", function(event){
         localStorage.setItem("nowFolderId", folderId);
+        document.getElementById("file_search_input").value="";
         updateFileList();
     });
 }
@@ -660,8 +694,10 @@ function addFilePathElement(parentId, folderName, folderId){
     folderElement.classList.add("file_path_text","clickable");
     folderElement.addEventListener("click", function(event){
         let nowFolderId = localStorage.getItem("nowFolderId");
-        if (nowFolderId !== folderId){
+        let searchInput = document.getElementById("file_search_input");
+        if (nowFolderId !== folderId || searchInput.value!==""){
             localStorage.setItem("nowFolderId", folderId);
+            searchInput.value="";
             updateFileList();
         }
     });
