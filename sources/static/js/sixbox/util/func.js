@@ -1,4 +1,4 @@
-export function throttle(func, limit){
+function throttle(func, limit){
     /*节流*/
     let inThrottle = false;  //标志位
     return function() {
@@ -12,7 +12,7 @@ export function throttle(func, limit){
     };
 }
 
-export function getUrlParam(paramName){
+function getUrlParam(paramName){
     /*获取URL特定的查询参数*/
     let queryString = window.location.search;
     let params = new URLSearchParams(queryString);
@@ -22,7 +22,7 @@ export function getUrlParam(paramName){
     return null;
 }
 
-export function loadUrlParamInLocal(paramArray){
+function loadUrlParamInLocal(paramArray){
     /*读取特定参数并将读取到的值写入localStorage*/
     if (!Array.isArray(paramArray)){
         return;
@@ -39,14 +39,14 @@ export function loadUrlParamInLocal(paramArray){
     });
 }
 
-export function checkLocalDefault(itemKey, defaultValue){
+function checkLocalDefault(itemKey, defaultValue){
     /*检查LocalStorage,若不存在数据则设置默认值*/
     if(localStorage.getItem(itemKey)===null){
         localStorage.setItem(itemKey, defaultValue);
     }
 }
 
-export function downloadByA(downloadUrl){
+function downloadByA(downloadUrl){
     /*设置a元素下载文件*/
     let downloadElement = document.createElement("a");
     downloadElement.href = downloadUrl;
@@ -54,7 +54,7 @@ export function downloadByA(downloadUrl){
     downloadElement.remove();
 }
 
-export function timeStampToText(timeStamp){
+function timeStampToText(timeStamp){
     /*将以秒单位的时间戳转成具体的样式文本*/
     let date = new Date(parseInt(timeStamp)*1000);
     let year = date.getFullYear();
@@ -66,7 +66,7 @@ export function timeStampToText(timeStamp){
     return `${year}-${month}-${day}`+" "+`${hours}:${minutes}:${seconds}`;
 }
 
-export function formatFileSize(fileSize){
+function formatFileSize(fileSize){
     /*返回对应的格式的存储大小文本*/
     fileSize = parseInt(fileSize);
     if (fileSize < 1){
@@ -80,4 +80,35 @@ export function formatFileSize(fileSize){
             fileSize = fileSize/1024;
         }
     }
+}
+
+async function clipTextToBoard(text){
+    if(navigator.clipboard){
+        await navigator.clipboard.writeText(clipText);
+        return;
+    }
+    /*复制文本至剪切板*/
+    var isRTL = document.documentElement.getAttribute('dir') === 'rtl';
+	var element = document.createElement('textarea');
+	// 防止在ios中产生缩放效果
+	element.style.fontSize = '12pt';
+	// 重置盒模型
+	element.style.border = '0';
+	element.style.padding = '0';
+	element.style.margin = '0';
+	// 将元素移到屏幕外
+	element.style.position = 'absolute';
+	element.style[isRTL ? 'right' : 'left'] = '-9999px';
+	// 移动元素到页面底部
+	let yPosition = window.pageYOffset || document.documentElement.scrollTop;
+	element.style.top = `${yPosition}px`;
+	//设置元素只读
+	element.setAttribute('readonly', '');
+	element.value = text;
+	document.body.appendChild(element);
+
+    element.select();
+	element.setSelectionRange(0, element.value.length);
+	document.execCommand('copy');
+	element.remove();
 }

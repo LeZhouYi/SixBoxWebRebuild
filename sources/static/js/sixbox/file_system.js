@@ -241,11 +241,11 @@ document.getElementById("copy_full_url_button").addEventListener("click", async 
     try{
         if (nowControlData.type==="0"){
             let clipText = `${host}/home.html?nowFolderId=${nowControlData.id}`;
-            await navigator.clipboard.writeText(clipText);
+            clipTextToBoard(clipText);
             displayMessage("已成功复制至剪切板");
         }else if(nowControlData.type==="1"){
             let clipText = `${host}/api/v1/files/${nowControlData.id}/download`;
-            await navigator.clipboard.writeText(clipText);
+            clipTextToBoard(clipText);
             displayMessage("已成功复制至剪切板");
         }
     } catch (error){
@@ -260,11 +260,11 @@ document.getElementById("copy_part_url_button").addEventListener("click", async 
     try{
         if (nowControlData.type==="0"){
             let clipText = `/home.html?nowFolderId=${nowControlData.id}`;
-            await navigator.clipboard.writeText(clipText);
+            clipTextToBoard(clipText);
             displayMessage("已成功复制至剪切板");
         }else if(nowControlData.type==="1"){
             let clipText = `/api/v1/files/${nowControlData.id}/download`;
-            await navigator.clipboard.writeText(clipText);
+            clipTextToBoard(clipText);
             displayMessage("已成功复制至剪切板");
         }
     } catch (error){
