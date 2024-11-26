@@ -133,6 +133,10 @@
     /*点击事件穿透该元素*/
     pointer-events: none;
 }
+.only399{
+    /*只有低于399px宽度才显示*/
+    display: none;
+}
 
 /*响应式*/
 @media (max-width: 399px), (max-device-width: 399px){

@@ -5,6 +5,15 @@ const sideBarMap = {
     }
 }
 
+function initSideBarAnima(contentId){
+    /*初始化时添加动画类*/
+    let contentElement = document.getElementById(contentId);
+    if(!contentElement){
+        return;
+    }
+    contentElement.classList.add("padding_trans");
+}
+
 function initSideBar(nowPage){
     /*初始化侧边栏*/
     for (let sideBarKey in sideBarMap){

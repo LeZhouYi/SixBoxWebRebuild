@@ -36,7 +36,7 @@ window.onload = function() {
     bindSideBarEvent("file_sys_side_button", "file_sys_container");
 
     /*动画相关初始化*/
-    document.getElementById("file_sys_container").classList.add("padding_trans");
+    initSideBarAnima("file_sys_container");
 
     window.addEventListener("resize", throttle(function(){
         resizeFullScreen("bodyContainer");
@@ -48,6 +48,7 @@ window.onload = function() {
 
 document.getElementById("all_file_button").addEventListener("click", function(event){
     /*点击所有文件*/
+    hiddenFileMenu();
     let nowFolderId = localStorage.getItem("nowFolderId");
     let nowPage = localStorage.getItem("nowPage");
     let searchInput = document.getElementById("file_search_input");
@@ -99,6 +100,7 @@ document.getElementById("file_add_form").addEventListener("submit", function(eve
 
 document.getElementById("file_add_pop_button").addEventListener("click", function(event){
     /*点击弹出新增文件弹窗*/
+    hiddenFileMenu();
     let fileAddContent = document.getElementById("file_add_content");
     displayElementById("file_add_popup_overlay", function(){
         let nowFolderId = localStorage.getItem("nowFolderId");
@@ -383,6 +385,44 @@ document.getElementById("file_search_input").addEventListener("blur", function(e
     event.preventDefault();
     updateFileList();
 });
+
+document.getElementById("file_menu_pop_button").addEventListener("click", function(event){
+    /*点击弹出文件菜单*/
+    if(!isInClientWidth(0,399)){
+        return;
+    }
+    let fileMenuElement = document.getElementById("file_sys_menu");
+    if(!fileMenuElement){
+        return;
+    }
+    if (!fileMenuElement.style.display || fileMenuElement.style.display==="none"){
+        fileMenuElement.style.display = "grid";
+    } else{
+        fileMenuElement.style.display = "none";
+    }
+    event.stopPropagation();
+});
+
+document.getElementById("file_sys_container").addEventListener("click", function(event){
+    /*点击容器关闭文件菜单*/
+    if(!isInClientWidth(0, 399)){
+        return;
+    }
+    let fileMenuElement = document.getElementById("file_sys_menu");
+    if (fileMenuElement.style.display === "grid" && !fileMenuElement.contains(event.target)){
+        fileMenuElement.style.display = "none";
+    }
+});
+
+function hiddenFileMenu(){
+    if(!isInClientWidth(0, 399)){
+        return;
+    }
+    let fileMenuElement = document.getElementById("file_sys_menu");
+    if (fileMenuElement && fileMenuElement.style.display === "grid"){
+        fileMenuElement.style.display = "none";
+    }
+}
 
 function updatePageInput(event){
     /*监听页面输入事件*/
