@@ -339,6 +339,7 @@
 }
 .file_add_content{
     width: var(--pop-form-width);
+    max-height: calc( 100% - var(--element-margin) * 2 );
     background-color: white;
     border: 2px solid var(--theme-part-color);
     display: flex;
@@ -347,6 +348,7 @@
     border-radius: var(--border-radius);
     box-sizing: border-box;
     transition: height 1s ease, width 1s ease;
+    overflow-y: auto;
 }
 .file_control_content{
     width: var(--file-item-button-width);

@@ -14,7 +14,7 @@ function initSideBarAnima(contentId){
     contentElement.classList.add("padding_trans");
 }
 
-function initSideBar(nowPage){
+function initSideBar(nowPage,sidebarId="side_bar_container", overlayId="side_bar_overlay"){
     /*初始化侧边栏*/
     for (let sideBarKey in sideBarMap){
         var sideBarValue = sideBarMap[sideBarKey];
@@ -26,12 +26,35 @@ function initSideBar(nowPage){
                     if (currentUrl!==sideBarValue.url){
                         window.location = sideBarValue.url;
                     }
+                    let overlayElement = document.getElementById(overlayId);
+                    let sideBarElement = document.getElementById(sidebarId);
+                    if(!overlayElement||!sideBarElement){
+                        return;
+                    }
+                    if (isInClientWidth(0,399)){
+                        changeSideBar(overlayElement,sideBarElement);
+                    }
                 });
                 if(nowPage===nowPage){
                     element.classList.add("active");
                 }
             }
         });
+    }
+}
+
+function changeSideBar(overlayElement, sideBarElement){
+    /*侧边栏变换*/
+    if(!overlayElement.style.display || overlayElement.style.display==="none"){
+        overlayElement.style.display="block";
+        setTimeout(()=>{
+            sideBarElement.style.transform = "translateX(0)";
+        }, 100);
+    }else{
+        sideBarElement.style.transform = "translateX(-100%)";
+        setTimeout(()=>{
+            overlayElement.style.display="none";
+        }, 1100);
     }
 }
 
@@ -64,18 +87,8 @@ function bindSideBarEvent(controlId, contentId, sidebarId="side_bar_container", 
         return;
     }
     overlayElement.addEventListener("click", function(event){
-        if (isInClientWidth(0,399)){
-            if(!overlayElement.style.display || overlayElement.style.display==="none"){
-                overlayElement.style.display="block";
-                setTimeout(()=>{
-                    sideBarElement.style.transform = "translateX(0)";
-                }, 100);
-            }else{
-                sideBarElement.style.transform = "translateX(-100%)";
-                setTimeout(()=>{
-                    overlayElement.style.display="none";
-                }, 1100);
-            }
+        if (isInClientWidth(0,399) && !sideBarElement.contains(event.target)){
+            changeSideBar(overlayElement,sideBarElement);
         }
     });
     controlElement.addEventListener("click", function(event){
@@ -89,24 +102,20 @@ function bindSideBarEvent(controlId, contentId, sidebarId="side_bar_container", 
         if(sideBarElement && contentElement){
             if (!isInClientWidth(0,399)){
                 if(sideBarElement.classList.contains(sidebarHidden)){
-                    sideBarElement.classList.remove(sidebarHidden);
-                    contentElement.classList.add(sideBarExpand);
+                    overlayElement.style.display="block";
+                    setTimeout(()=>{
+                        sideBarElement.classList.remove(sidebarHidden);
+                        contentElement.classList.add(sideBarExpand);
+                    },100);
                 }else if(!sideBarElement.classList.contains(sidebarHidden)){
                     sideBarElement.classList.add(sidebarHidden);
                     contentElement.classList.remove(sideBarExpand);
-                }
-            }else{
-                if(!overlayElement.style.display || overlayElement.style.display==="none"){
-                    overlayElement.style.display="block";
-                    setTimeout(()=>{
-                        sideBarElement.style.transform = "translateX(0)";
-                    }, 100);
-                }else{
-                    sideBarElement.style.transform = "translateX(-100%)";
                     setTimeout(()=>{
                         overlayElement.style.display="none";
-                    }, 1100);
+                    }, 1000);
                 }
+            }else{
+                changeSideBar(overlayElement,sideBarElement);
             }
         }
     });

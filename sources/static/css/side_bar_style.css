@@ -107,12 +107,11 @@
 }
 .side_bar_overlay{
     height: 100%;
-    width: 100%;
+    width: var(--side-bar-width);
     max-height: 100%;
     overflow-y: auto;
     position: fixed;
     z-index: 1;
-    pointer-events: none;
     display: block;
 }
 

@@ -12,6 +12,7 @@
     }
     .side_bar_overlay{
         pointer-events: auto;
+        width: 100%;
         display: none;
     }
 
