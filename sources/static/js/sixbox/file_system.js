@@ -43,6 +43,7 @@ window.onload = function() {
     }), 200);
     window.addEventListener("resize", throttle(function(){
         onSideBarReside();
+        onFileMenuResize();
     }), 2000);
 };
 
@@ -388,7 +389,7 @@ document.getElementById("file_search_input").addEventListener("blur", function(e
 
 document.getElementById("file_menu_pop_button").addEventListener("click", function(event){
     /*点击弹出文件菜单*/
-    if(!isInClientWidth(0,399)){
+    if(!isInClientWidth(0,999)){
         return;
     }
     let fileMenuElement = document.getElementById("file_sys_menu");
@@ -405,7 +406,7 @@ document.getElementById("file_menu_pop_button").addEventListener("click", functi
 
 document.getElementById("file_sys_container").addEventListener("click", function(event){
     /*点击容器关闭文件菜单*/
-    if(!isInClientWidth(0, 399)){
+    if(!isInClientWidth(0, 999)){
         return;
     }
     let fileMenuElement = document.getElementById("file_sys_menu");
@@ -414,8 +415,24 @@ document.getElementById("file_sys_container").addEventListener("click", function
     }
 });
 
+function onFileMenuResize(){
+    let fileMenuElement = document.getElementById("file_sys_menu");
+    if (!fileMenuElement){
+        return;
+    }
+    if(!isInClientWidth(0, 999)){
+        if(!fileMenuElement.style.display||fileMenuElement.style.display === "none"){
+            fileMenuElement.style.display = "grid";
+        }
+    }else{
+        if(fileMenuElement.style.display === "grid"){
+            fileMenuElement.style.display = "none";
+        }
+    }
+}
+
 function hiddenFileMenu(){
-    if(!isInClientWidth(0, 399)){
+    if(!isInClientWidth(0, 999)){
         return;
     }
     let fileMenuElement = document.getElementById("file_sys_menu");

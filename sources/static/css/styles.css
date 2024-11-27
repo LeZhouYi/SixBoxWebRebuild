@@ -130,8 +130,8 @@
     /*点击事件穿透该元素*/
     pointer-events: none;
 }
-.only399{
-    /*只有低于399px宽度才显示*/
+.only999{
+    /*只有低于999px宽度才显示*/
     display: none;
 }
 

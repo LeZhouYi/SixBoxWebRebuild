@@ -31,7 +31,7 @@ function initSideBar(nowPage,sidebarId="side_bar_container", overlayId="side_bar
                     if(!overlayElement||!sideBarElement){
                         return;
                     }
-                    if (isInClientWidth(0,399)){
+                    if (isInClientWidth(0,1300)){
                         changeSideBar(overlayElement,sideBarElement);
                     }
                 });
@@ -65,12 +65,19 @@ function onSideBarReside(sidebarId="side_bar_container", overlayId="side_bar_ove
     if(!overlayElement||!sideBarElement){
         return;
     }
-    if (!isInClientWidth(0,399)){
+    if (!isInClientWidth(0,1300)){
         if(!overlayElement.style.display || overlayElement.style.display==="none"){
+            overlayElement.style.display="";
             setTimeout(()=>{
-                overlayElement.style.display="block";
-                sideBarElement.style.transform = "translateX(0)";
+                sideBarElement.style = "";
             }, 100);
+        }
+    }else{
+        if(overlayElement.style.display==="block"){
+            sideBarElement.style.transform = "translateX(-100%)";
+            setTimeout(()=>{
+                overlayElement.style.display="none";
+            }, 1100);
         }
     }
 }
@@ -87,7 +94,7 @@ function bindSideBarEvent(controlId, contentId, sidebarId="side_bar_container", 
         return;
     }
     overlayElement.addEventListener("click", function(event){
-        if (isInClientWidth(0,399) && !sideBarElement.contains(event.target)){
+        if (isInClientWidth(0,1300) && !sideBarElement.contains(event.target)){
             changeSideBar(overlayElement,sideBarElement);
         }
     });
@@ -100,12 +107,12 @@ function bindSideBarEvent(controlId, contentId, sidebarId="side_bar_container", 
         let sideBarExpand = "side_bar_expand";  //添加将页面主内容腾出侧边栏的显示空间
         let sidebarHidden = "side_bar_hidden";  //添加将侧边栏往左移出页面
         if(sideBarElement && contentElement){
-            if (!isInClientWidth(0,399)){
+            if (!isInClientWidth(0,1300)){
                 if(sideBarElement.classList.contains(sidebarHidden)){
                     overlayElement.style.display="block";
+                    contentElement.classList.add(sideBarExpand);
                     setTimeout(()=>{
                         sideBarElement.classList.remove(sidebarHidden);
-                        contentElement.classList.add(sideBarExpand);
                     },100);
                 }else if(!sideBarElement.classList.contains(sidebarHidden)){
                     sideBarElement.classList.add(sidebarHidden);
