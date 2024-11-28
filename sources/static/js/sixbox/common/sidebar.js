@@ -11,50 +11,75 @@ function initSideBarAnima(contentId){
     if(!contentElement){
         return;
     }
+    /*左右移动的动画*/
     contentElement.classList.add("padding_trans");
 }
 
+function reverseIsShowSideBar(){
+    /*反转是否显示/隐藏侧边栏*/
+    if(localStorage.getItem("isShowSideBar")==="1"){
+        localStorage.getItem("isShowSideBar")==="0";
+    }else{
+        localStorage.getItem("isShowSideBar")==="1"
+    }
+}
+
+function bindSideButtonClick(element, sideBarId, overlayId){
+    /*绑定侧边栏按钮的点击事件*/
+    element.addEventListener("click", function(event){
+        let currentUrl = `${window.location.pathname}`;
+        if (currentUrl!==sideBarValue.url){
+            /*若当前的位置已是激活状态，则不用跳转*/
+            window.location = sideBarValue.url;
+        }
+        let overlayElement = document.getElementById(overlayId);
+        let sideBarElement = document.getElementById(sidebarId);
+        if(!overlayElement||!sideBarElement){
+            return;
+        }
+        if (isInClientWidth(0,1300)){
+            /*低于1300px时，点击后侧边栏要关闭*/
+            localStorage.setItem("isShowSideBar", "0");
+            updateSideBar(overlayElement,sideBarElement)
+//            changeSideBar(overlayElement,sideBarElement);
+        }
+    });
+}
+
 function initSideBar(nowPage,sidebarId="side_bar_container", overlayId="side_bar_overlay"){
-    /*初始化侧边栏*/
+    /*初始化侧边栏的内容，基础数据*/
     for (let sideBarKey in sideBarMap){
         var sideBarValue = sideBarMap[sideBarKey];
         sideBarValue.elementIds.forEach(elementId=>{
-            var element = document.getElementById(elementId);
+            let element = document.getElementById(elementId);
             if (element){
-                element.addEventListener("click", function(event){
-                    let currentUrl = `${window.location.pathname}`;
-                    if (currentUrl!==sideBarValue.url){
-                        window.location = sideBarValue.url;
-                    }
-                    let overlayElement = document.getElementById(overlayId);
-                    let sideBarElement = document.getElementById(sidebarId);
-                    if(!overlayElement||!sideBarElement){
-                        return;
-                    }
-                    if (isInClientWidth(0,1300)){
-                        changeSideBar(overlayElement,sideBarElement);
-                    }
-                });
+                /*绑定点击事件*/
+                bindSideButtonClick(element,sidebarId,overlayId);
                 if(nowPage===nowPage){
+                    /*设置当前选中效果*/
                     element.classList.add("active");
                 }
             }
         });
     }
+    /*检查本地缓存*/
+    checkLocalDefault("isShowSideBar", "1");
 }
 
-function changeSideBar(overlayElement, sideBarElement){
-    /*侧边栏变换*/
-    if(!overlayElement.style.display || overlayElement.style.display==="none"){
-        overlayElement.style.display="block";
-        setTimeout(()=>{
-            sideBarElement.style.transform = "translateX(0)";
-        }, 100);
-    }else{
+function updateSideBar(overlayElement, sideBarElement){
+    let isShowSideBar = localStorage.getItem("isShowSideBar");
+    if(isShowSideBar!=="1"){
+        /*表示要隐藏元素*/
         sideBarElement.style.transform = "translateX(-100%)";
         setTimeout(()=>{
             overlayElement.style.display="none";
         }, 1100);
+    }else{
+        /*表示要显示元素*/
+        overlayElement.style.display="block";
+        setTimeout(()=>{
+            sideBarElement.style.transform = "translateX(0)";
+        }, 100);
     }
 }
 
