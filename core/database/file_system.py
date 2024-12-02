@@ -140,13 +140,14 @@ class FileSystemServer:
         """
         data["id"] = route_utils.gen_id()
         data["updateTime"] = str(time.time())
+        data["name"] = str(data["name"]).strip()
         self.db.insert(data)
 
     def edit_folder(self, folder_id: str, data_input: dict):
         """编辑文件夹"""
         with self.thread_lock:
             data = self.db.get((self.query.id == folder_id) & (self.query.type == FileType.FOLDER))
-            data["name"] = data_input["name"]
+            data["name"] = str(data_input["name"]).strip()
             data["parentId"] = data_input["parentId"]
             data["updateTime"] = str(time.time())
             self.db.update(data, (self.query.id == folder_id) & (self.query.type == FileType.FOLDER))

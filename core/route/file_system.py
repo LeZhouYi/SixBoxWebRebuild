@@ -1,6 +1,6 @@
 import mimetypes
 import os.path
-import urllib
+import urllib.parse
 
 from flask import Blueprint, request, Response, jsonify
 from werkzeug.datastructures import FileStorage

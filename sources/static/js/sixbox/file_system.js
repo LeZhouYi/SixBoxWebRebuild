@@ -402,14 +402,13 @@ document.getElementById("file_menu_pop_button").addEventListener("click", functi
 
 document.getElementById("file_sys_container").addEventListener("click", function (event) {
     /*点击容器关闭文件菜单*/
-    if (!isInClientWidth(0, 999)) {
-        return;
+    if (isInClientWidth(0, 999)) {
+        getElement("file_sys_menu", fileMenuElement=>{
+            if(isDisplayValue(fileMenuElement, "grid")&&!fileMenuElement.contains(event.target)){
+                fileMenuElement.style.display = "none";
+            }
+        });
     }
-    getElement("file_sys_menu", fileMenuElement=>{
-        if(isDisplayValue(fileMenuElement, "grid")&&!fileMenuElement.contains(event.target)){
-            fileMenuElement.style.display = "none";
-        }
-    });
 });
 
 function onFileMenuResize() {
@@ -465,16 +464,14 @@ function updatePageInput(event) {
 
 async function updateFileList() {
     /*更新文件列表*/
+    let nowPage = localStorage.getItem("nowPage");
+    let nowLimit = localStorage.getItem("nowLimit");
+    setPageLimit("page_select_limit", nowLimit);
+    setNowPage("page_input_id", nowPage);
+    let pageIndex = parseInt(nowPage) - 1;
     try {
         let searchInput = document.getElementById("file_search_input");
         if (searchInput.value !== "") {
-            let nowPage = localStorage.getItem("nowPage");
-            let nowLimit = localStorage.getItem("nowLimit");
-
-            setPageLimit("page_select_limit", nowLimit);
-            setNowPage("page_input_id", nowPage);
-
-            let pageIndex = parseInt(nowPage) - 1;
             let data = await getJsonWithAuth(`/files?nameLike=${searchInput.value}&_page=${pageIndex}&_limit=${nowLimit}`);
 
             let contents = data.contents;
@@ -493,13 +490,6 @@ async function updateFileList() {
 
     try {
         let nowFolderId = localStorage.getItem("nowFolderId");
-        let nowPage = localStorage.getItem("nowPage");
-        let nowLimit = localStorage.getItem("nowLimit");
-
-        setPageLimit("page_select_limit", nowLimit);
-        setNowPage("page_input_id", nowPage);
-        let pageIndex = parseInt(nowPage) - 1;
-
         let data = await getJsonWithAuth(`/folders/${nowFolderId}?_page=${pageIndex}&_limit=${nowLimit}`);
         let contents = data.contents;
         getElement("file_table_body", fileListTable=>{
@@ -529,7 +519,6 @@ async function loadFolderSelect(dataListId, nowFolderId, editFolderId = null) {
     /*为特定元素提供候选输入*/
     try {
         let data = await getJsonWithAuth(`/folders/${nowFolderId}?type=0&_page=0&_limit=999`);
-        let contents = data.contents;
         getElement(dataListId, selectElement=>{
             selectElement.innerHTML = null;
             /*默认选项*/
@@ -538,9 +527,9 @@ async function loadFolderSelect(dataListId, nowFolderId, editFolderId = null) {
             defaultOptGroup.appendChild(defaultOption);
             selectElement.appendChild(defaultOptGroup);
             /*额外选项*/
-            let otherOptGroup = createOptGroup(data.name);
+            let otherOptGroup = createOptGroup("子文件夹");
             let folderCount = 0;
-            contents.forEach(content => {
+            data.contents.forEach(content => {
                 if (content.type === "0") {
                     if (editFolderId !== null && editFolderId === content.id) {
                         return;
@@ -554,6 +543,16 @@ async function loadFolderSelect(dataListId, nowFolderId, editFolderId = null) {
                 selectElement.appendChild(otherOptGroup);
             }
             selectElement.value = data.id;
+        });
+        if(!data.parentId){
+            return;
+        }
+        data = await getJsonWithAuth(`/folders/${data.parentId}?type=0&_page=0&_limit=10`);
+        let parentOptGroup = createOptGroup("父文件夹");
+        let parentOption = createOption(data.name, data.id);
+        parentOptGroup.appendChild(parentOption);
+        getElement(dataListId, selectElement=>{
+            selectElement.appendChild(parentOptGroup);
         });
     }
     catch (error) {
