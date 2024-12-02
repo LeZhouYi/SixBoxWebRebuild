@@ -51,6 +51,7 @@ def register_js_assets(assets: Environment):
         "js/sixbox/util/requestor.js",
         "js/sixbox/util/render.js",
         "js/sixbox/common/sidebar.js",
+        "js/sixbox/common/page_selector.js",
         "js/sixbox/file_system.js",
         filters="jsmin",
         output="js/generate/file_system.js"
