@@ -20,7 +20,7 @@ window.onload = function() {
     checkLocalStorage();
 
     /*侧边栏初始化*/
-    initSideBar("fileSystem");
+    initSidebar("fileSystem","file_sys_container");
 
     /*页面功能*/
     updateFileList();
@@ -33,16 +33,12 @@ window.onload = function() {
     clickOverlayHidden("file_control_overlay", "file_control_content");
     clickOverlayHidden("file_edit_popup_overlay", "file_edit_content");
     clickOverlayHidden("confirm_popup_overlay", "confirm_popup_content");
-    bindSideBarEvent("file_sys_side_button", "file_sys_container");
-
-    /*动画相关初始化*/
-    initSideBarAnima("file_sys_container");
+    bindSidebarEvent("file_sys_side_button", "file_sys_container");
 
     window.addEventListener("resize", throttle(function(){
         resizeFullScreen("bodyContainer");
     }), 200);
     window.addEventListener("resize", throttle(function(){
-        onSideBarReside();
         onFileMenuResize();
     }), 2000);
 };

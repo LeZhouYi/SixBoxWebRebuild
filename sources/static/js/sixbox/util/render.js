@@ -1,6 +1,6 @@
-export const hiddenClass = "hidden";
+const hiddenClass = "hidden";
 
-export function setBackgroundImage(className, fileUrl){
+function setBackgroundImage(className, fileUrl){
     /*
     设置类名对应元素的图片背景
     className: 元素类名
@@ -14,13 +14,13 @@ export function setBackgroundImage(className, fileUrl){
     });
 }
 
-export function resizeFullScreen(){
+function resizeFullScreen(){
     /*计算并调整页页使用适应全屏*/
     let bodyContainer = document.body;
     bodyContainer.style.height = String(document.documentElement.clientHeight)+"px";
 }
 
-export function displayMessage(messageText, iconUrl="sources?filename=icons/correct.png", removeTime=4500){
+function displayMessage(messageText, iconUrl="sources?filename=icons/correct.png", removeTime=4500){
     /*显示普通消息，一般是成功操作的提示*/
     let messageContainer = document.querySelector(".message_container");
     if (messageContainer){
@@ -45,7 +45,7 @@ export function displayMessage(messageText, iconUrl="sources?filename=icons/corr
     }
 }
 
-export function displayErrorMessage(errorMessageText, iconUrl="sources?filename=icons/alert.png", removeTime=4500){
+function displayErrorMessage(errorMessageText, iconUrl="sources?filename=icons/alert.png", removeTime=4500){
     /*显示错误信息*/
     let errorsContainer = document.querySelector(".message_container");
     if (errorsContainer){
@@ -70,7 +70,7 @@ export function displayErrorMessage(errorMessageText, iconUrl="sources?filename=
     }
 }
 
-export function displayError(error){
+function displayError(error){
     /*显示错误*/
     if (error instanceof ApiError){
         if (error.errorKey==="REFRESH FAIL"){
@@ -85,7 +85,7 @@ export function displayError(error){
     }
 }
 
-export function adjustRelativeLDPopup(popupElementId, startX, startY){
+function adjustRelativeLDPopup(popupElementId, startX, startY){
     /*将弹窗从X,Y调整显示合适的位置，左下角弹出*/
     let popupElement = document.getElementById(popupElementId);
     if (!popupElement){
@@ -117,7 +117,7 @@ export function adjustRelativeLDPopup(popupElementId, startX, startY){
     popupElement.style.top = y + "px";
 }
 
-export function addObserveResizeHiddenById(elementId){
+function addObserveResizeHiddenById(elementId){
     /*
         页面变化后隐藏，并移除监听器
         添加Math.floor的原因是因为beforeRect和contentRect两者的数值精度不一致
@@ -126,7 +126,7 @@ export function addObserveResizeHiddenById(elementId){
     addObserveResizeHidden(element);
 }
 
-export function addObserveResizeHidden(element){
+function addObserveResizeHidden(element){
     /*
         页面变化后隐藏，并移除监听器
         添加Math.floor的原因是因为beforeRect和contentRect两者的数值精度不一致
@@ -151,7 +151,7 @@ export function addObserveResizeHidden(element){
     resizeObserver.observe(element);
 }
 
-export function clickOverlayHidden(overlayId, contentId){
+function clickOverlayHidden(overlayId, contentId){
     /*点击overlay区域将隐藏元素*/
     let overlayElement = document.getElementById(overlayId);
     if (overlayElement){
@@ -166,7 +166,7 @@ export function clickOverlayHidden(overlayId, contentId){
     }
 }
 
-export function clearElementByStart(elementId="file_path_bar", minIndex=1){
+function clearElementByStart(elementId="file_path_bar", minIndex=1){
     /*清空路径元素*/
     let pathElement = document.getElementById(elementId);
     if (!pathElement){
@@ -178,7 +178,7 @@ export function clearElementByStart(elementId="file_path_bar", minIndex=1){
     }
 }
 
-export function hiddenElement(element, callback){
+function hiddenElement(element, callback){
     /*隐藏元素*/
     if (element){
         element.classList.add(hiddenClass);
@@ -188,7 +188,7 @@ export function hiddenElement(element, callback){
     return false;
 }
 
-export function displayElement(element, callback){
+function displayElement(element, callback){
     /*显示元素*/
     if (element && element.classList.contains(hiddenClass)){
         element.classList.remove(hiddenClass);
@@ -198,7 +198,7 @@ export function displayElement(element, callback){
     return false;
 }
 
-export function hiddenElementById(elementId, callback){
+function hiddenElementById(elementId, callback){
     /*隐藏元素*/
     let element = document.getElementById(elementId);
     if (element){
@@ -209,7 +209,7 @@ export function hiddenElementById(elementId, callback){
     return false;
 }
 
-export function displayElementById(elementId, callback){
+function displayElementById(elementId, callback){
     /*显示元素*/
     let element = document.getElementById(elementId);
     if (element && element.classList.contains(hiddenClass)){
@@ -220,12 +220,17 @@ export function displayElementById(elementId, callback){
     return false;
 }
 
-export function isHidden(element){
+function isHidden(element){
     /*判断元素是否拥有hidden类*/
     return element && element.classList.contains(hiddenClass);
 }
 
-export function isInClientWidth(start=0,end=399,callback){
+function isDisplayNone(element){
+    /*判断元素是否处于隐藏状态*/
+    return element && (!element.style.display || element.style.display === "none");
+}
+
+function isInClientWidth(start=0,end=399,callback){
     /*判断当前页面是否在范围宽度内*/
     let width = document.documentElement.clientWidth;
     if (width>=start && width <= end){
