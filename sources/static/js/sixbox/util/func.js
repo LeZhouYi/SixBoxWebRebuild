@@ -82,7 +82,7 @@ function formatFileSize(fileSize) {
     }
 }
 
-async function clipTextToBoard(text) {
+async function clipTextToBoard(clipText) {
     /*复制文本至剪切板*/
     if (navigator.clipboard) {
         await navigator.clipboard.writeText(clipText);
