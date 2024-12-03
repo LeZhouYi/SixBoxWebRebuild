@@ -49,7 +49,7 @@ document.getElementById("all_file_button").addEventListener("click", function (e
     let nowFolderId = localStorage.getItem("nowFolderId");
     let nowPage = localStorage.getItem("nowPage");
     let searchInput = document.getElementById("file_search_input");
-    getElement("file_search_input", searchInput=>{
+    callElement("file_search_input", searchInput=>{
         if (nowFolderId !== "1" || nowPage !== "1" || searchInput.value !== "") {
             localStorage.setItem("nowFolderId", "1");
             localStorage.setItem("nowPage", "1");
@@ -390,7 +390,7 @@ document.getElementById("file_menu_pop_button").addEventListener("click", functi
     if (!isInClientWidth(0, 999)) {
         return;
     }
-    getElement("file_sys_menu", fileMenuElement=>{
+    callElement("file_sys_menu", fileMenuElement=>{
         if (isDisplayValue(fileMenuElement, "none")) {
             fileMenuElement.style.display = "grid";
         } else {
@@ -403,7 +403,7 @@ document.getElementById("file_menu_pop_button").addEventListener("click", functi
 document.getElementById("file_sys_container").addEventListener("click", function (event) {
     /*点击容器关闭文件菜单*/
     if (isInClientWidth(0, 999)) {
-        getElement("file_sys_menu", fileMenuElement=>{
+        callElement("file_sys_menu", fileMenuElement=>{
             if(isDisplayValue(fileMenuElement, "grid")&&!fileMenuElement.contains(event.target)){
                 fileMenuElement.style.display = "none";
             }
@@ -413,7 +413,7 @@ document.getElementById("file_sys_container").addEventListener("click", function
 
 function onFileMenuResize() {
     /*文件菜单尺寸变化*/
-    getElement("file_sys_menu", fileMenuElement=>{
+    callElement("file_sys_menu", fileMenuElement=>{
         if (!isInClientWidth(0, 999)) {
             if (isDisplayValue(fileMenuElement, "none")) {
                 fileMenuElement.style.display = "grid";
@@ -429,7 +429,7 @@ function onFileMenuResize() {
 function hiddenFileMenu() {
     /*隐藏文件菜单*/
     if (isInClientWidth(0, 999)) {
-        getElement("file_sys_menu", fileMenuElement=>{
+        callElement("file_sys_menu", fileMenuElement=>{
             if (isDisplayValue(fileMenuElement, "grid")){
                 fileMenuElement.style.display = "none";
             }
@@ -475,7 +475,7 @@ async function updateFileList() {
             let data = await getJsonWithAuth(`/files?nameLike=${searchInput.value}&_page=${pageIndex}&_limit=${nowLimit}`);
 
             let contents = data.contents;
-            getElement("file_table_body", fileListTable=>{
+            callElement("file_table_body", fileListTable=>{
                 fileListTable.innerHTML = null;
                 contents.forEach(content => {
                     fileListTable.appendChild(createFileItem(content));
@@ -492,7 +492,7 @@ async function updateFileList() {
         let nowFolderId = localStorage.getItem("nowFolderId");
         let data = await getJsonWithAuth(`/folders/${nowFolderId}?_page=${pageIndex}&_limit=${nowLimit}`);
         let contents = data.contents;
-        getElement("file_table_body", fileListTable=>{
+        callElement("file_table_body", fileListTable=>{
             fileListTable.innerHTML = null;
             contents.forEach(content => {
                 fileListTable.appendChild(createFileItem(content));
@@ -519,7 +519,7 @@ async function loadFolderSelect(dataListId, nowFolderId, editFolderId = null) {
     /*为特定元素提供候选输入*/
     try {
         let data = await getJsonWithAuth(`/folders/${nowFolderId}?type=0&_page=0&_limit=999`);
-        getElement(dataListId, selectElement=>{
+        callElement(dataListId, selectElement=>{
             selectElement.innerHTML = null;
             /*默认选项*/
             let defaultOptGroup = createOptGroup("默认");
@@ -551,7 +551,7 @@ async function loadFolderSelect(dataListId, nowFolderId, editFolderId = null) {
         let parentOptGroup = createOptGroup("父文件夹");
         let parentOption = createOption(data.name, data.id);
         parentOptGroup.appendChild(parentOption);
-        getElement(dataListId, selectElement=>{
+        callElement(dataListId, selectElement=>{
             selectElement.appendChild(parentOptGroup);
         });
     }
@@ -630,7 +630,7 @@ function hiddenControlByType(controlElementId = "file_control_content", fileType
     if (!(fileType in FileTypeMap)) {
         return;
     }
-    getElement(controlElementId, controlElement=>{
+    callElement(controlElementId, controlElement=>{
         let childNodes = Array.from(controlElement.children);
         let controls = FileTypeMap[fileType].controls;
         childNodes.forEach((value, index) => {
@@ -647,7 +647,7 @@ function bindClickFolder(element, folderId) {
     /*绑定文件夹点击事件*/
     element.addEventListener("click", function (event) {
         localStorage.setItem("nowFolderId", folderId);
-        getElement("file_search_input", element=>{
+        callElement("file_search_input", element=>{
             element.value = "";
         });
         updateFileList();
@@ -690,7 +690,7 @@ function checkLocalStorage() {
 
 function addFilePathElement(parentId, folderName, folderId) {
     /*为文件路径添加单个可点击路径*/
-    getElement(parentId, parentElement=>{
+    callElement(parentId, parentElement=>{
         let folderElement = document.createElement("div");
         folderElement.textContent = folderName;
         folderElement.classList.add("file_path_text", "clickable");

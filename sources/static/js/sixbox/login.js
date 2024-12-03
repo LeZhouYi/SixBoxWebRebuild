@@ -8,7 +8,9 @@ window.addEventListener("resize", throttle(function () {
 }), 200);
 
 document.getElementById("login_form").addEventListener("submit", function (event) {
+    /*点击登录*/
     event.preventDefault();
+    let spinner = createSpinner(document.getElementById("login_button_panel"));
     const formData = {
         account: document.getElementById("account").value,
         password: document.getElementById("password").value
@@ -17,8 +19,12 @@ document.getElementById("login_form").addEventListener("submit", function (event
         localStorage.setItem("accessToken", data.accessToken);
         localStorage.setItem("refreshToken", data.refreshToken);
         window.location.href = "/home.html";
+        spinner.remove();
     })
-        .catch(error => {
-            displayError(error);
-        });
+    .catch(error => {
+        displayError(error);
+    })
+    .finally(()=>{
+        spinner.remove();
+    });
 });

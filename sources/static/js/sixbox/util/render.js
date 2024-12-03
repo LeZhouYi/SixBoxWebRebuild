@@ -253,3 +253,18 @@ function createOption(text, value){
     option.text = text;
     return option;
 }
+
+function createSpinner(target){
+    /*创建进度加载条*/
+    if(target){
+        let spinPanel = document.createElement("div");
+        spinPanel.classList.add("spin_panel");
+        if(target.firstChild){
+            target.insertBefore(spinPanel, target.firstChild);
+        }else{
+            target.appendChild(spinPanel);
+        }
+        new Spinner().spin(spinPanel);
+        return spinPanel;
+    }
+}

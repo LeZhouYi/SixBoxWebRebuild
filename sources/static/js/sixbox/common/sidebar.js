@@ -11,7 +11,7 @@ function initSidebar(nowPage, contentId, sidebarId = "side_bar_container", overl
     for (let sidebarKey in SideBarMap) {
         var sidebarValue = SideBarMap[sidebarKey];
         sidebarValue.elementIds.forEach(elementId => {
-            getElement(elementId, element => {
+            callElement(elementId, element => {
                 /*绑定点击事件*/
                 bindSideButtonClick(element, sidebarValue.url, contentId, sidebarId, overlayId);
                 if (nowPage === nowPage) {

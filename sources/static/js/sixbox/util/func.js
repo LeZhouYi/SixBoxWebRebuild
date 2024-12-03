@@ -113,7 +113,7 @@ async function clipTextToBoard(text) {
     element.remove();
 }
 
-function getElement(elementId, callback) {
+function callElement(elementId, callback) {
     /*获取元素并校验是否存在，存在则执行callback*/
     let element = document.getElementById(elementId);
     if (element && callback) {

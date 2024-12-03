@@ -19,6 +19,7 @@ def register_css_assets(assets: Environment):
         "css/message_style.css",
         "css/login_style.css",
         "css/styles.css",
+        "css/spinner.css",
         "css/responsive.css",
         filters="cssmin",
         output="css/generate/login.css"
@@ -42,6 +43,7 @@ def register_js_assets(assets: Environment):
         "js/sixbox/util/func.js",
         "js/sixbox/util/requestor.js",
         "js/sixbox/util/render.js",
+        "js/spinner/spinner.js",
         "js/sixbox/login.js",
         filters="jsmin",
         output="js/generate/login.js"

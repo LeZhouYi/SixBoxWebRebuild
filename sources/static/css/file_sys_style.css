@@ -350,6 +350,10 @@
     transition: height 1s ease, width 1s ease;
     overflow-y: auto;
 }
+.file_add_content::-webkit-scrollbar{
+    /*侧边栏列表栏，隐藏滚动条*/
+    width: 0px;
+}
 .file_control_content{
     width: var(--file-item-button-width);
     background-color: white;
