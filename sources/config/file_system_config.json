@@ -1,9 +1,9 @@
 {
     "file_white_list": {
-        "photo": ["png","jpg","jpeg","gif","svg","bmp","tiff"],
+        "2": ["png","jpg","jpeg","gif","svg","bmp","tiff"],
         "data": ["zip","rar","7z","json"],
-        "audio": ["mp3"],
-        "video": ["mp4"],
+        "3": ["mp3"],
+        "4": ["mp4"],
         "code": ["py","jar","html"],
         "text": ["yaml","xlsx","xls","docx","pdf","txt"]
     }

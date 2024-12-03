@@ -6,6 +6,7 @@ from typing import Optional
 from tinydb import TinyDB, Query
 
 from core.common import route_utils
+from core.common.file_utils import get_file_ext
 from core.common.route_utils import extra_data_by_list
 
 
@@ -212,3 +213,27 @@ class FileSystemServer:
             return search_value in item.get(field, "")
 
         return query
+
+    def tidy_up_data(self, ext_config: dict):
+        """整理文件"""
+        filter_ext_dict = {}
+        for key in ext_config:
+            try:
+                int_key = int(key)
+                filter_ext_dict[str(int_key)] = ext_config[key]
+            except ValueError:
+                continue
+        with self.thread_lock:
+            all_data = self.db.all()
+            for data in all_data:
+                if data["type"] != FileType.FILE:
+                    continue
+                file_ext = get_file_ext(data["path"])
+                suit_type = FileType.FILE
+                for type_index, ext_list in filter_ext_dict.items():
+                    if file_ext in ext_list:
+                        suit_type = type_index
+                        break
+                if suit_type != FileType.FILE:
+                    data["type"] = suit_type
+                    self.db.update(data, self.query.id == data["id"])

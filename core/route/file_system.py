@@ -237,3 +237,13 @@ def search_file():
     if is_str_empty(search_name):
         return gen_fail_response(ReportInfo["021"])
     return jsonify(FsServer.search_file(search_name, page_result[0], page_result[1]))
+
+
+@FileSystemBp.route(gen_prefix_api("/filesTidyUp"), methods=["GET"])
+def tidy_up_file():
+    """整理文件，调整文件类型"""
+    verify_result = verify_token(request)
+    if isinstance(verify_result[0], Response):
+        return verify_result
+    FsServer.tidy_up_data(FsConfig["file_white_list"])
+    return gen_success_response(ReportInfo["022"])

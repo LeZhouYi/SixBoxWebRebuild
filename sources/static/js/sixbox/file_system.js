@@ -12,6 +12,27 @@ const FileTypeMap = {
         "controls": [
             0, 1, 2, 3, 4
         ]
+    },
+    "2": {
+        "src": "/sources?filename=icons/image.png",
+        "text": "图片",
+        "controls": [
+            0, 1, 2, 3, 4
+        ]
+    },
+    "3": {
+        "src": "/sources?filename=icons/music.png",
+        "text": "音频",
+        "controls": [
+            0, 1, 2, 3, 4
+        ]
+    },
+    "4": {
+        "src": "/sources?filename=icons/movie.png",
+        "text": "视频",
+        "controls": [
+            0, 1, 2, 3, 4
+        ]
     }
 }
 

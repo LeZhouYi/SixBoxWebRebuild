@@ -29,7 +29,8 @@ ReportInfo = {
     "018": "缺少参数_limit",
     "019": "参数_page不能为负数",
     "020": "参数_limit不能小于1",
-    "021": "参数nameLike不能为空"
+    "021": "参数nameLike不能为空",
+    "022": "操作成功"
 }
 
 FsServer = FileSystemServer(get_config_path("file_sys_db_path"))
