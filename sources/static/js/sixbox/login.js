@@ -10,7 +10,7 @@ window.addEventListener("resize", throttle(function () {
 document.getElementById("login_form").addEventListener("submit", function (event) {
     /*点击登录*/
     event.preventDefault();
-    let spinner = createSpinner(document.getElementById("login_button_panel"));
+    let spinner = createSpinner("login_button_panel");
     const formData = {
         account: document.getElementById("account").value,
         password: document.getElementById("password").value
@@ -25,6 +25,6 @@ document.getElementById("login_form").addEventListener("submit", function (event
         displayError(error);
     })
     .finally(()=>{
-        spinner.remove();
+        spinner?.remove();
     });
 });

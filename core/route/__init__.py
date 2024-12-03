@@ -31,6 +31,7 @@ def register_css_assets(assets: Environment):
         "css/page_select_style.css",
         "css/file_sys_style.css",
         "css/styles.css",
+        "css/spinner.css",
         "css/responsive.css",
         filters="cssmin",
         output="css/generate/file_system.css"
@@ -54,6 +55,7 @@ def register_js_assets(assets: Environment):
         "js/sixbox/util/render.js",
         "js/sixbox/common/sidebar.js",
         "js/sixbox/common/page_selector.js",
+        "js/spinner/spinner.js",
         "js/sixbox/file_system.js",
         filters="jsmin",
         output="js/generate/file_system.js"

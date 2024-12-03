@@ -460,8 +460,6 @@
 .file_add_button{
     width: 100%;
     height: 44px;
-    margin-top: var(--element-gap);
-    margin-bottom: var(--element-gap);
     font-size: var(--main-text-size);
     box-sizing: border-box;
     border: var(--border-base-width) solid var(--theme-part-color);
@@ -484,6 +482,7 @@
     grid-gap: var(--element-gap);
 }
 .file_button_row{
+    margin-top: var(--element-gap);
     display: flex;
 }
 .file_button_row>*:nth-child(1){
@@ -525,4 +524,8 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.file_button_panel{
+    height: 44px;
+    width: 100%;
 }

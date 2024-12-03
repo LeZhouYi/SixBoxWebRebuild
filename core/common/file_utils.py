@@ -11,7 +11,9 @@ def get_file_ext(filename: str) -> str:
     :param filename:
     :return:
     """
-    return filename.rsplit('.', 1)[1]
+    if filename.find(".") > -1:
+        return filename.rsplit(".", 1)[1]
+    return ""
 
 
 def get_local_path(relative_path: PathLike | str) -> str:

@@ -44,3 +44,8 @@
     background-color: var(--theme-background-color);
     color: var(--text-main-color);
 }
+.confirm_control_item{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: var(--element-gap);
+}

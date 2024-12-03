@@ -254,11 +254,12 @@ function createOption(text, value){
     return option;
 }
 
-function createSpinner(target){
+function createSpinner(elementId, className="spin_panel"){
     /*创建进度加载条*/
+    let target = document.getElementById(elementId);
     if(target){
         let spinPanel = document.createElement("div");
-        spinPanel.classList.add("spin_panel");
+        spinPanel.classList.add(className);
         if(target.firstChild){
             target.insertBefore(spinPanel, target.firstChild);
         }else{

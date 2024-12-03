@@ -62,6 +62,7 @@ document.getElementById("all_file_button").addEventListener("click", function (e
 document.getElementById("folder_add_form").addEventListener("submit", function (event) {
     /*点击新增文件夹*/
     event.preventDefault();
+    let spinner = createSpinner("folder_add_button_panel");
     let formData = {
         name: document.getElementById("folder_add_name").value,
         parentId: document.getElementById("folder_add_folder_select").value
@@ -73,6 +74,9 @@ document.getElementById("folder_add_form").addEventListener("submit", function (
     })
     .catch(error => {
         displayError(error);
+    })
+    .finally(()=>{
+        spinner?.remove();
     });
 });
 
@@ -83,6 +87,7 @@ document.getElementById("file_add_form").addEventListener("submit", function (ev
     if (!fileElement.files || fileElement.files.length < 1) {
         displayErrorMessage("未选择文件");
     }
+    let spinner = createSpinner("file_add_button_panel");
     let formData = new FormData();
     formData.append("file", fileElement.files[0]);
     formData.append("name", document.getElementById("file_add_name").value);
@@ -94,6 +99,9 @@ document.getElementById("file_add_form").addEventListener("submit", function (ev
     })
     .catch(error => {
         displayError(error);
+    })
+    .finally(()=>{
+        spinner?.remove();
     });
 });
 
@@ -319,6 +327,7 @@ document.getElementById("file_edit_cancel").addEventListener("click", function (
 document.getElementById("file_edit_form").addEventListener("submit", function (event) {
     /*点击确认编辑*/
     event.preventDefault();
+    let spinner = createSpinner("file_edit_button_panel");
     let formData = {
         name: document.getElementById("file_edit_name").value,
         parentId: document.getElementById("file_edit_folder_select").value
@@ -330,12 +339,18 @@ document.getElementById("file_edit_form").addEventListener("submit", function (e
             hiddenElementById("file_edit_popup_overlay");
             updateFileList();
         })
+        .finally(()=>{
+            spinner?.remove();
+        });
     } else {
         putJsonWithAuth(`/files/${nowControlData.id}`, formData).then(data => {
             displayMessage(data.message);
             hiddenElementById("file_edit_popup_overlay");
             updateFileList();
         })
+        .finally(()=>{
+            spinner?.remove();
+        });
     }
 });
 
@@ -354,12 +369,16 @@ document.getElementById("cancel_popup_button").addEventListener("click", functio
 document.getElementById("confirm_popup_button").addEventListener("click", function (event) {
     /*点击确认删除*/
     let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+    let spinner = createSpinner("confirm_spin_panel");
     if (nowControlData.type === "0") {
         let deleteUrl = `/folders/${nowControlData.id}`;
         deleteJsonWithAuth(deleteUrl).then(data => {
             displayMessage(data.message);
             hiddenElementById("confirm_popup_overlay");
             updateFileList();
+        })
+        .finally(()=>{
+            spinner?.remove();
         });
     } else {
         let deleteUrl = `/files/${nowControlData.id}`;
@@ -367,6 +386,9 @@ document.getElementById("confirm_popup_button").addEventListener("click", functi
             displayMessage(data.message);
             hiddenElementById("confirm_popup_overlay");
             updateFileList();
+        })
+        .finally(()=>{
+            spinner?.remove();
         });
     }
 })
@@ -469,6 +491,8 @@ async function updateFileList() {
     setPageLimit("page_select_limit", nowLimit);
     setNowPage("page_input_id", nowPage);
     let pageIndex = parseInt(nowPage) - 1;
+
+    let spinner = createSpinner("file_table_spinner","spin_panel_light");
     try {
         let searchInput = document.getElementById("file_search_input");
         if (searchInput.value !== "") {
@@ -482,10 +506,12 @@ async function updateFileList() {
                 });
             });
             setTotalPage(data.total, "page_text_id", nowLimit);
+            spinner?.remove();
             return;
         }
     } catch (error) {
         displayError(error);
+        spinner?.remove();
     }
 
     try {
@@ -505,6 +531,7 @@ async function updateFileList() {
             addFilePathElement("file_path_bar", parentData.name, parentData.id);
         });
         addFilePathElement("file_path_bar", data.name, data.id);
+        spinner?.remove();
     }
     catch (error) {
         displayError(error);
@@ -512,6 +539,7 @@ async function updateFileList() {
             localStorage.setItem("nowFolderId", "1")
             updateFileList();
         }
+        spinner?.remove();
     }
 }
 
