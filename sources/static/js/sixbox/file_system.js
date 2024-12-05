@@ -330,7 +330,7 @@ document.getElementById("file_edit_button").addEventListener("click", function (
             document.getElementById("file_edit_header_text").textContent = "编辑文件夹";
             document.getElementById("file_edit_name").value = nowControlData.name;
             loadFolderSelect("file_edit_folder_select", nowControlData.parentId, nowControlData.id);
-        } else if (nowControlData.type === "1") {
+        } else {
             document.getElementById("file_edit_header_text").textContent = "编辑文件";
             document.getElementById("file_edit_name").value = nowControlData.name;
             loadFolderSelect("file_edit_folder_select", nowControlData.parentId);
