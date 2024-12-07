@@ -529,6 +529,50 @@ callElement("image_download_button", element=>{
     })
 });
 
+callElement("image_last_button", element=>{
+    element.addEventListener("click", async function(event){
+        /*切换至上一张图片*/
+        let accessToken = localStorage.getItem("accessToken");
+        let fileId = localStorage.getItem("nowDisplayId");
+        let getUrl = `/files/${fileId}/near`;
+        try{
+            let data = await getJsonWithAuth(getUrl);
+            if(data.last){
+                callElement("now_display_image", imageElement=>{
+                    localStorage.setItem("nowDisplayId", data.last.id);
+                    imageElement.src = `api/v1/files/${data.last.id}/download?token=${accessToken}`;
+                });
+            }else{
+                displayMessage("没有更多了哦")
+            }
+        } catch (error){
+            displayError(error);
+        }
+    });
+});
+
+callElement("image_next_button", element=>{
+    element.addEventListener("click", async function(event){
+        /*切换至上一张图片*/
+        let accessToken = localStorage.getItem("accessToken");
+        let fileId = localStorage.getItem("nowDisplayId");
+        let getUrl = `/files/${fileId}/near`;
+        try{
+            let data = await getJsonWithAuth(getUrl);
+            if(data.next){
+                callElement("now_display_image", imageElement=>{
+                    localStorage.setItem("nowDisplayId", data.next.id);
+                    imageElement.src = `api/v1/files/${data.next.id}/download?token=${accessToken}`;
+                });
+            }else{
+                displayMessage("没有更多了哦")
+            }
+        } catch (error){
+            displayError(error);
+        }
+    });
+});
+
 function onFileMenuResize() {
     /*文件菜单尺寸变化*/
     callElement("file_sys_menu", fileMenuElement=>{

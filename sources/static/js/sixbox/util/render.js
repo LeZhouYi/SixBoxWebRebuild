@@ -171,7 +171,6 @@ function clickMultiOverlayHidden(overlayId, contentIds) {
         overlayElement.addEventListener("click", function (event) {
             /*监听元素是否在弹窗外部*/
             let isInside = false;
-            console.log("test");
             contentIds.forEach(contentId=>{
                 callElement(contentId, contentElement=>{
                     if(contentElement.contains(event.target)){

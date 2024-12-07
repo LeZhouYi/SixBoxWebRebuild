@@ -23,7 +23,7 @@
     bottom: var(--element-gap);
     display: flex;
     background-color: white;
-    z-index: 2;
+    z-index: 1;
     opacity: 0.9;
     transition: opacity 0.5s ease;
     padding-top: calc( var(--element-margin) / 2);

@@ -237,3 +237,23 @@ class FileSystemServer:
                 if suit_type != FileType.FILE:
                     data["type"] = suit_type
                     self.db.update(data, self.query.id == data["id"])
+
+    def get_near_file(self, file_id: str):
+        """获取相邻同类型的文件"""
+        with self.thread_lock:
+            data = self.db.get(self.query.id == file_id)
+            search_data = self.db.search(
+                (self.query.parentId == data["parentId"]) & (self.query.type == data["type"])
+            )
+        search_data = sorted(search_data, key=self.default_sort_key)
+        index = None
+        for i in range(len(search_data)):
+            if search_data[i]["id"] == data["id"]:
+                index = i
+                break
+        return_data = {"last": None, "next": None}
+        if index > 0:
+            return_data["last"] = extra_data_by_list(search_data[index - 1], self.key_list)
+        if index < len(search_data) - 1:
+            return_data["next"] = extra_data_by_list(search_data[index + 1], self.key_list)
+        return return_data

@@ -247,3 +247,17 @@ def tidy_up_file():
         return verify_result
     FsServer.tidy_up_data(FsConfig["file_white_list"])
     return gen_success_response(ReportInfo["022"])
+
+
+@FileSystemBp.route(gen_prefix_api("/files/<file_id>/near"), methods=["GET"])
+def get_near_file(file_id: str):
+    """获取相邻同类型的文件"""
+    verify_result = verify_token(request)
+    if isinstance(verify_result[0], Response):
+        return verify_result
+
+    if is_str_empty(file_id):
+        return gen_fail_response(ReportInfo["012"])
+    if not FsServer.is_file_exist(file_id):
+        return gen_fail_response(ReportInfo["012"])
+    return jsonify(FsServer.get_near_file(file_id))
