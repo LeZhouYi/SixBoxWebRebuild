@@ -55,6 +55,7 @@ window.onload = function () {
     clickOverlayHidden("file_control_overlay", "file_control_content");
     clickOverlayHidden("file_edit_popup_overlay", "file_edit_content");
     clickOverlayHidden("confirm_popup_overlay", "confirm_popup_content");
+    clickMultiOverlayHidden("image_display_overlay", ["now_display_image", "image_display_bar"]);
 
     window.addEventListener("resize", throttle(function () {
         resizeFullScreen("bodyContainer");
@@ -64,394 +65,468 @@ window.onload = function () {
     }), 2000);
 };
 
-document.getElementById("all_file_button").addEventListener("click", function (event) {
-    /*点击所有文件*/
-    hiddenFileMenu();
-    let nowFolderId = localStorage.getItem("nowFolderId");
-    let nowPage = localStorage.getItem("nowPage");
-    let searchInput = document.getElementById("file_search_input");
-    callElement("file_search_input", searchInput=>{
-        if (nowFolderId !== "1" || nowPage !== "1" || searchInput.value !== "") {
-            localStorage.setItem("nowFolderId", "1");
-            localStorage.setItem("nowPage", "1");
-            searchInput.value = "";
-            updateFileList();
-        }
-    });
-});
-
-document.getElementById("folder_add_form").addEventListener("submit", function (event) {
-    /*点击新增文件夹*/
-    event.preventDefault();
-    let spinner = createSpinner("folder_add_button_panel");
-    let formData = {
-        name: document.getElementById("folder_add_name").value,
-        parentId: document.getElementById("folder_add_folder_select").value
-    };
-    postJsonWithAuth("/folders", formData).then(data => {
-        displayMessage(data.message);
-        hiddenElementById("file_add_popup_overlay");
-        updateFileList();
-    })
-    .catch(error => {
-        displayError(error);
-    })
-    .finally(()=>{
-        spinner?.remove();
-    });
-});
-
-document.getElementById("file_add_form").addEventListener("submit", function (event) {
-    /*点击新增文件*/
-    event.preventDefault();
-    let fileElement = document.getElementById("file_add_select_element");
-    if (!fileElement.files || fileElement.files.length < 1) {
-        displayErrorMessage("未选择文件");
-    }
-    let spinner = createSpinner("file_add_button_panel");
-    let formData = new FormData();
-    formData.append("file", fileElement.files[0]);
-    formData.append("name", document.getElementById("file_add_name").value);
-    formData.append("parentId", document.getElementById("file_add_folder_select").value);
-    postFormWithAuth("/files", formData).then(data => {
-        displayMessage(data.message);
-        hiddenElementById("file_add_popup_overlay");
-        updateFileList();
-    })
-    .catch(error => {
-        displayError(error);
-    })
-    .finally(()=>{
-        spinner?.remove();
-    });
-});
-
-document.getElementById("file_add_pop_button").addEventListener("click", function (event) {
-    /*点击弹出新增文件弹窗*/
-    hiddenFileMenu();
-    let fileAddContent = document.getElementById("file_add_content");
-    displayElementById("file_add_popup_overlay", function () {
+callElement("all_file_button", element=>{
+	element.addEventListener("click", function (event) {
+        /*点击所有文件*/
+        hiddenFileMenu();
         let nowFolderId = localStorage.getItem("nowFolderId");
-        loadFolderSelect("file_add_folder_select", nowFolderId);
-        loadFolderSelect("folder_add_folder_select", nowFolderId);
-    })
-    /*动画相关*/
-    let addFileFormElement = document.getElementById("file_add_form");
-    if (isHidden(addFileFormElement)) {
-        fileAddContent.style.height = "498px";
-    } else {
-        fileAddContent.style.height = "615px";
-    }
-});
-
-document.getElementById("file_add_cancel").addEventListener("click", function (event) {
-    /*点击取消新增文件弹窗按钮*/
-    hiddenElementById("file_add_popup_overlay");
-});
-
-document.getElementById("folder_add_cancel").addEventListener("click", function (event) {
-    /*点击取消新增文件弹窗按钮*/
-    hiddenElementById("file_add_popup_overlay");
-});
-
-document.getElementById("file_add_icon").addEventListener("click", function (event) {
-    /*点击新增文件的切换按钮*/
-    let addFileFormElement = document.getElementById("file_add_form");
-    let addFolderFormElement = document.getElementById("folder_add_form");
-    let addHeaderText = document.getElementById("file_add_header_text");
-    let fileAddContent = document.getElementById("file_add_content");
-    if (displayElement(addFileFormElement)) {
-        hiddenElement(addFolderFormElement);
-        addHeaderText.textContent = "新增文件";
-        /*动画相关*/
-        fileAddContent.style.height = "615px";
-    } else {
-        hiddenElement(addFileFormElement);
-        displayElement(addFolderFormElement);
-        addHeaderText.textContent = "新增文件夹";
-        /*动画相关*/
-        fileAddContent.style.height = "498px";
-    }
-});
-
-document.getElementById("file_add_icon").addEventListener("mouseenter", function (event) {
-    /*鼠标悬停在新增文件夹图标*/
-    let addFormElement = document.getElementById("file_add_form");
-    let hoverElement = event.target;
-    if (isHidden(addFormElement)) {
-        hoverElement.src = "/sources?filename=icons/add_file.png";
-    } else {
-        hoverElement.src = "/sources?filename=icons/add_folder.png";
-    }
-});
-
-document.getElementById("file_add_icon").addEventListener("mouseleave", function (event) {
-    /*鼠标离开在新增文件夹图标*/
-    let addFormElement = document.getElementById("file_add_form");
-    let hoverElement = event.target;
-    if (isHidden(addFormElement)) {
-        hoverElement.src = "/sources?filename=icons/add_file_blue.png";
-    } else {
-        hoverElement.src = "/sources?filename=icons/add_folder_blue.png";
-    }
-});
-
-document.getElementById("file_add_select_element").addEventListener("change", function (event) {
-    /*点击选择文件*/
-    if (event.target.files && event.target.files.length > 0) {
-        let fileName = event.target.files[0].name;
-        document.getElementById("file_add_select").value = fileName;
-    } else {
-        document.getElementById("file_add_select").value = "";
-    }
-});
-
-document.getElementById("file_add_item_button").addEventListener("click", function (event) {
-    /*点击新增选择文件*/
-    document.getElementById("file_add_select_element").click();
-});
-
-document.getElementById("page_input_id").addEventListener("input", function (event) {
-    /*根据输入动态变换长度*/
-    let value = event.target.value.replace(/\D/g, '');
-    if (value.length > 3) {
-        value = value.slice(0, 3);
-    }
-    event.target.value = value;
-    let elementWidth = 44 + (value.length - 1) * 10;
-    if (elementWidth < 44) {
-        elementWidth = 44;
-    }
-    event.target.style.width = elementWidth + "px";
-});
-
-document.getElementById("page_input_id").addEventListener("keydown", function (event) {
-    /*enter触发页面输入*/
-    if (event.key === 'Enter' || event.keyCode === 13) {
-        updatePageInput(event);
-    }
-});
-
-document.getElementById("page_input_id").addEventListener("blur", function (event) {
-    /*失去焦点触发页面输入*/
-    updatePageInput(event);
-});
-
-document.getElementById("page_select_limit").addEventListener("change", function (event) {
-    /*更改每页项数*/
-    localStorage.setItem("nowPage", "1");
-    localStorage.setItem("nowLimit", event.target.value);
-    updateFileList();
-});
-
-document.getElementById("last_page_button").addEventListener("click", function (event) {
-    /*点击上一页*/
-    let nowPage = parseInt(localStorage.getItem("nowPage"));
-    if (nowPage > 1) {
-        localStorage.setItem("nowPage", String(nowPage - 1));
-        updateFileList();
-    }
-});
-
-document.getElementById("next_page_button").addEventListener("click", function (event) {
-    /*点击下一页*/
-    let nowPage = parseInt(localStorage.getItem("nowPage"));
-    let nowTotalPage = parseInt(localStorage.getItem("nowTotalPage"));
-    if (nowPage <= nowTotalPage - 1) {
-        localStorage.setItem("nowPage", String(nowPage + 1));
-        updateFileList();
-    }
-});
-
-document.getElementById("copy_full_url_button").addEventListener("click", async function (event) {
-    /*点击拷贝完整链接*/
-    hiddenElementById("file_control_overlay");
-    let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
-    let host = window.location.host;
-    try {
-        if (nowControlData.type === "0") {
-            let clipText = `${host}/home.html?nowFolderId=${nowControlData.id}`;
-            clipTextToBoard(clipText);
-            displayMessage("已成功复制至剪切板");
-        } else if (nowControlData.type === "1") {
-            let clipText = `${host}/api/v1/files/${nowControlData.id}/download`;
-            clipTextToBoard(clipText);
-            displayMessage("已成功复制至剪切板");
-        }
-    } catch (error) {
-        displayErrorMessage(error);
-    }
-});
-
-document.getElementById("copy_part_url_button").addEventListener("click", async function (event) {
-    /*点击拷贝完整链接*/
-    hiddenElementById("file_control_overlay");
-    let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
-    try {
-        if (nowControlData.type === "0") {
-            let clipText = `/home.html?nowFolderId=${nowControlData.id}`;
-            clipTextToBoard(clipText);
-            displayMessage("已成功复制至剪切板");
-        } else if (nowControlData.type === "1") {
-            let clipText = `/api/v1/files/${nowControlData.id}/download`;
-            clipTextToBoard(clipText);
-            displayMessage("已成功复制至剪切板");
-        }
-    } catch (error) {
-        displayErrorMessage(error);
-    }
-});
-
-document.getElementById("file_download_button").addEventListener("click", function (event) {
-    /*点击下载文件*/
-    hiddenElementById("file_control_overlay");
-    let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
-    try {
-        if (nowControlData.type === "0") {
-            return;
-        }
-        let accessToken = localStorage.getItem("accessToken");
-        let downloadUrl = `api/v1/files/${nowControlData.id}/download?token=${accessToken}`;
-        downloadByA(downloadUrl);
-    } catch (error) {
-        displayErrorMessage(error);
-    }
-});
-
-document.getElementById("file_edit_button").addEventListener("click", function (event) {
-    /*点击编辑*/
-    hiddenElementById("file_control_overlay");
-    try {
-        let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
-        if (!displayElementById("file_edit_popup_overlay")) {
-            return;
-        }
-        if (nowControlData.type === "0") {
-            document.getElementById("file_edit_header_text").textContent = "编辑文件夹";
-            document.getElementById("file_edit_name").value = nowControlData.name;
-            loadFolderSelect("file_edit_folder_select", nowControlData.parentId, nowControlData.id);
-        } else {
-            document.getElementById("file_edit_header_text").textContent = "编辑文件";
-            document.getElementById("file_edit_name").value = nowControlData.name;
-            loadFolderSelect("file_edit_folder_select", nowControlData.parentId);
-        }
-    } catch (error) {
-        displayErrorMessage(error);
-    }
-});
-
-document.getElementById("file_edit_cancel").addEventListener("click", function (event) {
-    /*点击编辑文件取消*/
-    hiddenElementById("file_edit_popup_overlay");
-});
-
-document.getElementById("file_edit_form").addEventListener("submit", function (event) {
-    /*点击确认编辑*/
-    event.preventDefault();
-    let spinner = createSpinner("file_edit_button_panel");
-    let formData = {
-        name: document.getElementById("file_edit_name").value,
-        parentId: document.getElementById("file_edit_folder_select").value
-    };
-    let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
-    if (nowControlData.type === "0") {
-        putJsonWithAuth(`/folders/${nowControlData.id}`, formData).then(data => {
-            displayMessage(data.message);
-            hiddenElementById("file_edit_popup_overlay");
-            updateFileList();
-        })
-        .finally(()=>{
-            spinner?.remove();
+        let nowPage = localStorage.getItem("nowPage");
+        let searchInput = document.getElementById("file_search_input");
+        callElement("file_search_input", searchInput=>{
+            if (nowFolderId !== "1" || nowPage !== "1" || searchInput.value !== "") {
+                localStorage.setItem("nowFolderId", "1");
+                localStorage.setItem("nowPage", "1");
+                searchInput.value = "";
+                updateFileList();
+            }
         });
-    } else {
-        putJsonWithAuth(`/files/${nowControlData.id}`, formData).then(data => {
-            displayMessage(data.message);
-            hiddenElementById("file_edit_popup_overlay");
-            updateFileList();
-        })
-        .finally(()=>{
-            spinner?.remove();
-        });
-    }
+    });
 });
 
-document.getElementById("file_delete_button").addEventListener("click", function (event) {
-    /*点击弹出删除文件确认窗口*/
-    displayElementById("confirm_popup_overlay");
-    hiddenElementById("file_control_overlay");
-    document.getElementById("confirm_pop_text").textContent = "确认删除？";
-});
-
-document.getElementById("cancel_popup_button").addEventListener("click", function (event) {
-    /*点击取消*/
-    hiddenElementById("confirm_popup_overlay");
-});
-
-document.getElementById("confirm_popup_button").addEventListener("click", function (event) {
-    /*点击确认删除*/
-    let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
-    let spinner = createSpinner("confirm_spin_panel");
-    if (nowControlData.type === "0") {
-        let deleteUrl = `/folders/${nowControlData.id}`;
-        deleteJsonWithAuth(deleteUrl).then(data => {
-            displayMessage(data.message);
-            hiddenElementById("confirm_popup_overlay");
-            updateFileList();
-        })
-        .finally(()=>{
-            spinner?.remove();
-        });
-    } else {
-        let deleteUrl = `/files/${nowControlData.id}`;
-        deleteJsonWithAuth(deleteUrl).then(data => {
-            displayMessage(data.message);
-            hiddenElementById("confirm_popup_overlay");
-            updateFileList();
-        })
-        .finally(()=>{
-            spinner?.remove();
-        });
-    }
-})
-
-document.getElementById("file_search_input").addEventListener("keydown", function (event) {
-    /*输入搜索文件*/
-    if (event.key === "Enter" || event.keyCode === 13) {
+callElement("folder_add_form", element=>{
+	element.addEventListener("submit", function (event) {
+        /*点击新增文件夹*/
         event.preventDefault();
-        event.target.blur();
-    }
+        let spinner = createSpinner("folder_add_button_panel");
+        let formData = {
+            name: document.getElementById("folder_add_name").value,
+            parentId: document.getElementById("folder_add_folder_select").value
+        };
+        postJsonWithAuth("/folders", formData).then(data => {
+            displayMessage(data.message);
+            hiddenElementById("file_add_popup_overlay");
+            updateFileList();
+        })
+        .catch(error => {
+            displayError(error);
+        })
+        .finally(()=>{
+            spinner?.remove();
+        });
+    });
 });
 
-document.getElementById("file_search_input").addEventListener("blur", function (event) {
-    /*失去焦点触发页面输入*/
-    event.preventDefault();
-    updateFileList();
+callElement("file_add_form", element=>{
+	element.addEventListener("submit", function (event) {
+        /*点击新增文件*/
+        event.preventDefault();
+        let fileElement = document.getElementById("file_add_select_element");
+        if (!fileElement.files || fileElement.files.length < 1) {
+            displayErrorMessage("未选择文件");
+        }
+        let spinner = createSpinner("file_add_button_panel");
+        let formData = new FormData();
+        formData.append("file", fileElement.files[0]);
+        formData.append("name", document.getElementById("file_add_name").value);
+        formData.append("parentId", document.getElementById("file_add_folder_select").value);
+        postFormWithAuth("/files", formData).then(data => {
+            displayMessage(data.message);
+            hiddenElementById("file_add_popup_overlay");
+            updateFileList();
+        })
+        .catch(error => {
+            displayError(error);
+        })
+        .finally(()=>{
+            spinner?.remove();
+        });
+    });
 });
 
-document.getElementById("file_menu_pop_button").addEventListener("click", function (event) {
-    /*点击弹出文件菜单*/
-    if (!isInClientWidth(0, 999)) {
-        return;
-    }
-    callElement("file_sys_menu", fileMenuElement=>{
-        if (isDisplayValue(fileMenuElement, "none")) {
-            fileMenuElement.style.display = "grid";
+callElement("file_add_pop_button", element=>{
+	element.addEventListener("click", function (event) {
+        /*点击弹出新增文件弹窗*/
+        hiddenFileMenu();
+        let fileAddContent = document.getElementById("file_add_content");
+        displayElementById("file_add_popup_overlay", function () {
+            let nowFolderId = localStorage.getItem("nowFolderId");
+            loadFolderSelect("file_add_folder_select", nowFolderId);
+            loadFolderSelect("folder_add_folder_select", nowFolderId);
+        })
+        /*动画相关*/
+        let addFileFormElement = document.getElementById("file_add_form");
+        if (isHidden(addFileFormElement)) {
+            fileAddContent.style.height = "498px";
         } else {
-            fileMenuElement.style.display = "none";
+            fileAddContent.style.height = "615px";
         }
     });
-    event.stopPropagation();
 });
 
-document.getElementById("file_sys_container").addEventListener("click", function (event) {
-    /*点击容器关闭文件菜单*/
-    if (isInClientWidth(0, 999)) {
+callElement("file_add_cancel", element=>{
+	element.addEventListener("click", function (event) {
+        /*点击取消新增文件弹窗按钮*/
+        hiddenElementById("file_add_popup_overlay");
+    });
+});
+
+callElement("folder_add_cancel", element=>{
+	element.addEventListener("click", function (event) {
+        /*点击取消新增文件弹窗按钮*/
+        hiddenElementById("file_add_popup_overlay");
+    });
+});
+
+callElement("file_add_icon", element=>{
+	element.addEventListener("click", function (event) {
+        /*点击新增文件的切换按钮*/
+        let addFileFormElement = document.getElementById("file_add_form");
+        let addFolderFormElement = document.getElementById("folder_add_form");
+        let addHeaderText = document.getElementById("file_add_header_text");
+        let fileAddContent = document.getElementById("file_add_content");
+        if (displayElement(addFileFormElement)) {
+            hiddenElement(addFolderFormElement);
+            addHeaderText.textContent = "新增文件";
+            /*动画相关*/
+            fileAddContent.style.height = "615px";
+        } else {
+            hiddenElement(addFileFormElement);
+            displayElement(addFolderFormElement);
+            addHeaderText.textContent = "新增文件夹";
+            /*动画相关*/
+            fileAddContent.style.height = "498px";
+        }
+    });
+});
+
+callElement("file_add_icon", element=>{
+	element.addEventListener("mouseenter", function (event) {
+        /*鼠标悬停在新增文件夹图标*/
+        let addFormElement = document.getElementById("file_add_form");
+        let hoverElement = event.target;
+        if (isHidden(addFormElement)) {
+            hoverElement.src = "/sources?filename=icons/add_file.png";
+        } else {
+            hoverElement.src = "/sources?filename=icons/add_folder.png";
+        }
+    });
+});
+
+callElement("file_add_icon", element=>{
+    element.addEventListener("mouseleave", function (event) {
+        /*鼠标离开在新增文件夹图标*/
+        let addFormElement = document.getElementById("file_add_form");
+        let hoverElement = event.target;
+        if (isHidden(addFormElement)) {
+            hoverElement.src = "/sources?filename=icons/add_file_blue.png";
+        } else {
+            hoverElement.src = "/sources?filename=icons/add_folder_blue.png";
+        }
+    });
+});
+
+callElement("file_add_select_element", element=>{
+	element.addEventListener("change", function (event) {
+        /*点击选择文件*/
+        if (event.target.files && event.target.files.length > 0) {
+            let fileName = event.target.files[0].name;
+            document.getElementById("file_add_select").value = fileName;
+        } else {
+            document.getElementById("file_add_select").value = "";
+        }
+    });
+});
+
+callElement("file_add_item_button", element=>{
+	element.addEventListener("click", function (event) {
+        /*点击新增选择文件*/
+        document.getElementById("file_add_select_element").click();
+    });
+});
+
+callElement("page_input_id", element=>{
+	element.addEventListener("input", function (event) {
+        /*根据输入动态变换长度*/
+        let value = event.target.value.replace(/\D/g, '');
+        if (value.length > 3) {
+            value = value.slice(0, 3);
+        }
+        event.target.value = value;
+        let elementWidth = 44 + (value.length - 1) * 10;
+        if (elementWidth < 44) {
+            elementWidth = 44;
+        }
+        event.target.style.width = elementWidth + "px";
+    });
+});
+
+callElement("page_input_id", element=>{
+	element.addEventListener("keydown", function (event) {
+        /*enter触发页面输入*/
+        if (event.key === 'Enter' || event.keyCode === 13) {
+            updatePageInput(event);
+        }
+    });
+});
+
+callElement("page_input_id", element=>{
+	element.addEventListener("blur", function (event) {
+        /*失去焦点触发页面输入*/
+        updatePageInput(event);
+    });
+});
+
+callElement("page_select_limit", element=>{
+	element.addEventListener("change", function (event) {
+        /*更改每页项数*/
+        localStorage.setItem("nowPage", "1");
+        localStorage.setItem("nowLimit", event.target.value);
+        updateFileList();
+    });
+});
+
+callElement("last_page_button", element=>{
+	element.addEventListener("click", function (event) {
+        /*点击上一页*/
+        let nowPage = parseInt(localStorage.getItem("nowPage"));
+        if (nowPage > 1) {
+            localStorage.setItem("nowPage", String(nowPage - 1));
+            updateFileList();
+        }
+    });
+});
+
+callElement("next_page_button", element=>{
+	element.addEventListener("click", function (event) {
+        /*点击下一页*/
+        let nowPage = parseInt(localStorage.getItem("nowPage"));
+        let nowTotalPage = parseInt(localStorage.getItem("nowTotalPage"));
+        if (nowPage <= nowTotalPage - 1) {
+            localStorage.setItem("nowPage", String(nowPage + 1));
+            updateFileList();
+        }
+    });
+});
+
+callElement("copy_full_url_button", element=>{
+	element.addEventListener("click", async function (event) {
+        /*点击拷贝完整链接*/
+        hiddenElementById("file_control_overlay");
+        let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+        let host = window.location.host;
+        try {
+            if (nowControlData.type === "0") {
+                let clipText = `${host}/home.html?nowFolderId=${nowControlData.id}`;
+                clipTextToBoard(clipText);
+                displayMessage("已成功复制至剪切板");
+            } else if (nowControlData.type === "1") {
+                let clipText = `${host}/api/v1/files/${nowControlData.id}/download`;
+                clipTextToBoard(clipText);
+                displayMessage("已成功复制至剪切板");
+            }
+        } catch (error) {
+            displayErrorMessage(error);
+        }
+    });
+});
+
+callElement("copy_part_url_button", element=>{
+	element.addEventListener("click", async function (event) {
+        /*点击拷贝完整链接*/
+        hiddenElementById("file_control_overlay");
+        let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+        try {
+            if (nowControlData.type === "0") {
+                let clipText = `/home.html?nowFolderId=${nowControlData.id}`;
+                clipTextToBoard(clipText);
+                displayMessage("已成功复制至剪切板");
+            } else if (nowControlData.type === "1") {
+                let clipText = `/api/v1/files/${nowControlData.id}/download`;
+                clipTextToBoard(clipText);
+                displayMessage("已成功复制至剪切板");
+            }
+        } catch (error) {
+            displayErrorMessage(error);
+        }
+    });
+});
+
+callElement("file_download_button", element=>{
+	element.addEventListener("click", function (event) {
+        /*点击下载文件*/
+        hiddenElementById("file_control_overlay");
+        let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+        try {
+            if (nowControlData.type === "0") {
+                return;
+            }
+            let accessToken = localStorage.getItem("accessToken");
+            let downloadUrl = `api/v1/files/${nowControlData.id}/download?token=${accessToken}`;
+            downloadByA(downloadUrl);
+        } catch (error) {
+            displayErrorMessage(error);
+        }
+    });
+});
+
+callElement("file_edit_button", element=>{
+	element.addEventListener("click", function (event) {
+        /*点击编辑*/
+        hiddenElementById("file_control_overlay");
+        try {
+            let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+            if (!displayElementById("file_edit_popup_overlay")) {
+                return;
+            }
+            if (nowControlData.type === "0") {
+                document.getElementById("file_edit_header_text").textContent = "编辑文件夹";
+                document.getElementById("file_edit_name").value = nowControlData.name;
+                loadFolderSelect("file_edit_folder_select", nowControlData.parentId, nowControlData.id);
+            } else {
+                document.getElementById("file_edit_header_text").textContent = "编辑文件";
+                document.getElementById("file_edit_name").value = nowControlData.name;
+                loadFolderSelect("file_edit_folder_select", nowControlData.parentId);
+            }
+        } catch (error) {
+            displayErrorMessage(error);
+        }
+    });
+});
+
+callElement("file_edit_cancel", element=>{
+	element.addEventListener("click", function (event) {
+        /*点击编辑文件取消*/
+        hiddenElementById("file_edit_popup_overlay");
+    });
+});
+
+callElement("file_edit_form", element=>{
+    element.addEventListener("submit", function (event) {
+        /*点击确认编辑*/
+        event.preventDefault();
+        let spinner = createSpinner("file_edit_button_panel");
+        let formData = {
+            name: document.getElementById("file_edit_name").value,
+            parentId: document.getElementById("file_edit_folder_select").value
+        };
+        let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+        if (nowControlData.type === "0") {
+            putJsonWithAuth(`/folders/${nowControlData.id}`, formData).then(data => {
+                displayMessage(data.message);
+                hiddenElementById("file_edit_popup_overlay");
+                updateFileList();
+            })
+            .finally(()=>{
+                spinner?.remove();
+            });
+        } else {
+            putJsonWithAuth(`/files/${nowControlData.id}`, formData).then(data => {
+                displayMessage(data.message);
+                hiddenElementById("file_edit_popup_overlay");
+                updateFileList();
+            })
+            .finally(()=>{
+                spinner?.remove();
+            });
+        }
+    });
+});
+
+callElement("file_delete_button", element=>{
+	element.addEventListener("click", function (event) {
+        /*点击弹出删除文件确认窗口*/
+        displayElementById("confirm_popup_overlay");
+        hiddenElementById("file_control_overlay");
+        document.getElementById("confirm_pop_text").textContent = "确认删除？";
+    });
+});
+
+callElement("cancel_popup_button", element=>{
+    element.addEventListener("click", function (event) {
+        /*点击取消*/
+        hiddenElementById("confirm_popup_overlay");
+    });
+});
+
+callElement("confirm_popup_button", element=>{
+    element.addEventListener("click", function (event) {
+        /*点击确认删除*/
+        let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+        let spinner = createSpinner("confirm_spin_panel");
+        if (nowControlData.type === "0") {
+            let deleteUrl = `/folders/${nowControlData.id}`;
+            deleteJsonWithAuth(deleteUrl).then(data => {
+                displayMessage(data.message);
+                hiddenElementById("confirm_popup_overlay");
+                updateFileList();
+            })
+            .finally(()=>{
+                spinner?.remove();
+            });
+        } else {
+            let deleteUrl = `/files/${nowControlData.id}`;
+            deleteJsonWithAuth(deleteUrl).then(data => {
+                displayMessage(data.message);
+                hiddenElementById("confirm_popup_overlay");
+                updateFileList();
+            })
+            .finally(()=>{
+                spinner?.remove();
+            });
+        }
+    });
+});
+
+callElement("file_search_input", element=>{
+    element.addEventListener("keydown", function (event) {
+        /*输入搜索文件*/
+        if (event.key === "Enter" || event.keyCode === 13) {
+            event.preventDefault();
+            event.target.blur();
+        }
+    });
+    element.addEventListener("blur", function (event) {
+        /*失去焦点触发页面输入*/
+        event.preventDefault();
+        updateFileList();
+    });
+});
+
+callElement("file_menu_pop_button", element=>{
+    element.addEventListener("click", function (event) {
+        /*点击弹出文件菜单*/
+        if (!isInClientWidth(0, 999)) {
+            return;
+        }
         callElement("file_sys_menu", fileMenuElement=>{
-            if(isDisplayValue(fileMenuElement, "grid")&&!fileMenuElement.contains(event.target)){
+            if (isDisplayValue(fileMenuElement, "none")) {
+                fileMenuElement.style.display = "grid";
+            } else {
                 fileMenuElement.style.display = "none";
             }
         });
-    }
+        event.stopPropagation();
+    });
+});
+
+callElement("file_sys_container", element=>{
+    element.addEventListener("click", function (event) {
+        /*点击容器关闭文件菜单*/
+        if (isInClientWidth(0, 999)) {
+            callElement("file_sys_menu", fileMenuElement=>{
+                if(isDisplayValue(fileMenuElement, "grid")&&!fileMenuElement.contains(event.target)){
+                    fileMenuElement.style.display = "none";
+                }
+            });
+        }
+    });
+});
+
+callElement("image_close_button", element=>{
+    element.addEventListener("click", function(event){
+        /*点击关闭图片弹窗*/
+        hiddenElementById("image_display_overlay");
+    });
+});
+
+callElement("image_download_button", element=>{
+    element.addEventListener("click", function(event){
+        /*点击下载图片*/
+        let accessToken = localStorage.getItem("accessToken");
+        let fileId = localStorage.getItem("nowDisplayId");
+        let downloadUrl = `api/v1/files/${fileId}/download?token=${accessToken}`;
+        downloadByA(downloadUrl);
+    })
 });
 
 function onFileMenuResize() {
@@ -630,6 +705,8 @@ function createFileItem(fileData) {
     /*绑定事件*/
     if (fileType === "0") {
         bindClickFolder(fileNameDiv, fileData.id);
+    }else if(fileType === "2"){
+        bindClickImage(fileNameDiv, fileData);
     }
 
     fileItem.appendChild(fileNameDiv);
@@ -660,6 +737,19 @@ function createFileItem(fileData) {
     fileItem.appendChild(controlDiv);
 
     return fileItem;
+}
+
+function bindClickImage(element, fileData){
+    /*绑定点击图片事件*/
+    element.addEventListener("click", function(event){
+        displayElementById("image_display_overlay");
+        localStorage.setItem("nowDisplayId", fileData.id);
+        callElement("now_display_image", element=>{
+            let accessToken = localStorage.getItem("accessToken");
+            let imageUrl = `api/v1/files/${fileData.id}/download?token=${accessToken}`;
+            element.src = imageUrl;
+        });
+    });
 }
 
 function bindClickControl(element, fileData) {

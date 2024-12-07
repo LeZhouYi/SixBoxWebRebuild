@@ -153,8 +153,7 @@ function addObserveResizeHidden(element) {
 
 function clickOverlayHidden(overlayId, contentId) {
     /*点击overlay区域将隐藏元素*/
-    let overlayElement = document.getElementById(overlayId);
-    if (overlayElement) {
+    callElement(overlayId, overlayElement=>{
         overlayElement.addEventListener("click", function (event) {
             /*监听元素是否在弹窗外部*/
             let contentElement = document.getElementById(contentId);
@@ -163,7 +162,29 @@ function clickOverlayHidden(overlayId, contentId) {
                 event.preventDefault();
             }
         });
-    }
+    });
+}
+
+function clickMultiOverlayHidden(overlayId, contentIds) {
+    /*点击overlay区域将隐藏元素*/
+    callElement(overlayId, overlayElement=>{
+        overlayElement.addEventListener("click", function (event) {
+            /*监听元素是否在弹窗外部*/
+            let isInside = false;
+            console.log("test");
+            contentIds.forEach(contentId=>{
+                callElement(contentId, contentElement=>{
+                    if(contentElement.contains(event.target)){
+                        isInside = true;
+                    }
+                });
+            });
+            if(!isInside){
+                hiddenElement(overlayElement);
+                event.preventDefault();
+            }
+        });
+    });
 }
 
 function clearElementByStart(elementId = "file_path_bar", minIndex = 1) {

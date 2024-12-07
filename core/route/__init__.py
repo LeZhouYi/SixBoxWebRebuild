@@ -29,6 +29,7 @@ def register_css_assets(assets: Environment):
         "css/confirm_popup_style.css",
         "css/side_bar_style.css",
         "css/page_select_style.css",
+        "css/image_style.css",
         "css/file_sys_style.css",
         "css/styles.css",
         "css/spinner.css",

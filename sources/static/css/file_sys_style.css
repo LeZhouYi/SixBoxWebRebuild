@@ -30,7 +30,6 @@
     height: var(--header-icon-size);
     width: var(--header-icon-size);
     border-radius: var(--border-radius);
-    transition: background-color 0.5s ease;
     background-color: var(--theme-background-color);
     box-sizing: border-box;
     display: flex;
