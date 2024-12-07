@@ -47,6 +47,9 @@
                 "js/spinner/spinner.js",
                 "js/sixbox/file_system/image_display.js",
                 "js/sixbox/file_system/file_control.js",
+                "js/sixbox/file_system/file_page.js",
+                "js/sixbox/file_system/file_add.js",
+                "js/sixbox/file_system/file_edit.js",
                 "js/sixbox/file_system/file_system.js"
             ]
         }

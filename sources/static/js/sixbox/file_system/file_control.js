@@ -144,3 +144,21 @@ function bindClickControl(element, fileData) {
         });
     });
 }
+
+function hiddenControlByType(controlElementId = "file_control_content", fileType) {
+    /*控制操作弹窗的可操作元素显示*/
+    if (!(fileType in FileTypeMap)) {
+        return;
+    }
+    callElement(controlElementId, controlElement=>{
+        let childNodes = Array.from(controlElement.children);
+        let controls = FileTypeMap[fileType].controls;
+        childNodes.forEach((value, index) => {
+            if (controls.includes(index)) {
+                displayElement(value);
+            } else {
+                hiddenElement(value);
+            }
+        });
+    });
+}
