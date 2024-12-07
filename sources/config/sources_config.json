@@ -1,0 +1,54 @@
+{
+    "cssmin": {
+        "login_css": {
+            "output": "css/generate/login.css",
+            "sources": [
+                "css/message_style.css",
+                "css/login_style.css",
+                "css/styles.css",
+                "css/spinner.css",
+                "css/responsive.css"
+            ]
+        },
+        "file_system_css": {
+            "output": "css/generate/file_system.css",
+            "sources": [
+                "css/message_style.css",
+                "css/confirm_popup_style.css",
+                "css/side_bar_style.css",
+                "css/page_select_style.css",
+                "css/image_style.css",
+                "css/file_sys_style.css",
+                "css/styles.css",
+                "css/spinner.css",
+                "css/responsive.css"
+            ]
+        }
+    },
+    "jsmin": {
+        "login_js": {
+            "output": "js/generate/login.js",
+            "sources": [
+                "js/sixbox/util/func.js",
+                "js/sixbox/util/requestor.js",
+                "js/sixbox/util/render.js",
+                "js/spinner/spinner.js",
+                "js/sixbox/login/login.js"
+            ]
+        },
+        "file_system_js": {
+            "output": "js/generate/file_system.js",
+            "sources": [
+                "js/sixbox/util/func.js",
+                "js/sixbox/util/requestor.js",
+                "js/sixbox/util/render.js",
+                "js/sixbox/common/sidebar.js",
+                "js/sixbox/common/page_selector.js",
+                "js/spinner/spinner.js",
+                "js/sixbox/file_system/image_display.js",
+                "js/sixbox/file_system/file_control.js",
+                "js/sixbox/file_system/file_system.js"
+            ]
+        }
+    }
+}
