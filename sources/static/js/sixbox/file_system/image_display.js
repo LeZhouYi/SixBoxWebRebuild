@@ -1,6 +1,6 @@
-window.onload = function () {
+window.addEventListener("load",function () {
     clickMultiOverlayHidden("image_display_overlay", ["now_display_image", "image_display_bar"]);
-}
+});
 
 callElement("image_download_button", element=>{
     element.addEventListener("click", function(event){

@@ -36,7 +36,7 @@ const FileTypeMap = {
     }
 }
 
-window.onload = function () {
+window.addEventListener("load",function () {
     /*检查并初始化存储数据*/
     checkLocalStorage();
 
@@ -56,7 +56,7 @@ window.onload = function () {
     window.addEventListener("resize", throttle(function () {
         onFileMenuResize();
     }), 2000);
-};
+});
 
 callElement("all_file_button", element=>{
 	element.addEventListener("click", function (event) {

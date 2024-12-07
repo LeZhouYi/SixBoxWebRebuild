@@ -1,6 +1,6 @@
-window.onload = function () {
+window.addEventListener("load",function () {
     clickOverlayHidden("file_add_popup_overlay", "file_add_content");
-}
+});
 
 callElement("file_add_pop_button", element=>{
 	element.addEventListener("click", function (event) {
@@ -15,9 +15,9 @@ callElement("file_add_pop_button", element=>{
         /*动画相关*/
         let addFileFormElement = document.getElementById("file_add_form");
         if (isHidden(addFileFormElement)) {
-            fileAddContent.style.height = "498px";
+            fileAddContent.style.height = "428px";
         } else {
-            fileAddContent.style.height = "615px";
+            fileAddContent.style.height = "535px";
         }
     });
 });
@@ -47,13 +47,13 @@ callElement("file_add_icon", element=>{
             hiddenElement(addFolderFormElement);
             addHeaderText.textContent = "新增文件";
             /*动画相关*/
-            fileAddContent.style.height = "615px";
+            fileAddContent.style.height = "535px";
         } else {
             hiddenElement(addFileFormElement);
             displayElement(addFolderFormElement);
             addHeaderText.textContent = "新增文件夹";
             /*动画相关*/
-            fileAddContent.style.height = "498px";
+            fileAddContent.style.height = "428px";
         }
     });
 });

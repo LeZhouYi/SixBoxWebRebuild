@@ -1,6 +1,6 @@
-window.onload = function () {
+window.addEventListener("load",function () {
     clickOverlayHidden("file_edit_popup_overlay", "file_edit_content");
-}
+});
 
 callElement("file_edit_cancel", element=>{
 	element.addEventListener("click", function (event) {

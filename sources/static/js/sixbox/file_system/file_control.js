@@ -1,7 +1,7 @@
-window.onload = function () {
+window.addEventListener("load",function () {
     clickOverlayHidden("file_control_overlay", "file_control_content");
     clickOverlayHidden("confirm_popup_overlay", "confirm_popup_content");
-}
+});
 
 callElement("cancel_popup_button", element=>{
     element.addEventListener("click", function (event) {
