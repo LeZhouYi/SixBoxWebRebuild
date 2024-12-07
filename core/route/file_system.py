@@ -1,5 +1,6 @@
 import mimetypes
 import os.path
+import re
 import urllib.parse
 
 from flask import Blueprint, request, Response, jsonify
@@ -10,7 +11,8 @@ from core.common.route_utils import gen_fail_response, is_str_empty, gen_id, gen
 from core.config.config import get_config_path
 from core.database.file_system import FileType
 from core.log.log import logger
-from core.route.route_data import ReportInfo, FsServer, FsConfig, gen_prefix_api, verify_token, verify_page_limit
+from core.route.route_data import ReportInfo, FsServer, FsConfig, gen_prefix_api, verify_token, verify_page_limit, \
+    get_ext_key
 
 FileSystemBp = Blueprint("file_system", __name__)
 
@@ -94,9 +96,13 @@ def add_file():
         logger.error("保存文件%s失败：%s" % (file.filename, e))
         return gen_fail_response(ReportInfo["004"])
 
+    ext_key = get_ext_key(file_ext)
+    if not re.match(r"^\d+$",ext_key):
+        ext_key = FileType.FILE
+
     db_data = {
         "name": filename,
-        "type": FileType.FILE,
+        "type": ext_key,
         "parentId": parent_id,
         "path": filepath,
         "size": file_size

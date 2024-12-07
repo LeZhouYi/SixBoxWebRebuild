@@ -1,3 +1,5 @@
+from typing import Optional
+
 import flask
 from flask import Response
 
@@ -23,6 +25,13 @@ API_PREFIX = "/api/v1"
 def gen_prefix_api(api_str: str) -> str:
     """生成添加了前缀的api路由"""
     return API_PREFIX + api_str
+
+
+def get_ext_key(file_ext: str) -> Optional[str]:
+    """获取后缀对应文件类型键值"""
+    for ext_key, ext_list in FsConfig["file_white_list"].items():
+        if file_ext in ext_list:
+            return ext_key
 
 
 def verify_token(request_in: flask.request) -> tuple[Response, int] | tuple[str, str]:
