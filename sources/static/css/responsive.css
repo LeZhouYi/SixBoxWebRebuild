@@ -48,6 +48,7 @@
         width: calc( var(--file-enum-width) * 1.05 );
         height: calc( 100% - var(--element-margin) * 2 - 70px );
         border: 2px solid var(--theme-part-color);
+        z-index: 1;
     }
     .file_sys_body{
         padding-left: var(--element-margin);

@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='main',
+    name='六号盒子',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
