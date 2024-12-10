@@ -3,27 +3,28 @@
         "login_css": {
             "output": "css/generate/login.css",
             "sources": [
-                "css/comp/message_popup_style.css",
-                "css/login/login_style.css",
-                "css/styles.css",
-                "css/comp/spinner_style.css",
-                "css/responsive.css"
+                "css/common/comp_default.css",
+                "css/common/comp_popup_message.css",
+                "css/login/page_login.css",
+                "css/common/comp_spinner.css",
+                "css/styles.css"
             ]
         },
         "file_system_css": {
             "output": "css/generate/file_system.css",
             "sources": [
-                "css/comp/message_popup_style.css",
-                "css/comp/confirm_popup_style.css",
-                "css/sidebar/side_bar_style.css",
-                "css/comp/page_select_style.css",
-                "css/comp/image_popup_style.css",
-                "css/file_system/file_add_style.css",
-                "css/file_system/file_sys_style.css",
-                "css/comp/text_popup_style.css",
-                "css/comp/form_popup_style.css",
+                "css/common/comp_default.css",
+                "css/common/comp_popup_message.css",
+                "css/common/comp_popup_confirm.css",
+                "css/sidebar/comp_sidebar.css",
+                "css/common/comp_page_selector.css",
+                "css/common/comp_popup_image.css",
+                "css/file_system/comp_popup_file_add.css",
+                "css/file_system/page_file_sys.css",
+                "css/common/comp_popup_text.css",
+                "css/common/comp_popup_form.css",
+                "css/common/comp_spinner.css",
                 "css/styles.css",
-                "css/comp/spinner_style.css",
                 "css/responsive.css"
             ]
         }

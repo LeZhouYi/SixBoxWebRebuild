@@ -5,6 +5,7 @@
         "3": ["mp3"],
         "4": ["mp4"],
         "code": ["py","jar","html"],
-        "text": ["yaml","xlsx","xls","docx","pdf","txt"]
+        "text": ["yaml","xlsx","xls","docx","pdf","txt"],
+        "app": ["exe"]
     }
 }

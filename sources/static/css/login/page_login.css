@@ -13,14 +13,6 @@
     display: grid;
     grid-template-columns: 1fr var(--login-panel-width);
 }
-.login_background_image{
-    /*背景图片容器*/
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    transition: background-image 1s ease-in-out;
-}
 .login_panel{
     /*登录栏*/
     height: 100%;
@@ -107,4 +99,17 @@
     border: var(--border-base-width) solid var(--theme-part-color);
     background-color: var(--theme-active-color);
     color: var(--text-main-color);
+}
+
+@media (max-width: 999px), (max-device-width: 999px){
+    /*登录页面*/
+    .login_body_container{
+        grid-template-columns: 1fr;
+    }
+    .login_panel{
+        width: 100%;
+        padding-left: var(--element-gap);
+        padding-right: var(--element-gap);
+        box-sizing: border-box;
+    }
 }

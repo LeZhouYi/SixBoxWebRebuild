@@ -19,19 +19,6 @@
 
 /*响应式*/
 @media (max-width: 999px), (max-device-width: 999px){
-    /*登录页面*/
-    .login_body_container{
-        grid-template-columns: 1fr;
-    }
-    .login_background_image{
-        display: none;
-    }
-    .login_panel{
-        width: 100%;
-        padding-left: var(--element-gap);
-        padding-right: var(--element-gap);
-        box-sizing: border-box;
-    }
 
     /*文件系统*/
     .file_sys_container{

@@ -1,0 +1,71 @@
+.comp_background_image{
+    /*背景图片容器*/
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-image 1s ease-in-out;
+}
+
+/*通用*/
+.body_default{
+    /*默认Body*/
+    height: 100vh;
+    width: 100vw;
+    margin: 0px;
+}
+.body_theme{
+    /*主题Body*/
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-image 1s ease-in-out;
+    margin: 0px;
+    display: flex;
+    font-family: 'poppins';
+    background-color: var(--theme-main-color);
+}
+
+/*弹窗*/
+.popup_container{
+    height: 100%;
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 1;
+}
+/*弹窗*/
+.popup_container_gray{
+    height: 100%;
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 1;
+    background-color: rgba(0,0,0,0.5);
+}
+.popup_fixed_container{
+    height: 100%;
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    position: fixed;
+    z-index: 1;
+    background-color: rgba(0,0,0,0.5);
+}
+
+@media (max-width: 999px), (max-device-width: 999px){
+    .comp_background_image{
+        display: none;
+    }
+}
