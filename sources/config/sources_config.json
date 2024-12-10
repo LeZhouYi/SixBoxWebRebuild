@@ -6,7 +6,7 @@
                 "css/comp/message_popup_style.css",
                 "css/login/login_style.css",
                 "css/styles.css",
-                "css/comp/spinner.css",
+                "css/comp/spinner_style.css",
                 "css/responsive.css"
             ]
         },
@@ -21,6 +21,7 @@
                 "css/file_system/file_add_style.css",
                 "css/file_system/file_sys_style.css",
                 "css/comp/text_popup_style.css",
+                "css/comp/form_popup_style.css",
                 "css/styles.css",
                 "css/comp/spinner_style.css",
                 "css/responsive.css"

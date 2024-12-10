@@ -89,7 +89,9 @@
     .file_table_item>*:nth-child(4){
         display: none;
     }
-    .file_add_content{
+
+    /*表单弹窗*/
+    .form_popup_content{
         width: calc( 100% - var(--element-margin) * 2 );
     }
 }

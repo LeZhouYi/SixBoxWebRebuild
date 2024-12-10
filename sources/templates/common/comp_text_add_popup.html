@@ -1,7 +1,11 @@
 <div class="popup_container_gray hidden" id="text_add_popup_overlay">
-    <div class="text_add_content" id="text_add_content">
-        <div class="file_add_header">
-            <a class="file_add_header_text" id="file_edit_header_text">新增文本</a>
+    <div class="form_popup_content" id="text_add_content">
+        <div class="form_popup_header">
+            <a class="form_popup_header_text">新增文本</a>
         </div>
+        <form class="form_popup_main" id="text_add_form">
+            <label for="text_add_name" class="form_field_label">文件名</label>
+            <input id="text_add_name" type="text" required placeholder="请输入文件名" class="form_input_field">
+        </form>
     </div>
 </div>

@@ -1,0 +1,79 @@
+.form_popup_content{
+    width: var(--pop-form-width);
+    max-height: calc( 100% - var(--element-margin) * 2 );
+    background-color: white;
+    border: 2px solid var(--theme-part-color);
+    display: flex;
+    flex-direction: column;
+    padding: var(--element-gap);
+    border-radius: var(--border-radius);
+    box-sizing: border-box;
+    transition: height 1s ease, width 1s ease;
+    overflow-y: auto;
+}
+.form_popup_content::-webkit-scrollbar{
+    /*侧边栏列表栏，隐藏滚动条*/
+    width: 0px;
+}
+.form_popup_header{
+    width: 100%;
+    height: 54px;
+    font-size: var(--text-media-size);
+    font-weight: bold;
+    color: var(--text-main-color);
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--element-margin);
+}
+.form_popup_header_text{
+    width: 100%;
+    font-size: var(--text-header-size);
+    font-weight: bold;
+    color: var(--text-main-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.form_popup_main{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.form_field_label{
+    width: 100%;
+    min-height: 44px;
+    font-size: var(--main-text-size);
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding-bottom: var(--element-margin);
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.form_input_field{
+    width: 100%;
+    height: 44px;
+    font-size: var(--main-text-size);
+    margin-bottom: var(--element-gap);
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+    border-radius: var(--border-min-radius);
+    border-color: var(--text-main-color);
+    border-width: var(--border-base-width);
+    box-sizing: border-box;
+    font-family: 'poppins';
+}
+.form_choose_field{
+    width: 100%;
+    height: 44px;
+    font-size: var(--main-text-size);
+    margin-bottom: var(--element-margin);
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+    border-radius: var(--border-min-radius);
+    border-color: var(--text-main-color);
+    box-sizing: border-box;
+    font-family: 'poppins';
+    border-width: var(--border-base-width);
+}
