@@ -67,3 +67,20 @@
     box-sizing: border-box;
     margin-right: var(--element-margin);
 }
+
+@media (max-width: 460px), (max-device-width: 460px){
+    /*分页*/
+    .page_select_container{
+        display: grid;
+        grid-template-columns: var(--icon-base-size) 1fr var(--icon-base-size);
+    }
+    .page_select_container>*:nth-child(2){
+        margin: auto;
+    }
+    .page_select_container>*:nth-child(4){
+        display: none;
+    }
+    .page_select_icon{
+        margin: 0px;
+    }
+}

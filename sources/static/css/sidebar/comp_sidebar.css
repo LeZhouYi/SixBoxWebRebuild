@@ -124,3 +124,19 @@
     /*隐藏侧边栏*/
     transform: translateX(-100%);  /*将侧边栏移出*/
 }
+
+/*响应式*/
+@media (max-width: 1300px), (max-device-width: 1300px){
+    /*侧边栏*/
+    .side_bar_container{
+        transform: translateX(-100%);
+    }
+    .side_bar_expand{
+        padding-left: 0px;
+    }
+    .side_bar_overlay{
+        pointer-events: auto;
+        width: 100%;
+        display: none;
+    }
+}

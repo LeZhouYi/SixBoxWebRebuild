@@ -72,3 +72,9 @@
     /*只有低于999px宽度才显示*/
     display: none;
 }
+
+@media (max-width: 999px), (max-device-width: 999px){
+    .only999{
+        display: block;
+    }
+}

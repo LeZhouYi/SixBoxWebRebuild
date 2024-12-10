@@ -64,6 +64,13 @@
     background-color: rgba(0,0,0,0.5);
 }
 
+/*响应式*/
+@media (max-width: 1300px), (max-device-width: 1300px){
+    .click_throw{
+        pointer-events: auto;
+    }
+}
+
 @media (max-width: 999px), (max-device-width: 999px){
     .comp_background_image{
         display: none;

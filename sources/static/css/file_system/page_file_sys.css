@@ -378,3 +378,97 @@
     height: 44px;
     width: 100%;
 }
+
+/*响应式*/
+@media (max-width: 999px), (max-device-width: 999px){
+    /*文件系统*/
+    .file_sys_container{
+        grid-template-rows: calc( var(--file-sys-header-height) * 0.75 ) 1fr;
+    }
+    .file_sys_header{
+        padding: var(--element-margin);
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+    .file_sys_menu{
+        display: none;
+        position: fixed;
+        width: calc( var(--file-enum-width) * 1.05 );
+        height: calc( 100% - var(--element-margin) * 2 - 70px );
+        border: 2px solid var(--theme-part-color);
+        z-index: 1;
+    }
+    .file_sys_body{
+        padding-left: var(--element-margin);
+        padding-right: var(--element-margin);
+        grid-template-columns: 1fr;
+    }
+    .file_sys_search_bar{
+        grid-template-columns: var(--icon-base-size) 1fr;
+        grid-template-rows: 1fr 1fr;
+        grid-gap: var(--element-margin);
+    }
+    .file_sys_search_bar>*:nth-child(1){
+        grid-column: 1 / 3;
+    }
+    .file_sys_panel{
+        grid-gap: var(--element-margin);
+        grid-template-rows: calc( var(--file-search-height) * 2.25 ) 1fr
+    }
+}
+
+/*响应式*/
+@media (max-width: 700px), (max-device-width: 700px){
+    /*文件系统*/
+    .file_table_header{
+        grid-template-columns: 1fr 180px 90px 50px;
+    }
+    .file_table_header>*:nth-child(4){
+        display: none;
+    }
+    .file_table_item{
+        grid-template-columns: 1fr 180px 90px 50px;
+    }
+    .file_table_item>*:nth-child(4){
+        display: none;
+    }
+}
+
+/*响应式*/
+@media (max-width: 600px), (max-device-width: 600px){
+    /*文件系统*/
+    .file_table_header{
+        grid-template-columns: 1fr 180px 50px;
+    }
+    .file_table_header>*:nth-child(3), .file_table_header>*:nth-child(4){
+        display: none;
+    }
+    .file_table_item{
+        grid-template-columns: 1fr 180px 50px;
+    }
+    .file_table_item>*:nth-child(3), .file_table_item>*:nth-child(4){
+        display: none;
+    }
+}
+
+@media (max-width: 460px), (max-device-width: 460px){
+    /*文件系统*/
+    .file_table_header{
+        grid-template-columns: 1fr 50px;
+    }
+    .file_sys_header>*:nth-child(3),.file_sys_header>*:nth-child(4){
+        display: none;
+    }
+    .file_table_header>*:nth-child(2),.file_table_header>*:nth-child(3),.file_table_header>*:nth-child(4){
+        display: none;
+    }
+    .file_table_item{
+        grid-template-columns: 1fr 50px;
+    }
+    .file_table_item>*:nth-child(2),.file_table_item>*:nth-child(3),.file_table_item>*:nth-child(4){
+        display: none;
+    }
+    .file_sys_header{
+        grid-template-columns: var(--header-icon-size) 1fr var(--header-icon-size);
+    }
+}

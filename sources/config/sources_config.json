@@ -5,8 +5,8 @@
             "sources": [
                 "css/common/comp_default.css",
                 "css/common/comp_popup_message.css",
-                "css/login/page_login.css",
                 "css/common/comp_spinner.css",
+                "css/login/page_login.css",
                 "css/styles.css"
             ]
         },
@@ -19,13 +19,11 @@
                 "css/sidebar/comp_sidebar.css",
                 "css/common/comp_page_selector.css",
                 "css/common/comp_popup_image.css",
-                "css/file_system/comp_popup_file_add.css",
-                "css/file_system/page_file_sys.css",
                 "css/common/comp_popup_text.css",
                 "css/common/comp_popup_form.css",
                 "css/common/comp_spinner.css",
-                "css/styles.css",
-                "css/responsive.css"
+                "css/file_system/page_file_sys.css",
+                "css/styles.css"
             ]
         }
     },
