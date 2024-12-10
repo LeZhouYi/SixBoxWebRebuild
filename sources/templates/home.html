@@ -10,11 +10,11 @@
 
 {% block body_content %}
     {% include 'common/comp_side_bar.html' %}
-    {% include 'common/page_file_system.html' %}
+    {% include 'file_system/page_file_system.html' %}
     {% include 'common/comp_popup_message.html' %}
-    {% include 'common/comp_confirm_popup.html' %}
-    {% include 'common/comp_image_display.html' %}
-    {% include 'common/comp_text_add_popup.html' %}
+    {% include 'common/comp_popup_confirm.html' %}
+    {% include 'common/comp_popup_image.html' %}
+    {% include 'file_system/comp_popup_text_add.html' %}
 {% endblock %}
 
 {% block js_file %}
