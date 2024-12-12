@@ -53,6 +53,7 @@
                 "js/sixbox/file_system/file_add.js",
                 "js/sixbox/file_system/file_edit.js",
                 "js/sixbox/file_system/file_text_add.js",
+                "js/sixbox/file_system/file_menu.js",
                 "js/sixbox/file_system/file_system.js"
             ]
         }

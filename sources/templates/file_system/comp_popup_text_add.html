@@ -6,6 +6,17 @@
         <form class="form_popup_main" id="text_add_form">
             <label for="text_add_name" class="form_field_label">文件名</label>
             <input id="text_add_name" type="text" required placeholder="请输入文件名" class="form_input_field">
+            <label for="text_add_folder_select" class="form_field_label">文件夹</label>
+            <select id="text_add_folder_select" required class="form_choose_field">
+            </select>
+            <label class="form_field_label">正文</label>
+            <div id="text_tinymce_field" class="form_tinymce_field"></div>
+            <div class="form_button_row">
+                <div class="form_button_spinner spin_holder" id="text_add_button_panel">
+                    <input id="text_add_confirm" type="submit" value="确认" class="form_button">
+                </div>
+                <input id="text_add_cancel" type="button" value="取消" class="form_button">
+            </div>
         </form>
     </div>
 </div>

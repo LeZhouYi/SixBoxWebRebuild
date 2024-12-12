@@ -152,6 +152,9 @@
     background-color: var(--theme-background-color);
     color: var(--text-main-color);
 }
+.form_tinymce_field{
+    min-height: 400px;
+}
 
 /*响应式*/
 @media (max-width: 700px), (max-device-width: 700px){

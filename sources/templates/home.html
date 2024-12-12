@@ -21,4 +21,6 @@
     {% assets "file_system_js" %}
         <script type="module" src="{{ ASSET_URL }}"></script>
     {% endassets %}
+    <script type="module" src="{{url_for('static', filename='js/tinymce/tinymce.min.js')}}" referrerpolicy="origin"
+        defer></script>
 {% endblock %}

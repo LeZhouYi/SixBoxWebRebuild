@@ -120,3 +120,11 @@ function callElement(elementId, callback) {
         callback(element);
     }
 }
+
+function callElementByClass(elementClass, callback){
+    /*获取元素并校验是否存在，存在则执行callback*/
+    let element = document.querySelector(elementClass);
+    if (element && callback) {
+        callback(element);
+    }
+}
