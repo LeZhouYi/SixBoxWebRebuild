@@ -59,14 +59,37 @@ function initMce(mceInputId, initCallBack){
         branding: false,
         promotion: false,
         license_key: "gpl",
+        fullscreen_native: true,
         setup: function(editor){
             editor.on("init", function(){
-                callElementByClass(".tox.tox-silver-sink.tox-tinymce-aux", menuElement=>{
-                    menuElement.style.position = "fixed";
+                callElementByClass(".tox.tox-silver-sink.tox-tinymce-aux", tinymceElement=>{
+                    tinymceElement.style.position = "fixed";
+                    document.addEventListener("fullscreenchange", onTinyMceScreenChange);
+                    document.addEventListener("mozfullscreenchange", onTinyMceScreenChange);
+                    document.addEventListener("webkitfullscreenchange", onTinyMceScreenChange);
+                    document.addEventListener("msfullscreenchange", onTinyMceScreenChange);
                 });
-//                tox tox-tinymce tox-tinymce--toolbar-sticky-off
                 initCallBack?.();
             });
         }
+    });
+}
+
+function onTinyMceScreenChange(){
+    /*当编辑器的全屏进入/退出*/
+    callElementByClass(".tox.tox-tinymce.tox-edit-focus.tox-fullscreen", tinymceElement=>{
+        callElement("text_add_popup_overlay", overlayElement=>{
+            if(!isHidden(overlayElement)){
+                let fullscreenElement = (
+                    document.fullscreenElement || document.mozFullScreenElement ||
+                    document.webkitFullscreenElement || document.msFullscreenElement
+                );
+                if (fullscreenElement){
+                    tinymceElement.style.borderRadius = "0px";
+                }else{
+                    tinymceElement.style.borderRadius = "inherit";
+                }
+            }
+        })
     });
 }
