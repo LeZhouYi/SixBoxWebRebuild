@@ -8,6 +8,7 @@
 !/data/static
 /data/static/*
 !/data/static/icons
+!/data/static/langs
 
 # 运行生成文件
 __pycache__/

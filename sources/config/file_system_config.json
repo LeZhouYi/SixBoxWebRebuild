@@ -4,7 +4,8 @@
         "data": ["zip","rar","7z","json"],
         "3": ["mp3"],
         "4": ["mp4"],
-        "code": ["py","jar","html"],
+        "5": ["html"],
+        "code": ["py","jar"],
         "text": ["yaml","xlsx","xls","docx","pdf","txt"],
         "app": ["exe"]
     }

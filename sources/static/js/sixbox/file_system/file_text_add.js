@@ -2,6 +2,30 @@ window.addEventListener("load",function () {
     clickOverlayHidden("text_add_popup_overlay", "text_add_content");
 });
 
+callElement("text_add_form", element=>{
+    element.addEventListener("submit", function(event){
+        /*点击新增富文本*/
+        event.preventDefault();
+        let spinner = createSpinner("text_add_button_panel");
+        let formData = {
+            name: document.getElementById("text_add_name").value,
+            parentId: document.getElementById("text_add_folder_select").value,
+            content: tinymce.get("text_tinymce_field").getContent()
+        };
+        postJsonWithAuth("/texts", formData).then(data => {
+            displayMessage(data.message);
+            hiddenElementById("text_add_popup_overlay");
+            updateFileList();
+        })
+        .catch(error => {
+            displayError(error);
+        })
+        .finally(()=>{
+            spinner?.remove();
+        });
+    });
+});
+
 callElement("text_add_cancel", element=>{
     element.addEventListener("click", function(event){
         /*隐藏弹窗*/
@@ -16,18 +40,19 @@ callElement("add_text_button", element=>{
         let spinner = createSpinner("add_text_button","spin_panel");
         try{
             if(!menuElement){
-            initMce(".form_tinymce_field", function(){
-                    displayElementById("text_add_popup_overlay");
-                    hiddenFileMenu();
-                    spinner.remove();
-                });
+                let nowFolderId = localStorage.getItem("nowFolderId");
+                loadFolderSelect("text_add_folder_select", nowFolderId);
+                initMce(".form_tinymce_field", function(){
+                        displayElementById("text_add_popup_overlay");
+                        hiddenFileMenu();
+                    });
             }else{
                 displayElementById("text_add_popup_overlay");
                 hiddenFileMenu();
-                spinner.remove();
             }
         } catch (error){
             displayError(error);
+        } finally{
             spinner?.remove();
         }
     });
@@ -38,7 +63,7 @@ function initMce(mceInputId, initCallBack){
     tinymce.init({
         selector: mceInputId,
         //skin:"oxide-dark",
-        language:"zh_CN",
+        language: "zh_CN",
         plugins: "preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media code codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help emoticons autosave autoresize",
         toolbar: "code undo redo restoredraft | cut copy paste pastetext | forecolor backcolor bold italic underline strikethrough link anchor | alignleft aligncenter alignright alignjustify outdent indent | \
             styleselect formatselect fontselect fontsizeselect | bullist numlist | blockquote subscript superscript removeformat | \

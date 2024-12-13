@@ -33,6 +33,13 @@ const FileTypeMap = {
         "controls": [
             0, 1, 2, 3, 4
         ]
+    },
+    "5": {
+        "src": "/sources?filename=icons/text.png",
+        "text": "富文本",
+        "controls": [
+            0, 1, 2, 3, 4
+        ]
     }
 }
 

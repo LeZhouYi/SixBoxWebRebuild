@@ -155,7 +155,9 @@
 .form_tinymce_field{
     min-height: 400px;
 }
-
+.tox-collection__item-label{
+    min-width: 100px;
+}
 /*响应式*/
 @media (max-width: 700px), (max-device-width: 700px){
     /*表单弹窗*/
