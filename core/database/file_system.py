@@ -94,6 +94,18 @@ class FileSystemServer:
             data = self.db.get(self.query.id == data_id)
             return data
 
+    def get_data_by_keys(self, data_id) -> Optional[dict]:
+        """
+        获取文件数据
+        :param data_id:
+        :return:
+        """
+        with self.thread_lock:
+            data = self.db.get(self.query.id == data_id)
+            return extra_data_by_list(data, self.key_list)
+
+
+
     def get_folder_detail(self, data_id: str, search_type: str, page: int, limit: int) -> dict:
         """获取文件夹详情及该文件夹下的内容"""
         return_data = {}

@@ -232,7 +232,7 @@ function createFileItem(fileData) {
     let fileType = fileData.type;
 
     let fileItem = document.createElement("div");
-    fileItem.classList.add("file_table_item");
+    fileItem.classList.add("file_table_item", "spin_holder");
 
     let fileNameDiv = document.createElement("div");
     fileNameDiv.classList.add("file_name_div", "clickable");
@@ -247,9 +247,11 @@ function createFileItem(fileData) {
 
     /*绑定事件*/
     if (fileType === "0") {
-        bindClickFolder(fileNameDiv, fileData.id);
+        bindClickFolder(fileNameDiv, fileData);
     }else if(fileType === "2"){
         bindClickImage(fileNameDiv, fileData);
+    }else if(fileType === "5"){
+        bindClickText(fileItem, fileNameDiv, fileData);
     }
 
     fileItem.appendChild(fileNameDiv);
@@ -282,10 +284,10 @@ function createFileItem(fileData) {
     return fileItem;
 }
 
-function bindClickFolder(element, folderId) {
+function bindClickFolder(element, fileData) {
     /*绑定文件夹点击事件*/
     element.addEventListener("click", function (event) {
-        localStorage.setItem("nowFolderId", folderId);
+        localStorage.setItem("nowFolderId", fileData.id);
         callElement("file_search_input", element=>{
             element.value = "";
         });

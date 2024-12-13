@@ -289,3 +289,18 @@ function createSpinner(elementId, className="spin_panel"){
         return spinPanel;
     }
 }
+
+function createSpinnerByElement(target, className="spin_panel"){
+    /*创建进度加载条*/
+    if(target){
+        let spinPanel = document.createElement("div");
+        spinPanel.classList.add(className);
+        if(target.firstChild){
+            target.insertBefore(spinPanel, target.firstChild);
+        }else{
+            target.appendChild(spinPanel);
+        }
+        new Spinner().spin(spinPanel);
+        return spinPanel;
+    }
+}

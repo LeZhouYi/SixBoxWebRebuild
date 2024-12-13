@@ -80,7 +80,7 @@ callElement("copy_part_url_button", element=>{
                 let clipText = `/home.html?nowFolderId=${nowControlData.id}`;
                 clipTextToBoard(clipText);
                 displayMessage("已成功复制至剪切板");
-            } else if (nowControlData.type === "1") {
+            } else {
                 let clipText = `/api/v1/files/${nowControlData.id}/download`;
                 clipTextToBoard(clipText);
                 displayMessage("已成功复制至剪切板");
