@@ -3,6 +3,22 @@ window.addEventListener("load",function () {
     clickOverlayHidden("text_display_popup_overlay", "text_display_content");
 });
 
+callElement("text_edit_button", editElement=>{
+    editElement.addEventListener("click", function(event){
+        try{
+            let spinner = createSpinner("text_display_button_panel");
+            let fileId = localStorage.getItem("nowDisplayId");
+            onPopupEditText(fileId, function(){
+                hiddenElementById("text_display_popup_overlay");
+                spinner.remove();
+            });
+        } catch (error){
+            displayError(error);
+            spinner?.remove();
+        }
+    });
+});
+
 callElement("text_close_button", element=>{
     element.addEventListener("click", function(event){
         /*点击隐藏显示文本*/
@@ -14,23 +30,44 @@ callElement("text_add_form", element=>{
     element.addEventListener("submit", function(event){
         /*点击新增富文本*/
         event.preventDefault();
-        let spinner = createSpinner("text_add_button_panel");
-        let formData = {
-            name: document.getElementById("text_add_name").value,
-            parentId: document.getElementById("text_add_folder_select").value,
-            content: tinymce.get("text_tinymce_field").getContent()
-        };
-        postJsonWithAuth("/texts", formData).then(data => {
-            displayMessage(data.message);
-            hiddenElementById("text_add_popup_overlay");
-            updateFileList();
-        })
-        .catch(error => {
+        try{
+            let title = document.getElementById("text_add_title").textContent;
+            let spinner = createSpinner("text_add_button_panel");
+            let formData = {
+                name: document.getElementById("text_add_name").value,
+                parentId: document.getElementById("text_add_folder_select").value,
+                content: tinymce.get("text_add_mce_field").getContent()
+            };
+            if(title==="新增文本"){
+                postJsonWithAuth("/texts", formData).then(data => {
+                    displayMessage(data.message);
+                    hiddenElementById("text_add_popup_overlay");
+                    updateFileList();
+                })
+                .catch(error => {
+                    displayError(error);
+                })
+                .finally(()=>{
+                    spinner?.remove();
+                });
+            }else{
+                let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+                putJsonWithAuth(`/texts/${nowControlData.id}`, formData).then(data => {
+                    displayMessage(data.message);
+                    hiddenElementById("text_add_popup_overlay");
+                    updateFileList();
+                })
+                .catch(error => {
+                    displayError(error);
+                })
+                .finally(()=>{
+                    spinner?.remove();
+                });
+            }
+        } catch (error){
             displayError(error);
-        })
-        .finally(()=>{
             spinner?.remove();
-        });
+        }
     });
 });
 
@@ -48,6 +85,12 @@ callElement("add_text_button", element=>{
             let tinymceElement = fieldElement.nextElementSibling;
             let spinner = createSpinner("add_text_button","spin_panel");
             try{
+                callElement("text_add_title", titleElement=>{
+                    if(titleElement.textContent!=="新增文本"){
+                        tinymce.get("text_add_mce_field").setContent("");
+                        titleElement.textContent="新增文本";
+                    }
+                });
                 let nowFolderId = localStorage.getItem("nowFolderId");
                 loadFolderSelect("text_add_folder_select", nowFolderId);
                 if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")){
@@ -80,6 +123,7 @@ function initEditMce(mceInputId, initCallBack, fullChangeBack){
         selector: `#${mceInputId}`,
         language: "zh_CN",
         resize: false,
+        visualblocks_default_state: true,
         plugins: "preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media code codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help emoticons autosave autoresize",
         toolbar: "code undo redo restoredraft | cut copy paste pastetext | forecolor backcolor bold italic underline strikethrough link anchor | alignleft aligncenter alignright alignjustify outdent indent | \
             styleselect formatselect fontselect fontsizeselect | bullist numlist | blockquote subscript superscript removeformat | \
@@ -144,6 +188,7 @@ function bindClickText(fileItem, element, fileData){
     /*绑定点击富文本事件*/
     element.addEventListener("click", function(event){
         localStorage.setItem("nowDisplayId", fileData.id);
+        localStorage.setItem("nowControlData", JSON.stringify(fileData));
         callElement("text_display_mce_field", async function(fieldElement){
             let tinymceElement = fieldElement.nextElementSibling;
             let spinner = createSpinnerByElement(fileItem, "spin_panel_light");
@@ -181,7 +226,7 @@ function initDisplayMce(mceInputId, initCallBack){
     tinymce.init({
         selector: `#${mceInputId}`,
         language: "zh_CN",
-        plugins: "",
+        plugins: "preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media code codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help emoticons autosave autoresize",
         toolbar: "",
         menubar: false,
         resize: false,
@@ -216,20 +261,30 @@ function initDisplayMce(mceInputId, initCallBack){
     });
 }
 
-function onPopupEditText(textId){
+function onPopupEditText(textId, callback){
     callElement("text_add_mce_field", async function(fieldElement){
         let tinymceElement = fieldElement.nextElementSibling;
         try{
+            callElement("text_add_title", titleElement=>{
+                titleElement.textContent="编辑文本";
+            });
             let textData = await getJsonWithAuth(`/texts/${textId}`);
+            callElement("text_add_name", nameElement=>{
+                nameElement.value = textData.name;
+            });
+            let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+            loadFolderSelect("text_add_folder_select", nowControlData.parentId);
             if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")){
                 displayElementById("text_add_popup_overlay");
                 tinymce.get("text_add_mce_field").setContent(textData.content);
+                callback?.();
             }else{
                 initEditMce(
                     "text_add_mce_field",
                     function(){
                         displayElementById("text_add_popup_overlay");
                         tinymce.get("text_add_mce_field").setContent(textData.content);
+                        callback?.();
                     },
                     onTextAddFullChange
                 );

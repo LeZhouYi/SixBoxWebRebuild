@@ -340,7 +340,7 @@
     width: var(--file-item-button-width);
     background-color: white;
     border: 2px solid var(--theme-main-color);
-    border-radius: var(--border-radius);
+    border-radius: calc( var(--border-radius) - 2px );
     box-sizing: border-box;
     position: fixed;
     z-index: 2;

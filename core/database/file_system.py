@@ -223,7 +223,8 @@ class FileSystemServer:
         """部分匹配"""
 
         def query(item):
-            return search_value in item.get(field, "")
+            text = str(item.get(field, "")).lower()
+            return search_value.lower() in text
 
         return query
 

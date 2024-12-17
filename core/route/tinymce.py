@@ -58,12 +58,51 @@ def get_text(file_id: str):
     if is_str_empty(file_id) or not FsServer.is_file_exist(file_id):
         return gen_fail_response(ReportInfo["012"])
     data = FsServer.get_data(file_id)
-    file_path = data["path"]
+    filepath = data["path"]
     data = extra_data_by_list(data, FsServer.key_list)
     try:
-        with open(file_path, "r", encoding="utf-8") as file:
+        with open(filepath, "r", encoding="utf-8") as file:
             data["content"] = file.read()
     except Exception as e:
-        logger.error("读取文件%s失败：%s" % (data["name"], e))
+        logger.error("读取文件%s失败：%s" % (filepath, e))
         return gen_fail_response(ReportInfo["026"])
     return jsonify(data)
+
+
+@TinyMceBp.route(gen_prefix_api("/texts/<file_id>"), methods=["PUT"])
+def edit_text(file_id: str):
+    """编辑文本"""
+    verify_result = verify_token(request)
+    if isinstance(verify_result[0], Response):
+        return verify_result
+    if is_str_empty(file_id) or not FsServer.is_file_exist(file_id):
+        return gen_fail_response(ReportInfo["012"])
+    before_data = FsServer.get_data(file_id)
+    filepath = before_data["path"]
+    if not os.path.exists(filepath):
+        return gen_fail_response(ReportInfo["012"])
+    now_data = request.json
+    if is_key_str_empty(now_data, "name"):
+        return gen_fail_response(ReportInfo["023"])
+    if is_key_str_empty(now_data, "parentId"):
+        return gen_fail_response(ReportInfo["009"])
+    parent_id = now_data["parentId"]
+    if not FsServer.is_folder_exist(parent_id):
+        return gen_fail_response(ReportInfo["009"])
+    if is_key_str_empty(now_data, "content"):
+        return gen_fail_response(ReportInfo["024"])
+    try:
+        with open(filepath, "w", encoding="utf-8") as file:
+            file.write(now_data["content"])
+            file_size = os.path.getsize(filepath)
+    except Exception as e:
+        logger.error("写入文件%s失败：%s" % (filepath, e))
+        return gen_fail_response(ReportInfo["027"])
+    FsServer.edit_file(file_id, {
+        "name": now_data["name"],
+        "type": FileType.MCE_TEXT,
+        "parentId": parent_id,
+        "path": filepath,
+        "size": file_size
+    })
+    return gen_success_response(ReportInfo["014"])

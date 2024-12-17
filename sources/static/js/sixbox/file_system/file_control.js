@@ -123,8 +123,10 @@ callElement("file_edit_button", element=>{
                 displayElementById("file_edit_popup_overlay");
                 spinner.remove();
             } else if (nowControlData.type === "5"){
-                hiddenElementById("file_control_overlay");
-                onPopupEditText(nowControlData.id);
+                onPopupEditText(nowControlData.id, function(){
+                    hiddenElementById("file_control_overlay");
+                    spinner.remove();
+                });
             } else {
                 document.getElementById("file_edit_header_text").textContent = "编辑文件";
                 document.getElementById("file_edit_name").value = nowControlData.name;
@@ -135,7 +137,7 @@ callElement("file_edit_button", element=>{
             }
         } catch (error) {
             displayErrorMessage(error);
-            spinner.remove();
+            spinner?.remove();
         }
     });
 });
