@@ -182,8 +182,10 @@
     /*表单弹窗*/
     .form_popup_content{
         width: calc( 100% - var(--element-margin) * 2 );
+        padding: var(--element-margin);
     }
     .form_wide_content{
         width: calc( 100% - var(--element-margin) * 2 );
+        padding: var(--element-margin);
     }
 }

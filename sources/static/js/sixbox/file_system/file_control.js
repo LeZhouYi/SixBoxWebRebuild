@@ -110,25 +110,32 @@ callElement("file_download_button", element=>{
 });
 
 callElement("file_edit_button", element=>{
-	element.addEventListener("click", function (event) {
+	element.addEventListener("click", async function (event) {
         /*点击编辑*/
-        hiddenElementById("file_control_overlay");
         try {
             let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
-            if (!displayElementById("file_edit_popup_overlay")) {
-                return;
-            }
+            let spinner = createSpinner("file_edit_button");
             if (nowControlData.type === "0") {
                 document.getElementById("file_edit_header_text").textContent = "编辑文件夹";
                 document.getElementById("file_edit_name").value = nowControlData.name;
-                loadFolderSelect("file_edit_folder_select", nowControlData.parentId, nowControlData.id);
+                await loadFolderSelect("file_edit_folder_select", nowControlData.parentId, nowControlData.id);
+                hiddenElementById("file_control_overlay");
+                displayElementById("file_edit_popup_overlay");
+                spinner.remove();
+            } else if (nowControlData.type === "5"){
+                hiddenElementById("file_control_overlay");
+                onPopupEditText(nowControlData.id);
             } else {
                 document.getElementById("file_edit_header_text").textContent = "编辑文件";
                 document.getElementById("file_edit_name").value = nowControlData.name;
-                loadFolderSelect("file_edit_folder_select", nowControlData.parentId);
+                await loadFolderSelect("file_edit_folder_select", nowControlData.parentId);
+                hiddenElementById("file_control_overlay");
+                displayElementById("file_edit_popup_overlay");
+                spinner.remove();
             }
         } catch (error) {
             displayErrorMessage(error);
+            spinner.remove();
         }
     });
 });

@@ -280,6 +280,11 @@ function createSpinner(elementId, className="spin_panel"){
     if(target){
         let spinPanel = document.createElement("div");
         spinPanel.classList.add(className);
+        spinPanel.addEventListener("click", function(event){
+            console.log("test");
+            event.preventDefault();
+            event.stopPropagation();
+        });
         if(target.firstChild){
             target.insertBefore(spinPanel, target.firstChild);
         }else{

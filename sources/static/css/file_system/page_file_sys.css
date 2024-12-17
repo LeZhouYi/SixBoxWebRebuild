@@ -355,8 +355,6 @@
     border: 2px solid var(--theme-background-color);
     background-color: var(--theme-background-color);
     transition: background-color 1s ease, border-color 1s ease;
-    padding-left: var(--element-margin);
-    padding-right: var(--element-margin);
 }
 .file_control_item:hover{
     background-color: var(--theme-active-color);
@@ -365,6 +363,7 @@
 .file_control_icon{
     width: var(--icon-base-size);
     height: var(--icon-base-size);
+    margin-left: var(--element-margin);
     margin-right: var(--element-margin);
 }
 .file_control_text{
@@ -373,6 +372,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin-right: var(--element-margin);
 }
 .file_button_panel{
     height: 44px;
@@ -429,7 +429,7 @@
     .file_table_item{
         grid-template-columns: 1fr 180px 90px 50px;
     }
-    .file_table_item>*:nth-child(4){
+    .file_table_item>*:nth-last-child(2){
         display: none;
     }
 }
@@ -446,7 +446,7 @@
     .file_table_item{
         grid-template-columns: 1fr 180px 50px;
     }
-    .file_table_item>*:nth-child(3), .file_table_item>*:nth-child(4){
+    .file_table_item>*:nth-last-child(2), .file_table_item>*:nth-last-child(3){
         display: none;
     }
 }
@@ -465,7 +465,7 @@
     .file_table_item{
         grid-template-columns: 1fr 50px;
     }
-    .file_table_item>*:nth-child(2),.file_table_item>*:nth-child(3),.file_table_item>*:nth-child(4){
+    .file_table_item>*:nth-last-child(2),.file_table_item>*:nth-last-child(3),.file_table_item>*:nth-last-child(4){
         display: none;
     }
     .file_sys_header{

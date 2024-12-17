@@ -3,6 +3,13 @@ window.addEventListener("load",function () {
     clickOverlayHidden("text_display_popup_overlay", "text_display_content");
 });
 
+callElement("text_close_button", element=>{
+    element.addEventListener("click", function(event){
+        /*点击隐藏显示文本*/
+        hiddenElementById("text_display_popup_overlay");
+    });
+})
+
 callElement("text_add_form", element=>{
     element.addEventListener("submit", function(event){
         /*点击新增富文本*/
@@ -136,12 +143,19 @@ function onTextAddFullChange(){
 function bindClickText(fileItem, element, fileData){
     /*绑定点击富文本事件*/
     element.addEventListener("click", function(event){
-        callElement("text_display_mce_field", fieldElement=>{
+        localStorage.setItem("nowDisplayId", fileData.id);
+        callElement("text_display_mce_field", async function(fieldElement){
             let tinymceElement = fieldElement.nextElementSibling;
             let spinner = createSpinnerByElement(fileItem, "spin_panel_light");
             try{
+                let fileId = localStorage.getItem("nowDisplayId");
+                let textData = await getJsonWithAuth(`/texts/${fileId}`);
+                callElement("text_display_name", nameElement=>{
+                    text_display_name.value = textData.name;
+                });
                 if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")){
                     displayElementById("text_display_popup_overlay");
+                    tinymce.get("text_display_mce_field").setContent(textData.content);
                     spinner.remove();
                 }else{
                     initDisplayMce(
@@ -149,6 +163,7 @@ function bindClickText(fileItem, element, fileData){
                         function(){
                             spinner.remove();
                             displayElementById("text_display_popup_overlay");
+                            tinymce.get("text_display_mce_field").setContent(textData.content);
                         }
                     );
                 }
@@ -197,6 +212,31 @@ function initDisplayMce(mceInputId, initCallBack){
                 });
                 initCallBack?.();
             });
+        }
+    });
+}
+
+function onPopupEditText(textId){
+    callElement("text_add_mce_field", async function(fieldElement){
+        let tinymceElement = fieldElement.nextElementSibling;
+        try{
+            let textData = await getJsonWithAuth(`/texts/${textId}`);
+            if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")){
+                displayElementById("text_add_popup_overlay");
+                tinymce.get("text_add_mce_field").setContent(textData.content);
+            }else{
+                initEditMce(
+                    "text_add_mce_field",
+                    function(){
+                        displayElementById("text_add_popup_overlay");
+                        tinymce.get("text_add_mce_field").setContent(textData.content);
+                    },
+                    onTextAddFullChange
+                );
+            }
+        }
+        catch (error){
+            displayError(error);
         }
     });
 }

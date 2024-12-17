@@ -42,7 +42,7 @@
     width: 100%;
     height: 100%;
     background-color: rgba(128,128,128,0.5);
-    border-radius: var(--border-min-radius);
+    border-radius: calc( var(--border-min-radius) - 2px );
 }
 
 .spin_panel_light{
