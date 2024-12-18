@@ -201,14 +201,16 @@ function bindClickText(fileItem, element, fileData){
                 if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")){
                     displayElementById("text_display_popup_overlay");
                     tinymce.get("text_display_mce_field").setContent(textData.content);
+                    bindMceClickHref("text_display_mce_field");
                     spinner.remove();
                 }else{
                     initDisplayMce(
                         "text_display_mce_field",
                         function(){
-                            spinner.remove();
                             displayElementById("text_display_popup_overlay");
                             tinymce.get("text_display_mce_field").setContent(textData.content);
+                            bindMceClickHref("text_display_mce_field");
+                            spinner.remove();
                         }
                     );
                 }
@@ -219,6 +221,27 @@ function bindClickText(fileItem, element, fileData){
             }
         });
     });
+}
+
+function bindMceClickHref(mceId){
+    /*给mce内容中的a元素绑定点击事件*/
+    let editor = tinymce.get("text_display_mce_field");
+    if(editor){
+        let contentDoc = editor.getDoc();
+        let aElements = contentDoc.getElementsByTagName("a");
+        let prefixUrl = window.location.protocol + "//" + window.location.hostname;
+        for(let i = 0; i< aElements.length; i++){
+            let href = aElements[i].href;
+            if(href&&href.startsWith(prefixUrl)){
+                aElements[i].addEventListener("click", function(event){
+                    let accessToken = localStorage.getItem("accessToken");
+                    downloadByA(`${href}?token=${accessToken}`);
+                    event.preventDefault();
+                    event.stopPropagation();
+                });
+            }
+        }
+    }
 }
 
 function initDisplayMce(mceInputId, initCallBack){

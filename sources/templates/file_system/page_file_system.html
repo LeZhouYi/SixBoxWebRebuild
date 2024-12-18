@@ -1,17 +1,17 @@
 <div class="file_sys_container side_bar_expand padding_trans" id="file_sys_container">
     <div class="file_sys_header" id="file_sys_header">
         <div class="file_sys_header_icon clickable" id="file_sys_side_button">
-            <img src="sources?filename=icons/menu.png">
+            <img src="{{ url_for('static', filename='icons/menu.png') }}">
         </div>
         <div class="file_sys_header_title">文件仓库</div>
         <div class="file_sys_header_icon clickable">
-            <img src="/sources?filename=icons/notification.png">
+            <img src="{{ url_for('static', filename='icons/notification.png') }}">
         </div>
         <div class="file_sys_header_icon clickable">
-            <img src="/sources?filename=icons/setting.png">
+            <img src="{{ url_for('static', filename='icons/setting.png') }}">
         </div>
         <div class="file_sys_header_icon clickable">
-            <img src="/sources?filename=icons/user.png">
+            <img src="{{ url_for('static', filename='icons/user.png') }}">
         </div>
     </div>
     <div class="file_sys_body" id="file_sys_body">
@@ -24,7 +24,7 @@
                     </div>
                     <div class="file_sys_menu_item clickable" id="all_file_button">
                         <div class="file_sys_menu_icon">
-                            <img src="/sources?filename=icons/all_file.png">
+                            <img src="{{ url_for('static', filename='icons/all_file.png') }}">
                         </div>
                         <a class="file_sys_menu_text clickable">所有文件</a>
                     </div>
@@ -33,7 +33,7 @@
                     </div>
                     <div class="file_sys_menu_item clickable spin_holder" id="add_text_button">
                         <div class="file_sys_menu_icon">
-                            <img src="/sources?filename=icons/text.png">
+                            <img src="{{ url_for('static', filename='icons/text.png') }}">
                         </div>
                         <a class="file_sys_menu_text clickable">创建文本</a>
                     </div>
@@ -43,11 +43,11 @@
         <div class="file_sys_panel">
             <div class="file_sys_search_bar">
                 <div class="file_path_bar" id="file_path_bar">
-                    <img src="/sources?filename=icons/open_folder.png" class="file_search_icon">
+                    <img src="{{ url_for('static', filename='icons/open_folder.png') }}" class="file_search_icon">
                 </div>
-                <img class="file_control_img only999" src="/sources?filename=icons/dashboard.png" id="file_menu_pop_button">
+                <img class="file_control_img only999" src="{{ url_for('static', filename='icons/dashboard.png') }}" id="file_menu_pop_button">
                 <form class="file_search_bar">
-                    <img src="/sources?filename=icons/magnifier.png" class="file_search_icon">
+                    <img src="{{ url_for('static', filename='icons/magnifier.png') }}" class="file_search_icon">
                     <input placeholder="输入文本搜索" class="file_search_input" id="file_search_input">
                 </form>
             </div>

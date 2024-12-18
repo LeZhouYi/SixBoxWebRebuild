@@ -1,41 +1,41 @@
 const FileTypeMap = {
     "0": {
-        "src": "/sources?filename=icons/all_file.png",
+        "src": "/static/icons/all_file.png",
         "text": "文件夹",
         "controls": [
             0, 1, 3, 4
         ]
     },
     "1": {
-        "src": "/sources?filename=icons/file.png",
+        "src": "/static/icons/file.png",
         "text": "文件",
         "controls": [
             0, 1, 2, 3, 4
         ]
     },
     "2": {
-        "src": "/sources?filename=icons/image.png",
+        "src": "/static/icons/image.png",
         "text": "图片",
         "controls": [
             0, 1, 2, 3, 4
         ]
     },
     "3": {
-        "src": "/sources?filename=icons/music.png",
+        "src": "/static/icons/music.png",
         "text": "音频",
         "controls": [
             0, 1, 2, 3, 4
         ]
     },
     "4": {
-        "src": "/sources?filename=icons/movie.png",
+        "src": "/static/icons/movie.png",
         "text": "视频",
         "controls": [
             0, 1, 2, 3, 4
         ]
     },
     "5": {
-        "src": "/sources?filename=icons/text.png",
+        "src": "/static/icons/text.png",
         "text": "富文本",
         "controls": [
             0, 1, 2, 3, 4
@@ -276,7 +276,7 @@ function createFileItem(fileData) {
     bindClickControl(controlDiv, fileData);
     let controlImg = document.createElement("img");
     controlImg.classList.add("file_control_img", "clickable");
-    controlImg.src = "/sources?filename=icons/dots.png";
+    controlImg.src = "/static/icons/dots.png";
     controlDiv.appendChild(controlImg);
 
     fileItem.appendChild(controlDiv);

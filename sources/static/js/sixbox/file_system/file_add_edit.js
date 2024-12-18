@@ -65,9 +65,9 @@ callElement("file_add_icon", element=>{
         let addFormElement = document.getElementById("file_add_form");
         let hoverElement = event.target;
         if (isHidden(addFormElement)) {
-            hoverElement.src = "/sources?filename=icons/add_file.png";
+            hoverElement.src = "/static/icons/add_file.png";
         } else {
-            hoverElement.src = "/sources?filename=icons/add_folder.png";
+            hoverElement.src = "/static/icons/add_folder.png";
         }
     });
 });
@@ -78,9 +78,9 @@ callElement("file_add_icon", element=>{
         let addFormElement = document.getElementById("file_add_form");
         let hoverElement = event.target;
         if (isHidden(addFormElement)) {
-            hoverElement.src = "/sources?filename=icons/add_file_blue.png";
+            hoverElement.src = "/static/icons/add_file_blue.png";
         } else {
-            hoverElement.src = "/sources?filename=icons/add_folder_blue.png";
+            hoverElement.src = "/static/icons/add_folder_blue.png";
         }
     });
 });

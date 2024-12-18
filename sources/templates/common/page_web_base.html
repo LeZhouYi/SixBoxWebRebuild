@@ -4,7 +4,7 @@
     <meta charset="UTF-8"/>
     <title>{% block page_title %}六号盒子{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="web icon" href="/sources?filename=icons/favicon.ico">
+    <link rel="icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
     {% block css_file %}{% endblock %}
 </head>
 <body class="block_transition {% block body_class %}body_default{% endblock %}">
