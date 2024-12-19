@@ -4,6 +4,7 @@
     {% assets "file_system_css" %}
         <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}"/>
     {% endassets %}
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='js/videojs/video-js.min.css')}}"/>
 {% endblock %}
 
 {% block body_class %}body_theme{% endblock %}
@@ -14,6 +15,7 @@
     {% include 'common/comp_popup_message.html' %}
     {% include 'common/comp_popup_confirm.html' %}
     {% include 'common/comp_popup_image.html' %}
+    {% include 'common/comp_popup_video.html' %}
     {% include 'file_system/comp_popup_file_add.html'%}
     {% include 'file_system/comp_popup_file_control.html'%}
     {% include 'file_system/comp_popup_file_edit.html' %}
@@ -26,5 +28,7 @@
         <script type="module" src="{{ ASSET_URL }}"></script>
     {% endassets %}
     <script type="module" src="{{url_for('static', filename='js/tinymce/tinymce.min.js')}}" referrerpolicy="origin"
+        defer></script>
+    <script type="module" src="{{url_for('static', filename='js/videojs/video.min.js')}}" referrerpolicy="origin"
         defer></script>
 {% endblock %}

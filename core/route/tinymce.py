@@ -1,3 +1,4 @@
+import mimetypes
 import os
 
 from flask import Blueprint, Response, request, jsonify
@@ -43,7 +44,8 @@ def add_text():
         "type": FileType.MCE_TEXT,
         "parentId": parent_id,
         "path": filepath,
-        "size": file_size
+        "size": file_size,
+        "mimeType": mimetypes.guess_type(filepath)
     }
     FsServer.add(db_data)
     return gen_success_response(ReportInfo["006"])
@@ -100,9 +102,7 @@ def edit_text(file_id: str):
         return gen_fail_response(ReportInfo["027"])
     FsServer.edit_file(file_id, {
         "name": now_data["name"],
-        "type": FileType.MCE_TEXT,
         "parentId": parent_id,
-        "path": filepath,
         "size": file_size
     })
     return gen_success_response(ReportInfo["014"])

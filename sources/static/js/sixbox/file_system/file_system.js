@@ -250,6 +250,8 @@ function createFileItem(fileData) {
         bindClickFolder(fileNameDiv, fileData);
     }else if(fileType === "2"){
         bindClickImage(fileNameDiv, fileData);
+    }else if(fileType === "4"){
+        bindClickVideo(fileItem, fileNameDiv, fileData);
     }else if(fileType === "5"){
         bindClickText(fileItem, fileNameDiv, fileData);
     }

@@ -128,3 +128,9 @@ function callElementsByClass(elementClass, callback){
         callback(elements);
     }
 }
+
+function getFullDomain(){
+    /*获取当前完整的域名*/
+    var domain = window.location.protocol + '//' + window.location.host;
+    return domain;
+}

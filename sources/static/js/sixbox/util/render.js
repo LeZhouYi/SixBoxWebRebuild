@@ -20,7 +20,7 @@ function resizeFullScreen() {
     bodyContainer.style.height = String(document.documentElement.clientHeight) + "px";
 }
 
-function displayMessage(messageText, iconUrl = "sources?filename=icons/correct.png", removeTime = 4500) {
+function displayMessage(messageText, iconUrl = "/static/icons/correct.png", removeTime = 4500) {
     /*显示普通消息，一般是成功操作的提示*/
     let messageContainer = document.querySelector(".message_container");
     if (messageContainer) {
@@ -45,7 +45,7 @@ function displayMessage(messageText, iconUrl = "sources?filename=icons/correct.p
     }
 }
 
-function displayErrorMessage(errorMessageText, iconUrl = "sources?filename=icons/alert.png", removeTime = 4500) {
+function displayErrorMessage(errorMessageText, iconUrl = "/static/icons/alert.png", removeTime = 4500) {
     /*显示错误信息*/
     let errorsContainer = document.querySelector(".message_container");
     if (errorsContainer) {

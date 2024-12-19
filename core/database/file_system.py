@@ -1,4 +1,5 @@
 import copy
+import mimetypes
 import threading
 import time
 from typing import Optional
@@ -36,7 +37,7 @@ class FileType:
 class FileSystemServer:
     """文件系统数据库相关"""
 
-    key_list = ["id", "name", "parentId", "type", "updateTime", "size"]
+    key_list = ["id", "name", "parentId", "type", "updateTime", "size", "mimeType"]
 
     def __init__(self, db_path: str):
         """
@@ -104,8 +105,6 @@ class FileSystemServer:
             data = self.db.get(self.query.id == data_id)
             return extra_data_by_list(data, self.key_list)
 
-
-
     def get_folder_detail(self, data_id: str, search_type: str, page: int, limit: int) -> dict:
         """获取文件夹详情及该文件夹下的内容"""
         return_data = {}
@@ -170,8 +169,7 @@ class FileSystemServer:
         """编辑文件"""
         with self.thread_lock:
             data = self.db.get((self.query.id == file_id) & (self.query.type != FileType.FOLDER))
-            data["name"] = data_input["name"]
-            data["parentId"] = data_input["parentId"]
+            data.update(data_input)
             data["updateTime"] = str(time.time())
             self.db.update(data, (self.query.id == file_id) & (self.query.type != FileType.FOLDER))
 
@@ -240,7 +238,7 @@ class FileSystemServer:
         with self.thread_lock:
             all_data = self.db.all()
             for data in all_data:
-                if data["type"] != FileType.FILE:
+                if data["type"] == FileType.FOLDER:
                     continue
                 file_ext = get_file_ext(data["path"])
                 suit_type = FileType.FILE
@@ -248,9 +246,10 @@ class FileSystemServer:
                     if file_ext in ext_list:
                         suit_type = type_index
                         break
-                if suit_type != FileType.FILE:
-                    data["type"] = suit_type
-                    self.db.update(data, self.query.id == data["id"])
+                if "mimeType" not in data:
+                    data["mimeType"], _ = mimetypes.guess_type(data["path"])
+                data["type"] = suit_type
+                self.db.update(data, self.query.id == data["id"])
 
     def get_near_file(self, file_id: str):
         """获取相邻同类型的文件"""

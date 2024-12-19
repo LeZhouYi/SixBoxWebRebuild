@@ -29,8 +29,7 @@ def download_static_file():
         try:
             mime_type, _ = mimetypes.guess_type(file_path)
             return Response(get_stream_io(file_path), mimetype=mime_type, headers={
-                "Transfer-Encoding": "chunked",
-                "Content-Type": "application/octet-stream"
+                "Transfer-Encoding": "chunked"
             })
         except Exception as e:
             return gen_fail_response(str(e), 500)
@@ -56,8 +55,7 @@ def download_file(file_id: str):
         try:
             mime_type, _ = mimetypes.guess_type(file_path)
             return Response(get_stream_io(file_path), mimetype=mime_type, headers={
-                "Content-Disposition": "attachment;filename=%s" % urllib.parse.quote(filename),
-                "Content-Type": "application/octet-stream"
+                "Content-Disposition": "attachment;filename=%s" % urllib.parse.quote(filename)
             })
         except Exception as e:
             return gen_fail_response(str(e), 500)
@@ -105,7 +103,8 @@ def add_file():
         "type": ext_key,
         "parentId": parent_id,
         "path": filepath,
-        "size": file_size
+        "size": file_size,
+        "mimeType": mimetypes.guess_type(filepath)
     }
     FsServer.add(db_data)
     return gen_success_response(ReportInfo["006"])

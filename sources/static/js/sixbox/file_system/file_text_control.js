@@ -229,7 +229,7 @@ function bindMceClickHref(mceId){
     if(editor){
         let contentDoc = editor.getDoc();
         let aElements = contentDoc.getElementsByTagName("a");
-        let prefixUrl = window.location.protocol + "//" + window.location.hostname;
+        let prefixUrl = getFullDomain();
         for(let i = 0; i< aElements.length; i++){
             let href = aElements[i].href;
             if(href&&href.startsWith(prefixUrl)){
