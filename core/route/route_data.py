@@ -29,6 +29,7 @@ def gen_prefix_api(api_str: str) -> str:
 
 def get_ext_key(file_ext: str) -> Optional[str]:
     """获取后缀对应文件类型键值"""
+    file_ext = file_ext.lower()
     for ext_key, ext_list in FsConfig["file_white_list"].items():
         if file_ext in ext_list:
             return ext_key

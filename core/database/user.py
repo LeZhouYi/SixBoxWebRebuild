@@ -42,10 +42,12 @@ class SessionServer:
             "refreshToken": refresh_token
         }
         with self.thread_lock:
-            data = self.db.search((self.query.userId == user_id) & (self.query.clientIp == client_ip))
+            data = self.db.search((self.query.userId == user_id) & (self.query.clientIp == client_ip))  # type:ignore
             if len(data) > 0:
                 data[0].update(return_body)
-                self.db.update(data[0], (self.query.userId == user_id) & (self.query.clientIp == client_ip))
+                self.db.update(
+                    data[0], (self.query.userId == user_id) & (self.query.clientIp == client_ip)  # type:ignore
+                )
             else:
                 insert_data = {
                     "id": gen_id(),

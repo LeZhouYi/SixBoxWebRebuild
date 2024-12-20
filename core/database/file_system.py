@@ -92,7 +92,7 @@ class FileSystemServer:
         :return:
         """
         with self.thread_lock:
-            data = self.db.get(self.query.id == data_id)
+            data = self.db.get(self.query.id == data_id)  # type:ignore
             return data
 
     def get_data_by_keys(self, data_id) -> Optional[dict]:
@@ -102,7 +102,7 @@ class FileSystemServer:
         :return:
         """
         with self.thread_lock:
-            data = self.db.get(self.query.id == data_id)
+            data = self.db.get(self.query.id == data_id)  # type:ignore
             return extra_data_by_list(data, self.key_list)
 
     def get_folder_detail(self, data_id: str, search_type: str, page: int, limit: int) -> dict:
@@ -116,7 +116,7 @@ class FileSystemServer:
             parents = []
             now_parent_id = folder_data["parentId"]
             while now_parent_id is not None:
-                parent_data = self.db.get(self.query.id == now_parent_id)
+                parent_data = self.db.get(self.query.id == now_parent_id)  # type:ignore
                 parents.append(extra_data_by_list(parent_data, self.key_list))
                 now_parent_id = parent_data["parentId"]
             parents = list(reversed(parents))
@@ -249,14 +249,14 @@ class FileSystemServer:
                 if "mimeType" not in data:
                     data["mimeType"], _ = mimetypes.guess_type(data["path"])
                 data["type"] = suit_type
-                self.db.update(data, self.query.id == data["id"])
+                self.db.update(data, self.query.id == data["id"])  # type:ignore
 
     def get_near_file(self, file_id: str):
         """获取相邻同类型的文件"""
         with self.thread_lock:
             data = self.db.get(self.query.id == file_id)
             search_data = self.db.search(
-                (self.query.parentId == data["parentId"]) & (self.query.type == data["type"])
+                (self.query.parentId == data["parentId"]) & (self.query.type == data["type"])  # type:ignore
             )
         search_data = sorted(search_data, key=self.default_sort_key)
         index = None

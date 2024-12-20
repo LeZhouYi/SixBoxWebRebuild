@@ -6,7 +6,7 @@ import urllib.parse
 from flask import Blueprint, request, Response, jsonify
 from werkzeug.datastructures import FileStorage
 
-from core.common.file_utils import get_file_ext, get_stream_io, is_path_within_folder
+from core.common.file_utils import get_file_ext, get_stream_io, is_path_within_folder, get_range_stream_io
 from core.common.route_utils import gen_fail_response, is_str_empty, gen_id, gen_success_response, is_key_str_empty
 from core.config.config import get_config_path
 from core.database.file_system import FileType
@@ -53,10 +53,7 @@ def download_file(file_id: str):
     filename = "%s.%s" % (data["name"], get_file_ext(file_path))
     if os.path.exists(file_path) and os.path.isfile(file_path):
         try:
-            mime_type, _ = mimetypes.guess_type(file_path)
-            return Response(get_stream_io(file_path), mimetype=mime_type, headers={
-                "Content-Disposition": "attachment;filename=%s" % urllib.parse.quote(filename)
-            })
+            return get_range_stream_io(request, file_path, filename)
         except Exception as e:
             return gen_fail_response(str(e), 500)
     return gen_fail_response(ReportInfo["012"])
@@ -95,16 +92,17 @@ def add_file():
         return gen_fail_response(ReportInfo["004"])
 
     ext_key = get_ext_key(file_ext)
-    if not re.match(r"^\d+$",ext_key):
+    if not re.match(r"^\d+$", ext_key):
         ext_key = FileType.FILE
 
+    mimetype, _ = mimetypes.guess_type(filepath)
     db_data = {
         "name": filename,
         "type": ext_key,
         "parentId": parent_id,
         "path": filepath,
         "size": file_size,
-        "mimeType": mimetypes.guess_type(filepath)
+        "mimeType": mimetype
     }
     FsServer.add(db_data)
     return gen_success_response(ReportInfo["006"])

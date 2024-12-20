@@ -1,6 +1,32 @@
-<div class="popup_container_gray hidden" id="video_display_overlay">
-    <div id="video_display_content">
-        <video id="video_display_panel">
+<div class="popup_container_video hidden" id="video_display_overlay">
+    <div id="video_display_content" class="video_display_content">
+        <video id="video_display_panel" controls class="video-js video_display_panel">
         </video>
+        <div class="video_display_bar">
+            <div class="video_display_icon_div" id="video_download_button">
+                <img class="video_display_icon" src="{{ url_for('static', filename='icons/download_white.png') }}">
+            </div>
+            <div class="video_display_icon_div">
+                <img class="video_display_icon" src="{{ url_for('static', filename='icons/fast_rewind_plus.png') }}">
+            </div>
+            <div class="video_display_icon_div">
+                <img class="video_display_icon" src="{{ url_for('static', filename='icons/fast_rewind.png') }}">
+            </div>
+            <div class="video_display_icon_div">
+                <img class="video_display_icon" src="{{ url_for('static', filename='icons/last_page.png') }}">
+            </div>
+            <div class="video_display_icon_div">
+                <img class="video_display_icon" src="{{ url_for('static', filename='icons/next_page.png') }}">
+            </div>
+            <div class="video_display_icon_div">
+                <img class="video_display_icon" src="{{ url_for('static', filename='icons/fast_forward.png') }}">
+            </div>
+            <div class="video_display_icon_div" id="video_forward_10_min_button">
+                <img class="video_display_icon" src="{{ url_for('static', filename='icons/fast_forward_plus.png') }}">
+            </div>
+            <div class="video_display_icon_div" id="video_close_button">
+                <img class="video_display_icon" src="{{ url_for('static', filename='icons/close.png') }}">
+            </div>
+        </div>
     </div>
 </div>

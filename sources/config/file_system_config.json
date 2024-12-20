@@ -3,7 +3,7 @@
         "2": ["png","jpg","jpeg","gif","svg","bmp","tiff"],
         "data": ["zip","rar","7z","json"],
         "3": ["mp3"],
-        "4": ["mp4"],
+        "4": ["mp4","mov"],
         "5": ["html"],
         "code": ["py","jar"],
         "text": ["yaml","xlsx","xls","docx","pdf","txt"],
