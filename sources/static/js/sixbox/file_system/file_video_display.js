@@ -53,7 +53,7 @@ function initVideo(videoId, fileId, fileType, callback){
         controls: true,
         autoplay: false,
         fluid: false,
-        preload: true
+        preload: false
     }).ready(function(){
         this.src({
             src: videoUrl,

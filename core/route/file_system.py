@@ -16,7 +16,6 @@ from core.route.route_data import ReportInfo, FsServer, FsConfig, gen_prefix_api
 
 FileSystemBp = Blueprint("file_system", __name__)
 
-
 @FileSystemBp.route("/sources", methods=["GET"])
 def download_static_file():
     """下载静态资源文件"""
@@ -53,7 +52,11 @@ def download_file(file_id: str):
     filename = "%s.%s" % (data["name"], get_file_ext(file_path))
     if os.path.exists(file_path) and os.path.isfile(file_path):
         try:
-            return get_range_stream_io(request, file_path, filename)
+            return get_range_stream_io(request, file_path)
+            # mime_type, _ = mimetypes.guess_type(file_path)
+            # return Response(get_stream_io(file_path), mimetype=mime_type, headers={
+            #     "Content-Disposition": "attachment;filename=%s" % urllib.parse.quote(filename)
+            # })
         except Exception as e:
             return gen_fail_response(str(e), 500)
     return gen_fail_response(ReportInfo["012"])

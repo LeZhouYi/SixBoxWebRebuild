@@ -1,7 +1,7 @@
 import json
 import os.path
+import re
 import sys
-import urllib.parse
 from os import PathLike
 from typing import Optional, Generator, Any
 
@@ -40,49 +40,47 @@ def load_json_data(file_path: str) -> Optional[dict]:
             return json.load(file)
 
 
-def get_range_stream_io(
-        request: flask.request, file_path: str, filename: str, chunk_size: int = 8192
-):
-    def generate():
-        file_size = os.path.getsize(file_path)
-        # 获取Range头部
-        range_header = request.headers.get('Range', None)
-        if range_header:
-            # 解析Range头部，比如 "bytes=200-1000"
-            range_parts = range_header.split('=').split('-')
-            start = int(range_parts)
-            end = int(range_parts) if len(range_parts) > 1 else file_size - 1
-
-            # 确保范围是有效的
-            if start >= file_size or end >= file_size:
-                return Response(status=416)  # Requested range not satisfiable
-
-            file = open(file_path, 'rb')
-            file.seek(start)
-            # 设置Content-Range响应头部
-            yield f'Content-Range: bytes {start}-{end}/{file_size}\r\n'
-        else:
-            start = 0
-            end = file_size - 1
-            file = open(file_path, 'rb')
-        # 设置响应状态码为206 Partial Content以表示部分响应
-        status = 206 if range_header else 200
-        headers = {
-            'Content-Type': 'application/octet-stream',
-            'Accept-Ranges': 'bytes',
-            'Content-Length': end - start + 1,
-        }
-        # 发送响应头部
-        yield from Response(status=status, headers=headers).response
-        # 逐块发送文件内容
-        while start <= end:
-            chunk = file.read(chunk_size)
-            if not chunk:
+def get_file_chunk(filepath: str, start: int = None):
+    end = None
+    with open(filepath, 'rb') as file:
+        file_size = os.path.getsize(filepath)
+        while True:
+            print(start)
+            print(file_size)
+            if start is None:
+                start = 0
+            if end is not None:
+                start = end
+            if start >= file_size - 1:
                 break
-            yield chunk
-        file.close()
+            end = start + 1024 * 1024
+            if end > file_size - 1:
+                end = file_size - 1
 
-    return Response(generate(), mimetype='application/octet-stream')
+            file.seek(start)
+            # 发送文件的部分内容
+            data = file.read(end - start + 1)
+            yield data
+
+
+def get_range_stream_io(request: flask.request, filepath: str):
+    range_header = request.headers.get('Range', None)
+    start = 0
+    file_size = os.path.getsize(filepath)
+    if range_header:
+        match = re.search(r'(\d+)-(\d*)', range_header)
+        groups = match.groups()
+        if groups[0]:
+            start = int(groups[0])
+    end = start + 1024 * 1024
+    length = end - start + 1
+    return Response(get_file_chunk(filepath, start), status=206, mimetype='video/mp4', content_type="video/mp4",
+                    direct_passthrough=True,
+                    headers={
+                        "Content-Range": "bytes %s-%s/%s" % (start, end, file_size),
+                        "Accept-Ranges": "bytes",
+                        "Content-Length": length
+                    })
 
 
 def get_stream_io(file_path: str, chunk_size: int = 1024) -> Generator[bytes, Any, None]:
