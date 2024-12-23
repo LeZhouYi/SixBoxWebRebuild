@@ -48,7 +48,7 @@ function initVideo(videoId, fileId, fileType, callback){
     /*初始化Video*/
     let accessToken = localStorage.getItem("accessToken");
     let fullDomain = getFullDomain();
-    let videoUrl = `${fullDomain}/api/v1/files/${fileId}/download?token=${accessToken}`;
+    let videoUrl = `${fullDomain}/api/v1/videos/${fileId}/play?token=${accessToken}`;
     videojs(videoId, {
         controls: true,
         autoplay: false,
