@@ -1,7 +1,9 @@
 import json
+import mimetypes
 import os.path
 import re
 import sys
+import urllib.parse
 from os import PathLike
 from typing import Optional, Generator, Any
 
@@ -29,14 +31,14 @@ def get_local_path(relative_path: PathLike | str) -> str:
     return os.path.join(root_path, relative_path)
 
 
-def load_json_data(file_path: str) -> Optional[dict]:
+def load_json_data(filepath: str) -> Optional[dict]:
     """
     读取Json数据
-    :param file_path: 文件相对路径
+    :param filepath: 文件相对路径
     :return Json数据
     """
-    if os.path.exists(file_path):
-        with open(file_path, "r", encoding="utf-8") as file:
+    if os.path.exists(filepath):
+        with open(filepath, "r", encoding="utf-8") as file:
             return json.load(file)
 
 
@@ -63,7 +65,7 @@ def get_file_chunk(filepath: str, start: int = None):
             yield data
 
 
-def get_range_stream_io(request: flask.request, filepath: str):
+def get_range_stream_io(request: flask.request, filepath: str, filename: str):
     range_header = request.headers.get('Range', None)
     start = 0
     file_size = os.path.getsize(filepath)
@@ -72,20 +74,22 @@ def get_range_stream_io(request: flask.request, filepath: str):
         groups = match.groups()
         if groups[0]:
             start = int(groups[0])
-    end = start + 1024 * 1024
+    end = min(start + 1024 * 1024, file_size-1)
     length = end - start + 1
-    return Response(get_file_chunk(filepath, start), status=206, mimetype='video/mp4', content_type="video/mp4",
+    mime_type, _ = mimetypes.guess_type(filepath)
+    return Response(get_file_chunk(filepath, start), status=206, mimetype=mime_type, content_type=mime_type,
                     direct_passthrough=True,
                     headers={
                         "Content-Range": "bytes %s-%s/%s" % (start, end, file_size),
                         "Accept-Ranges": "bytes",
-                        "Content-Length": length
+                        "Content-Length": length,
+                        "Content-Disposition": "attachment;filename=%s" % urllib.parse.quote(filename)
                     })
 
 
-def get_stream_io(file_path: str, chunk_size: int = 1024) -> Generator[bytes, Any, None]:
+def get_stream_io(filepath: str, chunk_size: int = 1024) -> Generator[bytes, Any, None]:
     """获取文件流式传输流"""
-    with open(file_path, "rb") as file:
+    with open(filepath, "rb") as file:
         while True:
             data = file.read(chunk_size)
             if not data:
@@ -93,22 +97,22 @@ def get_stream_io(file_path: str, chunk_size: int = 1024) -> Generator[bytes, An
             yield data
 
 
-def is_path_within_folder(file_path, folder_path) -> bool:
+def is_path_within_folder(filepath, folder_path) -> bool:
     """
     判断文件是否在指定文件夹内
-    @param file_path:
+    @param filepath:
     @param folder_path:
     @return: true表示在文件夹内
     """
     try:
-        relative_path = os.path.relpath(folder_path, file_path)
+        relative_path = os.path.relpath(folder_path, filepath)
     except ValueError:
         return False
     return not relative_path.startswith("..")
 
 
-def get_svg_content(file_path):
+def get_svg_content(filepath):
     """获取本地的svg"""
-    with open(file_path, 'r', encoding='utf-8') as file:
+    with open(filepath, 'r', encoding='utf-8') as file:
         svg_content = file.read()
     return svg_content

@@ -16,6 +16,7 @@ from core.route.route_data import ReportInfo, FsServer, FsConfig, gen_prefix_api
 
 FileSystemBp = Blueprint("file_system", __name__)
 
+
 @FileSystemBp.route("/sources", methods=["GET"])
 def download_static_file():
     """下载静态资源文件"""
@@ -23,11 +24,11 @@ def download_static_file():
     if is_str_empty(filename):
         return gen_fail_response(ReportInfo["012"], 404)
     static_path = get_config_path("file_static_path")
-    file_path = os.path.join(static_path, filename)
-    if os.path.exists(file_path) and os.path.isfile(file_path) and is_path_within_folder(static_path, file_path):
+    filepath = os.path.join(static_path, filename)
+    if os.path.exists(filepath) and os.path.isfile(filepath) and is_path_within_folder(static_path, filepath):
         try:
-            mime_type, _ = mimetypes.guess_type(file_path)
-            return Response(get_stream_io(file_path), mimetype=mime_type, headers={
+            mime_type, _ = mimetypes.guess_type(filepath)
+            return Response(get_stream_io(filepath), mimetype=mime_type, headers={
                 "Transfer-Encoding": "chunked"
             })
         except Exception as e:
@@ -48,15 +49,38 @@ def download_file(file_id: str):
     if not FsServer.is_file_exist(file_id):
         return gen_fail_response(ReportInfo["012"])
     data = FsServer.get_data(file_id)
-    file_path = data["path"]
-    filename = "%s.%s" % (data["name"], get_file_ext(file_path))
-    if os.path.exists(file_path) and os.path.isfile(file_path):
+    filepath = data["path"]
+    filename = "%s.%s" % (data["name"], get_file_ext(filepath))
+    if os.path.exists(filepath) and os.path.isfile(filepath):
         try:
-            return get_range_stream_io(request, file_path)
-            # mime_type, _ = mimetypes.guess_type(file_path)
-            # return Response(get_stream_io(file_path), mimetype=mime_type, headers={
-            #     "Content-Disposition": "attachment;filename=%s" % urllib.parse.quote(filename)
-            # })
+            mime_type, _ = mimetypes.guess_type(filepath)
+            return Response(get_stream_io(filepath), mimetype=mime_type, headers={
+                "Content-Disposition": "attachment;filename=%s" % urllib.parse.quote(filename)
+            })
+        except Exception as e:
+            return gen_fail_response(str(e), 500)
+    return gen_fail_response(ReportInfo["012"])
+
+
+@FileSystemBp.route(gen_prefix_api("/videos/<file_id>/play"), methods=["GET"])
+def play_video(file_id: str):
+    """播放视频"""
+    # verify
+    verify_result = verify_token(request)
+    if isinstance(verify_result[0], Response):
+        return verify_result
+
+    if is_str_empty(file_id):
+        return gen_fail_response(ReportInfo["012"])
+    if not FsServer.is_file_exist(file_id):
+        return gen_fail_response(ReportInfo["012"])
+    data = FsServer.get_data(file_id)
+    filepath = data["path"]
+    filename = "%s.%s" % (data["name"], get_file_ext(filepath))
+    if os.path.exists(filepath) and os.path.isfile(filepath):
+        try:
+            if data["type"] == FileType.VIDEO:
+                return get_range_stream_io(request, filepath, filename)
         except Exception as e:
             return gen_fail_response(str(e), 500)
     return gen_fail_response(ReportInfo["012"])
