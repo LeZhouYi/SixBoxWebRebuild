@@ -1,5 +1,6 @@
 import copy
 import mimetypes
+import os.path
 import threading
 import time
 from typing import Optional
@@ -9,6 +10,7 @@ from tinydb import TinyDB, Query
 from core.common import route_utils
 from core.common.file_utils import get_file_ext
 from core.common.route_utils import extra_data_by_list
+from core.log.log import logger
 
 
 class FileType:
@@ -238,18 +240,22 @@ class FileSystemServer:
         with self.thread_lock:
             all_data = self.db.all()
             for data in all_data:
-                if data["type"] == FileType.FOLDER:
-                    continue
-                file_ext = get_file_ext(data["path"])
-                suit_type = FileType.FILE
-                for type_index, ext_list in filter_ext_dict.items():
-                    if file_ext in ext_list:
-                        suit_type = type_index
-                        break
-                if "mimeType" not in data:
-                    data["mimeType"], _ = mimetypes.guess_type(data["path"])
-                data["type"] = suit_type
-                self.db.update(data, self.query.id == data["id"])  # type:ignore
+                try:
+                    if data["type"] == FileType.FOLDER:
+                        continue
+                    file_ext = get_file_ext(data["path"])
+                    suit_type = FileType.FILE
+                    for type_index, ext_list in filter_ext_dict.items():
+                        if file_ext in ext_list:
+                            suit_type = type_index
+                            break
+                    if "mimeType" not in data:
+                        data["mimeType"], _ = mimetypes.guess_type(data["path"])
+                    data["size"] = os.path.getsize(data["path"])
+                    data["type"] = suit_type
+                    self.db.update(data, self.query.id == data["id"])  # type:ignore
+                except Exception as e:
+                    logger.error("整理文件时错误：%s" % e)
 
     def get_near_file(self, file_id: str):
         """获取相邻同类型的文件"""

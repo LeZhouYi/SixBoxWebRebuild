@@ -96,7 +96,7 @@ def edit_text(file_id: str):
     try:
         with open(filepath, "w", encoding="utf-8") as file:
             file.write(now_data["content"])
-            file_size = os.path.getsize(filepath)
+        file_size = os.path.getsize(filepath)
     except Exception as e:
         logger.error("写入文件%s失败：%s" % (filepath, e))
         return gen_fail_response(ReportInfo["027"])
