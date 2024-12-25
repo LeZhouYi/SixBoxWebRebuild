@@ -47,8 +47,6 @@ def get_file_chunk(filepath: str, start: int = None):
     with open(filepath, 'rb') as file:
         file_size = os.path.getsize(filepath)
         while True:
-            print(start)
-            print(file_size)
             if start is None:
                 start = 0
             if end is not None:
