@@ -23,8 +23,18 @@
     align-items: center;
     justify-content: center;
     background: var(--theme-main-color);
+    overflow-x: auto;
+    white-space: nowrap;
+}
+.video_display_bar>*:last-child{
+    margin-right: var(--element-margin);
+}
+.video_display_bar::-webkit-scrollbar{
+    width: 0px;
+    height: 0px
 }
 .video_display_icon_div{
+    flex: 0 0 auto;
     height: var(--icon-base-size);
     width: var(--icon-base-size);
     border-radius: 12px;
@@ -53,4 +63,11 @@
 }
 .vjs-tech{
     background: white;
+}
+
+/*响应式*/
+@media (max-width: 390px), (max-device-width: 390px){
+    .video_display_bar{
+        justify-content: start;
+    }
 }

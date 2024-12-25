@@ -8,14 +8,57 @@ callElement("video_download_button", element=>{
     });
 });
 
+callElement("video_rewind_10_min_button", element=>{
+    element.addEventListener("click", function(event){
+        /*快进10分*/
+        let player = videojs("video_display_panel");
+        let current = player.currentTime();
+        player.currentTime(current-600);
+    });
+});
+
+callElement("video_rewind_1_min_button", element=>{
+    element.addEventListener("click", function(event){
+        /*快进10分*/
+        let player = videojs("video_display_panel");
+        let current = player.currentTime();
+        player.currentTime(current-60);
+    });
+});
+
+callElement("video_rewind_10_sec_button", element=>{
+    element.addEventListener("click", function(event){
+        /*快进10分*/
+        let player = videojs("video_display_panel");
+        let current = player.currentTime();
+        player.currentTime(current-10);
+    });
+});
+
+callElement("video_forward_10_sec_button", element=>{
+    element.addEventListener("click", function(event){
+        /*快进10分*/
+        let player = videojs("video_display_panel");
+        let current = player.currentTime();
+        player.currentTime(current+10);
+    });
+});
+
+callElement("video_forward_1_min_button", element=>{
+    element.addEventListener("click", function(event){
+        /*快进10分*/
+        let player = videojs("video_display_panel");
+        let current = player.currentTime();
+        player.currentTime(current+60);
+    });
+});
+
 callElement("video_forward_10_min_button", element=>{
     element.addEventListener("click", function(event){
         /*快进10分*/
         let player = videojs("video_display_panel");
         let current = player.currentTime();
-        console.log(current);
         player.currentTime(current+600);
-        console.log(player.currentTime());
     });
 });
 

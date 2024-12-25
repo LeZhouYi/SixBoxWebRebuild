@@ -19,6 +19,7 @@ callElement("login_form", element=>{
         postJson("/sessions", formData).then(data => {
             localStorage.setItem("accessToken", data.accessToken);
             localStorage.setItem("refreshToken", data.refreshToken);
+            history.replaceState(null,document.title, "/home.html");
             window.location.href = "/home.html";
             spinner.remove();
         })
