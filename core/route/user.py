@@ -55,3 +55,40 @@ def refresh():
         if data_or_info == "TOKEN INVALID":
             return gen_fail_response(ReportInfo["010"], 400)
     return jsonify(data_or_info)
+
+
+@UserBp.route(gen_prefix_api("/usersTidyUp"), methods=["GET"])
+def tidy_up_data():
+    verify_result = verify_token(request)
+    if isinstance(verify_result[0], Response):
+        return verify_result
+    UsrServer.tidy_up_data()
+    return gen_success_response(ReportInfo["022"])
+
+
+@UserBp.route(gen_prefix_api("/userDetail"), methods=["GET"])
+def get_user_detail():
+    verify_result = verify_token(request)
+    if isinstance(verify_result[0], Response):
+        return verify_result
+    data = UsrServer.get_user(verify_result[0])
+    if data is not None:
+        return jsonify(data)
+    return gen_fail_response(ReportInfo["028"])
+
+
+@UserBp.route(gen_prefix_api("/users/<user_id>"), methods=["PUT"])
+def edit_user(user_id: str):
+    verify_result = verify_token(request)
+    if isinstance(verify_result[0], Response):
+        return verify_result
+    user_data = UsrServer.get_user(user_id)
+    if user_data is None:
+        return gen_fail_response(ReportInfo["028"])
+    edit_data = request.json
+    if is_key_str_empty(edit_data, "name"):
+        return gen_fail_response(ReportInfo["029"])
+    if "background" not in edit_data:
+        return gen_fail_response(ReportInfo["030"])
+    UsrServer.edit_user(user_id, edit_data)
+    return gen_success_response(ReportInfo["022"])

@@ -55,6 +55,9 @@ window.addEventListener("load",function () {
     updateFileList();
 
     /*页面调整*/
+    loadUserInfo(function(){
+        initBackground();
+    });
     resizeFullScreen();
 
     window.addEventListener("resize", throttle(function () {

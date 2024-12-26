@@ -34,6 +34,7 @@
                 "js/sixbox/util/func.js",
                 "js/sixbox/util/requestor.js",
                 "js/sixbox/util/render.js",
+                "js/sixbox/common/theme.js",
                 "js/spinner/spinner.js",
                 "js/sixbox/login/login.js"
             ]
@@ -46,6 +47,7 @@
                 "js/sixbox/util/render.js",
                 "js/sixbox/common/sidebar.js",
                 "js/sixbox/common/page_selector.js",
+                "js/sixbox/common/theme.js",
                 "js/spinner/spinner.js",
                 "js/sixbox/file_system/file_image_display.js",
                 "js/sixbox/file_system/file_control.js",

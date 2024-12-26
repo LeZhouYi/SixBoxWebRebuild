@@ -1,6 +1,6 @@
 window.onload = function () {
     resizeFullScreen();
-    setBackgroundImage("comp_background_image", "url('/sources?filename=images/background.jpg')");
+    setBackgroundImage("comp_background_image", "/sources?filename=images/background.jpg");
 };
 
 window.addEventListener("resize", throttle(function () {

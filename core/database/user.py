@@ -7,8 +7,9 @@ from typing import Optional
 import jwt
 from tinydb import TinyDB, Query
 
-from core.common.route_utils import gen_id, is_key_str_empty
+from core.common.route_utils import gen_id, is_key_str_empty, extra_data_by_list
 from core.config.config import get_config
+from core.log.log import logger
 
 JWT_SECRET_KEY = get_config("jwt_secret_key")
 JWT_ALGORITHM = get_config("jwt_algorithm")
@@ -123,6 +124,8 @@ class SessionServer:
 class UserServer:
     """用户数据库相关"""
 
+    key_list = ["id", "name", "background"]
+
     def __init__(self, db_path: str):
         """
         加载本地数据
@@ -137,7 +140,8 @@ class UserServer:
                 "id": "1",
                 "name": "admin",
                 "account": "admin",
-                "password": self.hash_encrypt("1234567a")
+                "password": self.hash_encrypt("1234567a"),
+                "background": None
             })
 
     def is_user_exist(self, account: str, password: str) -> Optional[str]:
@@ -152,6 +156,33 @@ class UserServer:
             data = self.db.get((self.query.account == account) & (self.query.password == password))
             if data is not None:
                 return data["id"]
+
+    def get_user(self, user_id: str) -> Optional[dict]:
+        """获取用户详情"""
+        with self.thread_lock:
+            data = self.db.get(self.query.id == user_id)
+            if data is not None:
+                return extra_data_by_list(data, self.key_list)
+
+    def tidy_up_data(self):
+        """整理用户数据"""
+        with self.thread_lock:
+            all_data = self.db.all()
+            for data in all_data:
+                try:
+                    if "background" not in data:
+                        data["background"] = None
+                    self.db.update(data, self.query.id == data["id"])  # type:ignore
+                except Exception as e:
+                    logger.error("整理数据时错误：%s" % e)
+
+    def edit_user(self, user_id: str, data_input: dict):
+        """编辑用户"""
+        with self.thread_lock:
+            data = self.db.get(self.query.id == user_id)
+            data["name"] = str(data_input["name"]).strip()
+            data["background"] = str(data_input["background"])
+            self.db.update(data, self.query.id == user_id)
 
     @staticmethod
     def hash_encrypt(value: str) -> str:

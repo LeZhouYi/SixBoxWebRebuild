@@ -1,19 +1,5 @@
 const hiddenClass = "hidden";
 
-function setBackgroundImage(className, fileUrl) {
-    /*
-    设置类名对应元素的图片背景
-    className: 元素类名
-    fileName: 文件URL
-    */
-    let elements = document.getElementsByClassName(className);
-    Array.from(elements).forEach(element => {
-        if (!element.classList.contains(hiddenClass)) {
-            element.style.backgroundImage = fileUrl;
-        }
-    });
-}
-
 function resizeFullScreen() {
     /*计算并调整页页使用适应全屏*/
     let bodyContainer = document.body;

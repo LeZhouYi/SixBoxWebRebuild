@@ -47,6 +47,7 @@
     border-radius: var(--border-min-radius);
     box-sizing: border-box;
     transition: width 0.5s ease;
+    background: transparent;
 }
 .page_select_limit{
     height: 100%;
@@ -66,6 +67,7 @@
     border-radius: var(--border-min-radius);
     box-sizing: border-box;
     margin-right: var(--element-margin);
+    background: transparent;
 }
 
 @media (max-width: 460px), (max-device-width: 460px){
