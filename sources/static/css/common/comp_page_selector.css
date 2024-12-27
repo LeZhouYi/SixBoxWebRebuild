@@ -16,7 +16,7 @@
     box-sizing: border-box;
     border: 2px solid var(--text-remark-color);
     border-radius: var(--border-min-radius);
-    background-color: var(--theme-background-color);
+    background-color: transparent;
     transition: border-color 1s ease, background-color 1s ease;
 }
 .page_select_icon:hover{
@@ -49,6 +49,10 @@
     transition: width 0.5s ease;
     background: transparent;
 }
+.page_select_input:focus-visible{
+    background-color: var(--theme-active-color);
+    outline-color: var(--theme-part-color);
+}
 .page_select_limit{
     height: 100%;
     display: flex;
@@ -68,6 +72,10 @@
     box-sizing: border-box;
     margin-right: var(--element-margin);
     background: transparent;
+}
+.page_select_limit_list:focus-visible{
+    background-color: var(--theme-active-color);
+    outline-color: var(--theme-part-color);
 }
 
 @media (max-width: 460px), (max-device-width: 460px){

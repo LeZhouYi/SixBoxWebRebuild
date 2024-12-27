@@ -2,6 +2,10 @@ const SideBarMap = {
     "fileSystem": {
         "url": "/home.html",
         "elementIds": ["side_bar_file_sys"]
+    },
+    "musicBox": {
+        "url": "/music.html",
+        "elementIds": ["side_bar_music_box"]
     }
 }
 const SideBarWidth = 1300;
@@ -14,7 +18,7 @@ function initSidebar(nowPage, contentId, sidebarId = "side_bar_container", overl
             callElement(elementId, element => {
                 /*绑定点击事件*/
                 bindSideButtonClick(element, sidebarValue.url, contentId, sidebarId, overlayId);
-                if (nowPage === nowPage) {
+                if (nowPage === sidebarKey) {
                     /*设置当前选中效果*/
                     element.classList.add("active");
                 }

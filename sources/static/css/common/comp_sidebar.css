@@ -70,17 +70,22 @@
     box-sizing: border-box;
     margin-bottom: var(--side-bar-item-gap);
     border-radius: var(--border-radius);
+    border: 2px solid;
 }
 .side_bar_item:not(.active){
     color: var(--text-remark-color);
+    background-color: var(--theme-background-color);
+    border-color: var(--theme-background-color);
 }
 .side_bar_item.active{
     color: var(--text-active-color);
+    border-color: var(--theme-part-color);
     background-color: var(--theme-part-color);
 }
 .side_bar_item:hover {
     background-color: var(--theme-active-color);
     color: var(--text-main-color);
+    border-color: var(--theme-part-color);
 }
 .side_bar_icon{
     /*侧边栏item图标*/

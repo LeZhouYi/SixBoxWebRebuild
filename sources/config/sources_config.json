@@ -6,7 +6,7 @@
                 "css/common/comp_default.css",
                 "css/common/comp_popup_message.css",
                 "css/common/comp_spinner.css",
-                "css/login/page_login.css",
+                "css/page/page_login.css",
                 "css/styles.css"
             ]
         },
@@ -16,13 +16,24 @@
                 "css/common/comp_default.css",
                 "css/common/comp_popup_message.css",
                 "css/common/comp_popup_confirm.css",
-                "css/sidebar/comp_sidebar.css",
+                "css/common/comp_navigation_bar.css",
+                "css/common/comp_sidebar.css",
                 "css/common/comp_page_selector.css",
                 "css/common/comp_popup_image.css",
                 "css/common/comp_popup_video.css",
                 "css/common/comp_popup_form.css",
                 "css/common/comp_spinner.css",
-                "css/file_system/page_file_sys.css",
+                "css/page/page_file_sys.css",
+                "css/styles.css"
+            ]
+        },
+        "music_box_css": {
+            "output": "css/generate/music_box.css",
+            "sources": [
+                "css/common/comp_default.css",
+                "css/common/comp_sidebar.css",
+                "css/common/comp_navigation_bar.css",
+                "css/page/page_music_box.css",
                 "css/styles.css"
             ]
         }
@@ -48,6 +59,7 @@
                 "js/sixbox/common/sidebar.js",
                 "js/sixbox/common/page_selector.js",
                 "js/sixbox/common/theme.js",
+                "js/sixbox/common/navigation_bar.js",
                 "js/spinner/spinner.js",
                 "js/sixbox/file_system/file_image_display.js",
                 "js/sixbox/file_system/file_control.js",
@@ -57,6 +69,18 @@
                 "js/sixbox/file_system/file_video_display.js",
                 "js/sixbox/file_system/file_menu.js",
                 "js/sixbox/file_system/file_system.js"
+            ]
+        },
+        "music_box_js": {
+            "output": "js/generate/music_box.js",
+            "sources": [
+                "js/sixbox/util/func.js",
+                "js/sixbox/util/requestor.js",
+                "js/sixbox/util/render.js",
+                "js/sixbox/common/sidebar.js",
+                "js/sixbox/common/theme.js",
+                "js/sixbox/common/navigation_bar.js",
+                "js/sixbox/music_box/music_box.js"
             ]
         }
     }

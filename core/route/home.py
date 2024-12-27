@@ -5,11 +5,7 @@ HomeBp = Blueprint("home", __name__)
 
 @HomeBp.route("/home.html")
 def home_page():
-    data = {
-        "js_file": "js/sixbox/home.js",
-        "body_class": "background_body"
-    }
-    return render_template("home.html", **data)
+    return render_template("home.html")
 
 
 @HomeBp.route("/")

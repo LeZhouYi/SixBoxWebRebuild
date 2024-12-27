@@ -8,9 +8,6 @@ function setBackgroundImage(className, fileUrl) {
     Array.from(elements).forEach(element => {
         if (!element.classList.contains(hiddenClass)) {
             element.style.backgroundImage = `url('${fileUrl}')`;
-            console.log(element);
-            console.log(fileUrl);
-            console.log(element.style.backgroundImage);
         }
     });
 }
@@ -30,8 +27,6 @@ function initBackground() {
     /*初始化主题背景*/
     let userInfo = JSON.parse(localStorage.getItem("userInfo"));
     let accessToken = localStorage.getItem("accessToken");
-    console.log(userInfo);
-    console.log(userInfo.background);
     if(userInfo.background){
         setBackgroundImage("body_default", `api/v1/files/${userInfo.background}/download?token=${accessToken}`);
     }

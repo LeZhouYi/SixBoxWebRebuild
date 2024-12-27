@@ -1,0 +1,18 @@
+{% extends 'common/page_web_base.html' %}
+
+{% block css_file %}
+    {% assets "music_box_css" %}
+        <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}"/>
+    {% endassets %}
+{% endblock %}
+
+{% block body_content %}
+    {% include 'music_box/page_music_box.html' %}
+    {% include 'common/comp_side_bar.html' %}
+{% endblock %}
+
+{% block js_file %}
+    {% assets "music_box_js" %}
+        <script type="module" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock %}

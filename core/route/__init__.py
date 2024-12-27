@@ -5,6 +5,7 @@ from core.common.file_utils import load_json_data
 from core.config.config import get_config_path
 from core.route.file_system import FileSystemBp
 from core.route.home import HomeBp
+from core.route.music_box import MusicBoxBp
 from core.route.tinymce import TinyMceBp
 from core.route.user import UserBp
 
@@ -15,6 +16,7 @@ def register_blueprints(app: flask.Flask):
     app.register_blueprint(UserBp)
     app.register_blueprint(FileSystemBp)
     app.register_blueprint(TinyMceBp)
+    app.register_blueprint(MusicBoxBp)
 
 
 def register_assets(assets: Environment):

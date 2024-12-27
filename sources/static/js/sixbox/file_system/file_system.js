@@ -31,14 +31,14 @@ const FileTypeMap = {
         "src": "/static/icons/movie.png",
         "text": "视频",
         "controls": [
-            0, 1, 2, 3, 4
+            0, 1, 3, 4, 5
         ]
     },
     "5": {
         "src": "/static/icons/text.png",
         "text": "富文本",
         "controls": [
-            0, 1, 2, 3, 4
+            0, 1, 3, 4, 5
         ]
     }
 }
@@ -49,12 +49,13 @@ window.addEventListener("load",function () {
 
     /*侧边栏初始化*/
     initSidebar("fileSystem", "file_sys_container");
-    bindSidebarEvent("file_sys_side_button", "file_sys_container");
+    bindSidebarEvent("main_side_bar_button", "file_sys_container");
 
     /*页面功能*/
     updateFileList();
 
     /*页面调整*/
+    setNavigationBarTitle("文件仓库");
     loadUserInfo(function(){
         initBackground();
     });
