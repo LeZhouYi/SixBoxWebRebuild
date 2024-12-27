@@ -3,28 +3,28 @@ const FileTypeMap = {
         "src": "/static/icons/all_file.png",
         "text": "文件夹",
         "controls": [
-            0, 1, 3, 4
+            0, 1, 4, 5
         ]
     },
     "1": {
         "src": "/static/icons/file.png",
         "text": "文件",
         "controls": [
-            0, 1, 2, 3, 4
+            0, 1, 3, 4, 5
         ]
     },
     "2": {
         "src": "/static/icons/image.png",
         "text": "图片",
         "controls": [
-            0, 1, 2, 3, 4
+            0, 1, 2, 3, 4 ,5
         ]
     },
     "3": {
         "src": "/static/icons/music.png",
         "text": "音频",
         "controls": [
-            0, 1, 2, 3, 4
+            0, 1, 3, 4, 5
         ]
     },
     "4": {

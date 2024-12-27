@@ -16,7 +16,7 @@
     background-color: var(--theme-main-color);
     font-family: 'poppins';
     background-size: cover;
-    background-position: center;
+    background-position: top;
     background-repeat: no-repeat;
     transition: background-image 1s ease-in-out;
     display: flex;

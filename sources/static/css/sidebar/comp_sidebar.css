@@ -21,7 +21,7 @@
     grid-template-rows: var(--header-height) 1fr;
     transition: transform 1s ease;
     position: fixed;
-    background-color: var(--theme-main-color);
+    background-color: var(--theme-background-color);
 }
 .side_bar_logo{
     /*侧边栏Logo*/

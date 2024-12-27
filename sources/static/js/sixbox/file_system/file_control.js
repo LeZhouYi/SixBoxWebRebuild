@@ -3,6 +3,29 @@ window.addEventListener("load",function () {
     clickOverlayHidden("confirm_popup_overlay", "confirm_popup_content");
 });
 
+callElement("set_background_button", element=>{
+    element.addEventListener("click", async function (event) {
+        /*点击设置背景*/
+        try{
+            let spinner = createSpinner("set_background_button");
+            let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+            let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+            await putJsonWithAuth(`/users/${userInfo.id}`, {
+                name: userInfo.name,
+                background: nowControlData.id
+            });
+            loadUserInfo(function(){
+                initBackground();
+                hiddenElementById("file_control_overlay");
+                spinner.remove();
+            });
+        } catch (error) {
+            displayErrorMessage(error);
+            spinner?.remove();
+        }
+    });
+});
+
 callElement("cancel_popup_button", element=>{
     element.addEventListener("click", function (event) {
         /*点击取消*/
