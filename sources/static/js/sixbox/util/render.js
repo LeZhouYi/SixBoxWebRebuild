@@ -60,7 +60,6 @@ function displayError(error) {
     /*显示错误*/
     if (error instanceof ApiError) {
         if (error.errorKey === "REFRESH FAIL") {
-            displayErrorMessage("验证失败，请重新登录");
             setTimeout(function () {
                 window.location = requestConfig.authErrorRoute;
             }, 2000);
@@ -268,7 +267,6 @@ function createSpinner(elementId, className="spin_panel"){
         let spinPanel = document.createElement("div");
         spinPanel.classList.add(className);
         spinPanel.addEventListener("click", function(event){
-            console.log("test");
             event.preventDefault();
             event.stopPropagation();
         });

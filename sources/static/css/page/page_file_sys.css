@@ -40,7 +40,7 @@
     grid-gap: var(--element-margin);
 }
 .file_sys_menu_button{
-    width: var(--file-enum-button-width);
+    width: 100%;
     height: var(--file-enum-item-height);
     background-color: var(--theme-part-color);
     border-radius: var(--border-radius);

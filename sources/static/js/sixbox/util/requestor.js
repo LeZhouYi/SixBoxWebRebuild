@@ -1,12 +1,12 @@
 "use strict";
 
 const whiteErrorCode = [400, 401];
-export const requestConfig = {
+const requestConfig = {
     "apiPrefix": "/api/v1",
     "authErrorRoute": "/login.html"
 };
 
-export class ApiError extends Error {
+class ApiError extends Error {
     /*API接口错误*/
     constructor(message, errorKey, errorData) {
         super(message);
@@ -38,7 +38,7 @@ async function fetchWithRetry(requestFunc, retryTimes = 1) {
     }
 }
 
-export async function postJson(url, postData) {
+async function postJson(url, postData) {
     /*post传输json数据*/
     const response = await fetch(requestConfig.apiPrefix + url, {
         method: "POST",
@@ -60,7 +60,7 @@ export async function postJson(url, postData) {
     }
 }
 
-export async function postJsonWithAuth(url, postData) {
+async function postJsonWithAuth(url, postData) {
     /*带重试，Bearer验证的post方法获取Json数据的接口*/
     /*请求*/
     let requestFunc = async function () {
@@ -79,7 +79,7 @@ export async function postJsonWithAuth(url, postData) {
     return data;
 }
 
-export async function putJsonWithAuth(url, postData) {
+async function putJsonWithAuth(url, postData) {
     /*带重试，Bearer验证的put方法获取Json数据的接口*/
     /*请求*/
     let requestFunc = async function () {
@@ -98,7 +98,7 @@ export async function putJsonWithAuth(url, postData) {
     return data;
 }
 
-export async function getJsonWithAuth(url) {
+async function getJsonWithAuth(url) {
     /*带重试，Bearer验证的Get方法获取Json数据的接口*/
     /*请求*/
     let requestFunc = async function () {
@@ -116,7 +116,7 @@ export async function getJsonWithAuth(url) {
     return data;
 }
 
-export async function deleteJsonWithAuth(url) {
+async function deleteJsonWithAuth(url) {
     /*带重试，Bearer验证的Delete方法获取Json数据的接口*/
     /*请求*/
     let requestFunc = async function () {
@@ -134,7 +134,7 @@ export async function deleteJsonWithAuth(url) {
     return data;
 }
 
-export async function postFormWithAuth(url, formData) {
+async function postFormWithAuth(url, formData) {
     /*带重试，Bearer验证的POST方法传输form-data数据的接口*/
     /*请求*/
     let requestFunc = async function () {
@@ -174,7 +174,7 @@ async function refreshToken() {
         throw new Error(`HTTP ERROR: ${response.status}`);
     } else {
         let data = await response.json();
-        if (data || !("accessToken" in data)) {
+        if (data && !("accessToken" in data)) {
             throw new Error("Refresh Access Token Fail");
         }
         /*更新Token并写入缓存*/
