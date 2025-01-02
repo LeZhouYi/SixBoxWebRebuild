@@ -66,6 +66,8 @@ callElement("video_close_button", element=>{
     element.addEventListener("click", function(event){
         /*点击关闭视频*/
         hiddenElementById("video_display_overlay");
+        let player = videojs("video_display_panel");
+        player.pause();
     });
 });
 

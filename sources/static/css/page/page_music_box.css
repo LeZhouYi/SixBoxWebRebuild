@@ -2,5 +2,86 @@
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-rows: 110px 1fr;
+    grid-template-rows: 110px 1fr 80px;
+    box-sizing: border-box;
+}
+.music_main_container{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 245px 1fr;
+    padding-left: var(--element-gap);
+    padding-right: var(--element-gap);
+    padding-bottom: var(--element-gap);
+    box-sizing: border-box;
+    grid-gap: var(--element-gap);
+}
+.music_play_bar{
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding-left: var(--element-gap);
+    padding-right: var(--element-gap);
+    background-color: var(--theme-background-color);
+}
+.music_play_bar_content{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 48px 1fr repeat(5, 48px) 2fr 1fr;
+    grid-gap: var(--element-margin);
+}
+.music_play_image_div{
+    width:48px;
+    display: grid;
+    align-items: center;
+}
+.music_play_image{
+    width: 48px;
+    height: 48px;
+}
+.music_play_info{
+    width: 100%;
+    display: grid;
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+.music_play_name{
+    color: var(--theme-part-color);
+    font-size: var(--main-text-size);
+}
+.music_play_singer{
+    color: var(--text-remark-color);
+    font-size: var(--text-label-size);
+}
+.music_play_progress_bar{
+    display: grid;
+    grid-template-columns: 48px 1fr 48px;
+    grid-gap: 10px;
+}
+.music_play_progress{
+    margin: 0px;
+}
+.music_play_progress_text{
+    display: grid;
+    align-items: center;
+}
+.music_play_volume_bar{
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    grid-gap: 10px;
+}
+.music_collect_menu{
+    width: 100%;
+    height: 100%;
+    background-color: var(--theme-background-color);
+    border-radius: var(--border-radius);
+    display: grid;
+    display-template-rows: 48px 1fr;
+}
+.music_collect_list{
+    width: 100%;
+    height: 100%;
+    background-color: var(--theme-background-color);
+    border-radius: var(--border-radius);
 }

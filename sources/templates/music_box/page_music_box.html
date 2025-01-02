@@ -1,3 +1,48 @@
 <div class="music_box_container side_bar_expand padding_trans" id="music_box_container">
     {% include 'common/comp_navigation_bar.html' %}
+    <div class="music_main_container">
+        <div class="music_collect_menu">
+            <button class="music_menu_button"></button>
+            <dd
+        </div>
+        <div class="music_collect_list">
+        </div>
+    </div>
+    <div class="music_play_bar">
+        <div class="music_play_bar_content">
+            <div class="music_play_image_div">
+                <img src="/static/icons/music.png" class="music_play_image">
+            </div>
+            <div class="music_play_info">
+                <div class="music_play_name">Test</div>
+                <div class="music_play_singer">Test</div>
+            </div>
+            <div class="music_play_image_div">
+                <img src="/static/icons/random_order.png" class="music_play_image">
+            </div>
+            <div class="music_play_image_div">
+                <img src="/static/icons/fast_rewind_trans.png" class="music_play_image">
+            </div>
+            <div class="music_play_image_div">
+                <img src="/static/icons/next_page_trans.png" class="music_play_image">
+            </div>
+            <div class="music_play_image_div">
+                <img src="/static/icons/fast_forward_trans.png" class="music_play_image">
+            </div>
+            <div class="music_play_image_div">
+                <img src="/static/icons/add_collection.png" class="music_play_image">
+            </div>
+            <div class="music_play_progress_bar">
+                <div class="music_play_progress_text">00:00</div>
+                <input type="range" min="0" max="100" step="1" value="0" class="music_play_progress">
+                <div class="music_play_progress_text">00:00</div>
+            </div>
+            <div class="music_play_volume_bar">
+                <div class="music_play_image_div">
+                    <img src="/static/icons/volume_trans.png" class="music_play_image">
+                </div>
+                <input type="range" min="0" max="100" step="1" value="50" class="music_play_progress">
+            </div>
+        </div>
+    </div>
 </div>

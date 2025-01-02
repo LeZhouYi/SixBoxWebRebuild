@@ -10,7 +10,7 @@ callElement("set_background_button", element=>{
             let spinner = createSpinner("set_background_button");
             let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
             let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-            await putJsonWithAuth(`/users/${userInfo.id}`, {
+            let content = await putJsonWithAuth(`/users/${userInfo.id}`, {
                 name: userInfo.name,
                 background: nowControlData.id
             });
@@ -19,6 +19,7 @@ callElement("set_background_button", element=>{
                 hiddenElementById("file_control_overlay");
                 spinner.remove();
             });
+            displayMessage(content.message);
         } catch (error) {
             displayErrorMessage(error);
             spinner?.remove();

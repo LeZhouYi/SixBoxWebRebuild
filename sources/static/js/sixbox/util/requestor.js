@@ -174,7 +174,7 @@ async function refreshToken() {
         throw new Error(`HTTP ERROR: ${response.status}`);
     } else {
         let data = await response.json();
-        if (data && !("accessToken" in data)) {
+        if (!data || !("accessToken" in data)) {
             throw new Error("Refresh Access Token Fail");
         }
         /*更新Token并写入缓存*/
