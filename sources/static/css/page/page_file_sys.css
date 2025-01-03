@@ -110,6 +110,7 @@
 }
 .file_sys_menu_text{
     font-size: var(--text-label-size);
+    color: var(--text-main-color);
     margin-right: var(--element-margin);
 }
 .file_sys_panel{

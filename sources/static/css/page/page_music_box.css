@@ -77,11 +77,97 @@
     background-color: var(--theme-background-color);
     border-radius: var(--border-radius);
     display: grid;
-    display-template-rows: 48px 1fr;
+    grid-template-rows: 48px 48px 1fr;
+    padding: var(--element-margin);
+    box-sizing: border-box;
+    grid-gap: var(--element-margin);
 }
-.music_collect_list{
+.music_content_panel{
     width: 100%;
     height: 100%;
+    display: grid;
+    grid-template-rows: 37px 1fr;
+    grid-gap: var(--element-gap);
+}
+.music_menu_button{
+    width: 100%;
+    height: 48px;
+    background-color: var(--theme-part-color);
+    border-radius: var(--border-radius);
+    color: var(--text-active-color);
+    font-size: var(--text-label-size);
+    box-sizing: border-box;
+    border: var(--border-base-width) solid var(--theme-part-color);
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+.music_menu_button:hover{
+    background-color: var(--theme-active-color);
+    border-color: var(--theme-part-color);
+    color: var(--text-main-color);
+}
+.music_menu_dd{
+    margin-inline-start: 0;
+}
+.music_menu_dl{
+    width: 100%;
+    height: 48px;
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+.music_menu_label{
+    width: 100%;
+    font-size: var(--text-label-size);
+    color: var(--text-remark-color);
+    display: flex;
+    align-items: end;
+    box-sizing: border-box;
+    padding-left: var(--element-margin);
+    margin-bottom: var(--element-list-gap);
+}
+.music_menu_item{
+    width: 100%;
+    height: 48px;
+    background-color: var(--theme-background-color);
+    color: var(--text-main-color);
+    border-radius: var(--border-radius);
+    border: var(--border-base-width) solid var(--theme-background-color);
+    transition: border-color 0.5s ease, background-color 0.5s ease;
+    box-sizing: border-box;
+    margin-bottom: var(--element-margin);
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    grid-gap: var(--element-margin);
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+}
+.music_menu_item:hover{
+    background-color: var(--theme-active-color);
+    border-color: var(--theme-part-color);
+}
+.music_menu_item_text{
+    display: grid;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.music_menu_image_div{
+    width: 100%;
+    display: grid;
+    align-items: center;
+}
+.music_menu_image{
+    width: 32px;
+}
+.music_control_panel{
+    height: 37px;
+    width: 100%;
+    background-color: var(--theme-background-color);
+    border-radius: var(--border-radius);
+}
+.music_content_main_panel{
+    height: 100%;
+    width: 100%;
     background-color: var(--theme-background-color);
     border-radius: var(--border-radius);
 }

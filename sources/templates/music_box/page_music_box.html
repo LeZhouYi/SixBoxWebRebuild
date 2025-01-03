@@ -2,10 +2,23 @@
     {% include 'common/comp_navigation_bar.html' %}
     <div class="music_main_container">
         <div class="music_collect_menu">
-            <button class="music_menu_button"></button>
-            <dd
+            <button class="music_menu_button">新增合集</button>
+            <button class="music_menu_button">新增歌曲</button>
+            <dd class="music_menu_dd">
+                <dl class="music_menu_dl">
+                    <div class="music_menu_label">合集</div>
+                    <div class="music_menu_item">
+                        <div class="music_menu_image_div">
+                            <img src="/static/icons/music.png" class="music_menu_image">
+                        </div>
+                        <div class="music_menu_item_text">默认合集</div>
+                    </div>
+                </dl>
+            </dd>
         </div>
-        <div class="music_collect_list">
+        <div class="music_content_panel">
+            <div class="music_control_panel"></div>
+            <div class="music_content_main_panel"></div>
         </div>
     </div>
     <div class="music_play_bar">
