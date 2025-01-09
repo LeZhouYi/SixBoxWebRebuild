@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, Response, render_template
 
 from core.common.route_utils import is_key_str_empty, gen_fail_response, get_client_ip, gen_success_response
-from core.route.route_data import ReportInfo, UsrServer, SessServer, gen_prefix_api, verify_token
+from core.route.base.route_data import ReportInfo, UsrServer, SessServer, gen_prefix_api, verify_token, token_required
 
 UserBp = Blueprint("user", __name__)
 
@@ -58,10 +58,8 @@ def refresh():
 
 
 @UserBp.route(gen_prefix_api("/usersTidyUp"), methods=["GET"])
+@token_required
 def tidy_up_data():
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
     UsrServer.tidy_up_data()
     return gen_success_response(ReportInfo["022"])
 
@@ -78,10 +76,8 @@ def get_user_detail():
 
 
 @UserBp.route(gen_prefix_api("/users/<user_id>"), methods=["PUT"])
+@token_required
 def edit_user(user_id: str):
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
     user_data = UsrServer.get_user(user_id)
     if user_data is None:
         return gen_fail_response(ReportInfo["028"])

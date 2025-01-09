@@ -11,8 +11,8 @@ from core.common.route_utils import gen_fail_response, is_str_empty, gen_id, gen
 from core.config.config import get_config_path
 from core.database.file_system import FileType
 from core.log.log import logger
-from core.route.route_data import ReportInfo, FsServer, FsConfig, gen_prefix_api, verify_token, verify_page_limit, \
-    get_ext_key, is_default_folder
+from core.route.base.route_data import ReportInfo, FsServer, FsConfig, gen_prefix_api, verify_page_limit, \
+    get_ext_key, is_default_folder, token_required
 
 FileSystemBp = Blueprint("file_system", __name__)
 
@@ -37,13 +37,9 @@ def download_static_file():
 
 
 @FileSystemBp.route(gen_prefix_api("/files/<file_id>/download"), methods=["GET"])
+@token_required
 def download_file(file_id: str):
     """下载文件"""
-    # verify
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
-
     if is_str_empty(file_id):
         return gen_fail_response(ReportInfo["012"])
     if not FsServer.is_file_exist(file_id):
@@ -63,13 +59,9 @@ def download_file(file_id: str):
 
 
 @FileSystemBp.route(gen_prefix_api("/videos/<file_id>/play"), methods=["GET"])
+@token_required
 def play_video(file_id: str):
     """播放视频"""
-    # verify
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
-
     if is_str_empty(file_id):
         return gen_fail_response(ReportInfo["012"])
     if not FsServer.is_file_exist(file_id):
@@ -87,13 +79,9 @@ def play_video(file_id: str):
 
 
 @FileSystemBp.route(gen_prefix_api("/files"), methods=["POST"])
+@token_required
 def add_file():
     """新增文件"""
-    # verify
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
-
     # 获取并检查数据
     file = request.files.get("file")
     if not file:
@@ -113,7 +101,6 @@ def add_file():
     filepath = os.path.join(get_config_path("file_save_path"), local_name)
     try:
         file.save(filepath)
-        file_size = os.path.getsize(filepath)
     except Exception as e:
         logger.error("保存文件%s失败：%s" % (file.filename, e))
         return gen_fail_response(ReportInfo["004"])
@@ -122,26 +109,15 @@ def add_file():
     if not re.match(r"^\d+$", ext_key):
         ext_key = FileType.FILE
 
-    mimetype, _ = mimetypes.guess_type(filepath)
-    db_data = {
-        "name": filename,
-        "type": ext_key,
-        "parentId": parent_id,
-        "path": filepath,
-        "size": file_size,
-        "mimeType": mimetype
-    }
+    db_data = FsServer.gen_add_dict(filename, ext_key, parent_id, filepath)
     FsServer.add(db_data)
     return gen_success_response(ReportInfo["006"])
 
 
 @FileSystemBp.route(gen_prefix_api("/folders"), methods=["POST"])
+@token_required
 def add_folder():
     """新增文件夹"""
-    # verify
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
     data = request.json
     if is_key_str_empty(data, "name"):
         return gen_fail_response(ReportInfo["013"])
@@ -160,12 +136,9 @@ def add_folder():
 
 
 @FileSystemBp.route(gen_prefix_api("/folders/<folder_id>"), methods=["PUT"])
+@token_required
 def edit_folder(folder_id: str):
     """编辑文件夹"""
-    # verify
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
     data = request.json
     if is_key_str_empty(data, "name"):
         return gen_fail_response(ReportInfo["013"])
@@ -180,12 +153,9 @@ def edit_folder(folder_id: str):
 
 
 @FileSystemBp.route(gen_prefix_api("/files/<file_id>"), methods=["PUT"])
+@token_required
 def edit_file(file_id: str):
     """编辑文件"""
-    # verify
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
     data = request.json
     if is_key_str_empty(data, "name"):
         return gen_fail_response(ReportInfo["013"])
@@ -198,12 +168,9 @@ def edit_file(file_id: str):
 
 
 @FileSystemBp.route(gen_prefix_api("/folders/<folder_id>"), methods=["GET"])
+@token_required
 def get_folder_content(folder_id: str):
     """获取文件夹"""
-    # verify
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
     if is_str_empty(folder_id) or not FsServer.is_folder_exist(folder_id):
         return gen_fail_response(ReportInfo["009"])
     search_type = request.args.get("type")
@@ -230,12 +197,9 @@ def check_file_ext(file: FileStorage) -> bool:
 
 
 @FileSystemBp.route(gen_prefix_api("/files/<file_id>"), methods=["DELETE"])
+@token_required
 def delete_file(file_id: str):
     """删除文件"""
-    # verify
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
     if is_str_empty(file_id) or not FsServer.is_file_exist(file_id):
         return gen_fail_response(ReportInfo["012"])
     FsServer.delete_file(file_id)
@@ -243,11 +207,9 @@ def delete_file(file_id: str):
 
 
 @FileSystemBp.route(gen_prefix_api("/folders/<folder_id>"), methods=["DELETE"])
+@token_required
 def delete_folder(folder_id: str):
     """删除文件夹"""
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
     if is_str_empty(folder_id) or not FsServer.is_folder_exist(folder_id):
         return gen_fail_response(ReportInfo["009"])
     if is_default_folder(folder_id):
@@ -257,11 +219,9 @@ def delete_folder(folder_id: str):
 
 
 @FileSystemBp.route(gen_prefix_api("/files"), methods=["GET"])
+@token_required
 def search_file():
     """搜索文件和文件夹"""
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
     page_result = verify_page_limit(request)
     if isinstance(page_result[0], Response):
         return page_result
@@ -272,22 +232,17 @@ def search_file():
 
 
 @FileSystemBp.route(gen_prefix_api("/filesTidyUp"), methods=["GET"])
+@token_required
 def tidy_up_file():
     """整理文件，调整文件类型"""
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
     FsServer.tidy_up_data(FsConfig["file_white_list"])
     return gen_success_response(ReportInfo["022"])
 
 
 @FileSystemBp.route(gen_prefix_api("/files/<file_id>/near"), methods=["GET"])
+@token_required
 def get_near_file(file_id: str):
     """获取相邻同类型的文件"""
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
-
     if is_str_empty(file_id):
         return gen_fail_response(ReportInfo["012"])
     if not FsServer.is_file_exist(file_id):

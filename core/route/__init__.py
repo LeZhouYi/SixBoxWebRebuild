@@ -3,11 +3,11 @@ from flask_assets import Environment, Bundle
 
 from core.common.file_utils import load_json_data
 from core.config.config import get_config_path
-from core.route.file_system import FileSystemBp
-from core.route.home import HomeBp
-from core.route.music_box import MusicBoxBp
-from core.route.tinymce import TinyMceBp
-from core.route.user import UserBp
+from core.route.instance.file_system import FileSystemBp
+from core.route.instance.home import HomeBp
+from core.route.instance.music_box import MusicBoxBp
+from core.route.instance.tinymce import TinyMceBp
+from core.route.instance.user import UserBp
 
 
 def register_blueprints(app: flask.Flask):

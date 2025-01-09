@@ -3,6 +3,7 @@ import mimetypes
 import os.path
 import threading
 import time
+from os import PathLike
 from typing import Optional
 
 from tinydb import TinyDB, Query
@@ -140,16 +141,18 @@ class FileSystemServer:
         """默认排序"""
         return int(data["type"]), data["name"]
 
-    def add(self, data: dict):
+    def add(self, data: dict) -> str:
         """
         新增
         :param data: 直接的数据结构
-        :return:
+        :return: 返回数据ID
         """
         data["id"] = route_utils.gen_id()
         data["updateTime"] = str(time.time())
         data["name"] = str(data["name"]).strip()
-        self.db.insert(data)
+        with self.thread_lock:
+            self.db.insert(data)
+        return data["id"]
 
     def edit_folder(self, folder_id: str, data_input: dict):
         """编辑文件夹"""
@@ -268,3 +271,17 @@ class FileSystemServer:
         if index < len(search_data) - 1:
             return_data["next"] = extra_data_by_list(search_data[index + 1], self.key_list)
         return return_data
+
+    @staticmethod
+    def gen_add_dict(filename: str, ext_key: str, parent_id: str, filepath: PathLike) -> dict:
+        """生成新增所需数据结构"""
+        file_size = os.path.getsize(filepath)
+        mimetype, _ = mimetypes.guess_type(filepath)
+        return {
+            "name": filename,
+            "type": ext_key,
+            "parentId": parent_id,
+            "path": filepath,
+            "size": file_size,
+            "mimeType": mimetype
+        }

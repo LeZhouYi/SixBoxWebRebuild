@@ -1,7 +1,8 @@
+from functools import wraps
 from typing import Optional
 
 import flask
-from flask import Response
+from flask import Response, request
 
 from core.common.file_utils import load_json_data
 from core.common.route_utils import get_bearer_token, is_str_empty, gen_fail_response, get_client_ip
@@ -79,3 +80,16 @@ def is_default_folder(folder_id: str) -> bool:
         if folder_id in data:
             return True
     return False
+
+
+def token_required(func):
+    """添加Token校验"""
+
+    @wraps(func)
+    def decorated(*args, **kwargs):
+        verify_result = verify_token(request)
+        if isinstance(verify_result[0], Response):
+            return verify_result
+        return func(*args, **kwargs)
+
+    return decorated

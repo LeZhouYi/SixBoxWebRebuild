@@ -1,24 +1,22 @@
 import mimetypes
 import os
 
-from flask import Blueprint, Response, request, jsonify
+from flask import Blueprint, request, jsonify
 
 from core.common.route_utils import is_key_str_empty, gen_fail_response, gen_id, gen_success_response, is_str_empty, \
     extra_data_by_list
 from core.config.config import get_config_path
 from core.database.file_system import FileType
 from core.log.log import logger
-from core.route.route_data import gen_prefix_api, verify_token, ReportInfo, FsServer
+from core.route.base.route_data import gen_prefix_api, ReportInfo, FsServer, token_required
 
 TinyMceBp = Blueprint("tinymce", __name__)
 
 
 @TinyMceBp.route(gen_prefix_api("/texts"), methods=["POST"])
+@token_required
 def add_text():
     """新增富文本"""
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
     data = request.json
     if is_key_str_empty(data, "name"):
         return gen_fail_response(ReportInfo["023"])
@@ -52,11 +50,9 @@ def add_text():
 
 
 @TinyMceBp.route(gen_prefix_api("/texts/<file_id>"), methods=["GET"])
+@token_required
 def get_text(file_id: str):
     """获取文本"""
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
     if is_str_empty(file_id) or not FsServer.is_file_exist(file_id):
         return gen_fail_response(ReportInfo["012"])
     data = FsServer.get_data(file_id)
@@ -72,11 +68,9 @@ def get_text(file_id: str):
 
 
 @TinyMceBp.route(gen_prefix_api("/texts/<file_id>"), methods=["PUT"])
+@token_required
 def edit_text(file_id: str):
     """编辑文本"""
-    verify_result = verify_token(request)
-    if isinstance(verify_result[0], Response):
-        return verify_result
     if is_str_empty(file_id) or not FsServer.is_file_exist(file_id):
         return gen_fail_response(ReportInfo["012"])
     before_data = FsServer.get_data(file_id)
