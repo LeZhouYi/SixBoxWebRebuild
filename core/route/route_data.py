@@ -7,17 +7,23 @@ from core.common.file_utils import load_json_data
 from core.common.route_utils import get_bearer_token, is_str_empty, gen_fail_response, get_client_ip
 from core.config.config import get_config_path
 from core.database.file_system import FileSystemServer
+from core.database.music import MusicServer, MusicSetServer
 from core.database.user import SessionServer
 from core.database.user import UserServer
 
 ReportInfo = load_json_data(get_config_path("lang_config_path"))
 
-FsServer = FileSystemServer(get_config_path("file_sys_db_path"))
-FsConfig = load_json_data(get_config_path("file_sys_config_path"))
+DbConfig = load_json_data(get_config_path("database_config_path"))
 
-UsrServer = UserServer(get_config_path("user_db_path"))
+FsConfig = load_json_data(get_config_path("file_sys_config_path"))
+FsServer = FileSystemServer(get_config_path("file_sys_db_path"), FsConfig)
+
+UsrServer = UserServer(get_config_path("user_db_path"), DbConfig)
 
 SessServer = SessionServer(get_config_path("session_db_path"))
+
+MscServer = MusicServer(get_config_path("music_db_path"))
+MscSetServer = MusicSetServer(get_config_path("music_set_db_path"), DbConfig)
 
 API_PREFIX = "/api/v1"
 
@@ -65,3 +71,11 @@ def verify_page_limit(request_in: flask.request) -> tuple[Response, int] | tuple
     if int(limit) < 1:
         return gen_fail_response(ReportInfo["020"])
     return int(page), int(limit)
+
+
+def is_default_folder(folder_id: str) -> bool:
+    """判断是否是默认文件夹"""
+    for data in FsConfig["default_folders"]:
+        if folder_id in data:
+            return True
+    return False

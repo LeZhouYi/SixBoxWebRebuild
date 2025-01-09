@@ -41,7 +41,7 @@ class FileSystemServer:
 
     key_list = ["id", "name", "parentId", "type", "updateTime", "size", "mimeType"]
 
-    def __init__(self, db_path: str):
+    def __init__(self, db_path: str, config: dict):
         """
         加载本地数据
         :param db_path:数据库文件路径
@@ -49,19 +49,12 @@ class FileSystemServer:
         self.db = TinyDB(db_path)
         self.query = Query()
         self.thread_lock = threading.Lock()
-        self.init()
+        self.init(config)
 
-    def init(self):
+    def init(self, config: dict):
         if len(self.db.all()) == 0:
-            self.db.insert({
-                "id": "1",
-                "name": "根目录",
-                "type": FileType.FOLDER,
-                "parentId": None,
-                # "path": None,
-                "updateTime": str(time.time()),
-                # "size": None
-            })
+            for data in config["default_folders"]:
+                self.db.insert(data)
 
     def is_folder_exist(self, data_id: str) -> bool:
         """
@@ -197,7 +190,6 @@ class FileSystemServer:
                 temp_search.clear()
             for will_id in will_ids:
                 self.db.remove(self.query.id == will_id)
-            self.init()
 
     def search_file(self, name: str, page, limit):
         """搜索文件和文件夹"""

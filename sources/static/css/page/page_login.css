@@ -12,7 +12,7 @@
     width: 100%;
     display: grid;
     grid-template-columns: 1fr var(--login-panel-width);
-    background-color: var(--theme-background-color);
+    background-color: white;
 }
 .login_panel{
     /*登录栏*/

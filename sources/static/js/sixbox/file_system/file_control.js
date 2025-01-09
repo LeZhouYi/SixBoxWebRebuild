@@ -83,7 +83,7 @@ callElement("copy_full_url_button", element=>{
                 let clipText = `${host}/home.html?nowFolderId=${nowControlData.id}`;
                 clipTextToBoard(clipText);
                 displayMessage("已成功复制至剪切板");
-            } else if (nowControlData.type === "1") {
+            } else {
                 let clipText = `${host}/api/v1/files/${nowControlData.id}/download`;
                 clipTextToBoard(clipText);
                 displayMessage("已成功复制至剪切板");

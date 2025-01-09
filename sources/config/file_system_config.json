@@ -8,5 +8,21 @@
         "code": ["py","jar"],
         "text": ["yaml","xlsx","xls","docx","pdf","txt"],
         "app": ["exe"]
-    }
+    },
+    "default_folders": [
+        {
+            "id": "1",
+            "name": "根目录",
+            "parentId": null,
+            "type": "0",
+            "updateTime": "1731052367.406409"
+        },
+        {
+            "id": "2",
+            "name": "音频",
+            "parentId": "1",
+            "type": "0",
+            "updateTime": "1731052367.406409"
+        }
+    ]
 }

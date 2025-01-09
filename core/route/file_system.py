@@ -12,7 +12,7 @@ from core.config.config import get_config_path
 from core.database.file_system import FileType
 from core.log.log import logger
 from core.route.route_data import ReportInfo, FsServer, FsConfig, gen_prefix_api, verify_token, verify_page_limit, \
-    get_ext_key
+    get_ext_key, is_default_folder
 
 FileSystemBp = Blueprint("file_system", __name__)
 
@@ -250,6 +250,8 @@ def delete_folder(folder_id: str):
         return verify_result
     if is_str_empty(folder_id) or not FsServer.is_folder_exist(folder_id):
         return gen_fail_response(ReportInfo["009"])
+    if is_default_folder(folder_id):
+        return gen_fail_response(ReportInfo["031"])
     FsServer.delete_folder(folder_id)
     return gen_success_response(ReportInfo["016"])
 

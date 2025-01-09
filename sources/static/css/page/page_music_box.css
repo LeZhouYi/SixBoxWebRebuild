@@ -163,7 +163,7 @@
     height: 37px;
     width: 100%;
     display: grid;
-    grid-template-columns: 37px 1fr 1fr;
+    grid-template-columns: 37px 2fr 1fr;
     grid-gap: var(--element-margin);
 }
 .music_content_main_panel{
@@ -171,6 +171,8 @@
     width: 100%;
     background-color: var(--theme-background-color);
     border-radius: var(--border-radius);
+    display: grid;
+    grid-template-rows: 56px 1fr;
 }
 .music_control_icon_div{
     height: 37px;
@@ -206,4 +208,58 @@
 .music_search_bar{
     background-color: var(--theme-background-color);
     border-radius: var(--border-radius);
+    display: grid;
+    grid-template-columns: 25px 1fr;
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+    box-sizing: border-box;
+}
+.music_search_input{
+    height: 100%;
+    width: 100%;
+    border-width: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-size: var(--text-remark-size);
+    background: transparent;
+}
+.music_search_input:focus-visible{
+    outline: none;
+}
+.music_content_header{
+    width: 100%;
+    height: 100%;
+    border-bottom: var(--border-base-width) solid var(--text-remark-color);
+    align-items: end;
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+    box-sizing: border-box;
+    grid-gap: var(--element-margin);
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 2fr 50px;
+}
+.music_content_header_text{
+    min-width: 50px;
+    color: var(--text-main-color);
+    font-size: var(--main-text-size);
+    padding-bottom: calc(var(--element-margin) / 2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.music_content_header>*:last-child{
+    display: grid;
+    justify-content: center;
+}
+.music_content_table{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    margin-inline-start: 0;
+}
+.music_content_row{
+    width: 100%;
+    height: 56px;
+    margin-block-start: 0;
+    margin-block-end: 0;
 }

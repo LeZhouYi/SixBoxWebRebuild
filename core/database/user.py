@@ -126,7 +126,7 @@ class UserServer:
 
     key_list = ["id", "name", "background"]
 
-    def __init__(self, db_path: str):
+    def __init__(self, db_path: str, config: dict):
         """
         加载本地数据
         :param db_path:数据库文件路径
@@ -136,13 +136,8 @@ class UserServer:
         self.thread_lock = threading.Lock()
 
         if len(self.db.all()) == 0:
-            self.db.insert({
-                "id": "1",
-                "name": "admin",
-                "account": "admin",
-                "password": self.hash_encrypt("1234567a"),
-                "background": None
-            })
+            for data in config["user_defaults"]:
+                self.db.insert(data)
 
     def is_user_exist(self, account: str, password: str) -> Optional[str]:
         """

@@ -1,0 +1,17 @@
+{
+    "user_defaults": [
+        {
+            "id": "1",
+            "name": "admin",
+            "account": "admin",
+            "password": "47ef20207489b775fa4cdcac3c394b517ab22d7460237ae3df1ac0e8963699d6",
+            "background": null
+        }
+    ],
+    "music_set_defaults": [
+        {
+            "id": "1",
+            "name": "默认合集"
+        }
+    ]
+}
