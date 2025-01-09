@@ -156,6 +156,7 @@ class FileSystemServer:
 
     def edit_folder(self, folder_id: str, data_input: dict):
         """编辑文件夹"""
+        data_input = extra_data_by_list(data_input, ["name", "parentId"])
         with self.thread_lock:
             data = self.db.get((self.query.id == folder_id) & (self.query.type == FileType.FOLDER))
             data["name"] = str(data_input["name"]).strip()
@@ -165,6 +166,7 @@ class FileSystemServer:
 
     def edit_file(self, file_id: str, data_input: dict):
         """编辑文件"""
+        data_input = extra_data_by_list(data_input, ["name", "parentId", "size"])
         with self.thread_lock:
             data = self.db.get((self.query.id == file_id) & (self.query.type != FileType.FOLDER))
             data.update(data_input)

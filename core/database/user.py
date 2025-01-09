@@ -173,6 +173,7 @@ class UserServer:
 
     def edit_user(self, user_id: str, data_input: dict):
         """编辑用户"""
+        data_input = extra_data_by_list(data_input, ["name", "background"])
         with self.thread_lock:
             data = self.db.get(self.query.id == user_id)
             data["name"] = str(data_input["name"]).strip()

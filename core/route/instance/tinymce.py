@@ -1,4 +1,3 @@
-import mimetypes
 import os
 
 from flask import Blueprint, request, jsonify
@@ -33,18 +32,10 @@ def add_text():
     try:
         with open(filepath, "w", encoding="utf-8") as file:
             file.write(data["content"])
-        file_size = os.path.getsize(filepath)
     except Exception as e:
         logger.error("保存文件%s失败：%s" % (filepath, e))
         return gen_fail_response(ReportInfo["025"])
-    db_data = {
-        "name": data["name"],
-        "type": FileType.MCE_TEXT,
-        "parentId": parent_id,
-        "path": filepath,
-        "size": file_size,
-        "mimeType": mimetypes.guess_type(filepath)
-    }
+    db_data = FsServer.gen_add_dict(data["name"], FileType.MCE_TEXT, parent_id, filepath)
     FsServer.add(db_data)
     return gen_success_response(ReportInfo["006"])
 

@@ -1,10 +1,8 @@
 import mimetypes
 import os.path
-import re
 import urllib.parse
 
 from flask import Blueprint, request, Response, jsonify
-from werkzeug.datastructures import FileStorage
 
 from core.common.file_utils import get_file_ext, get_stream_io, is_path_within_folder, get_range_stream_io
 from core.common.route_utils import gen_fail_response, is_str_empty, gen_id, gen_success_response, is_key_str_empty
@@ -12,7 +10,7 @@ from core.config.config import get_config_path
 from core.database.file_system import FileType
 from core.log.log import logger
 from core.route.base.route_data import ReportInfo, FsServer, FsConfig, gen_prefix_api, verify_page_limit, \
-    get_ext_key, is_default_folder, token_required
+    get_ext_key, is_default_folder, token_required, check_file_ext
 
 FileSystemBp = Blueprint("file_system", __name__)
 
@@ -106,8 +104,6 @@ def add_file():
         return gen_fail_response(ReportInfo["004"])
 
     ext_key = get_ext_key(file_ext)
-    if not re.match(r"^\d+$", ext_key):
-        ext_key = FileType.FILE
 
     db_data = FsServer.gen_add_dict(filename, ext_key, parent_id, filepath)
     FsServer.add(db_data)
@@ -178,22 +174,6 @@ def get_folder_content(folder_id: str):
     if isinstance(page_result[0], Response):
         return page_result
     return jsonify(FsServer.get_folder_detail(folder_id, search_type, page_result[0], page_result[1]))
-
-
-def check_file_ext(file: FileStorage) -> bool:
-    """
-    检查文件类型是否在白名单中
-    :param file:
-    :return: False表示文件不符合要求
-    """
-    white_list = FsConfig["file_white_list"]
-    if file.filename is None:
-        return False
-    file_ext = get_file_ext(file.filename).lower()
-    for _, value in white_list.items():
-        if file_ext in value:
-            return True
-    return False
 
 
 @FileSystemBp.route(gen_prefix_api("/files/<file_id>"), methods=["DELETE"])
