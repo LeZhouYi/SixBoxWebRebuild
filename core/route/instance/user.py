@@ -1,7 +1,8 @@
-from flask import Blueprint, request, jsonify, Response, render_template
+from flask import Blueprint, jsonify, render_template, request
 
-from core.common.route_utils import is_key_str_empty, gen_fail_response, get_client_ip, gen_success_response
-from core.route.base.route_data import ReportInfo, UsrServer, SessServer, gen_prefix_api, verify_token, token_required
+from core.common.route_utils import is_key_str_empty, gen_success_response
+from core.route.base.route_data import *
+from core.route.base.route_decorate import token_required
 
 UserBp = Blueprint("user", __name__)
 

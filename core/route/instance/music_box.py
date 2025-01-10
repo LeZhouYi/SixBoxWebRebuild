@@ -1,14 +1,11 @@
 import os
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 
-from core.common.file_utils import get_file_ext
-from core.common.route_utils import gen_fail_response, is_str_empty, gen_id, gen_success_response
-from core.config.config import get_config_path
-from core.database.file_system import FileType
+from core.common.route_utils import gen_id, gen_success_response
 from core.log.log import logger
-from core.route.base.route_data import gen_prefix_api, ReportInfo, get_ext_key, FsConfig, FsServer, \
-    MscSetServer, MscServer, token_required
+from core.route.base.route_data import *
+from core.route.base.route_decorate import token_required, page_args_required
 
 MusicBoxBp = Blueprint("music_box", __name__)
 
@@ -26,7 +23,7 @@ def add_music():
     file = request.files.get("file")
     if not file:
         return gen_fail_response(ReportInfo["007"])
-    ext_key = get_ext_key(file.filename)
+    ext_key = get_ext_key(get_file_ext(file.filename))
     if ext_key != FileType.MUSIC:
         return gen_fail_response(ReportInfo["008"])
     music_name = request.form.get("name")
@@ -40,6 +37,8 @@ def add_music():
         return gen_fail_response(ReportInfo["033"])
     if not MscSetServer.is_exist(set_id):
         return gen_fail_response(ReportInfo["034"])
+    album = request.files.get("album")
+    tags = request.files.get("tags")
 
     # 保存文件
     file_ext = get_file_ext(file.filename)
@@ -56,6 +55,24 @@ def add_music():
         filename, ext_key, FsConfig["music_folder_id"], filepath
     )
     file_id = FsServer.add(db_data)
-    music_data = MscServer.gen_add_dict(music_name, file_id, singer, set_id)
+    music_data = MscServer.gen_add_dict(music_name, file_id, singer, set_id, album, tags)
     MscServer.add(music_data)
     return gen_success_response(ReportInfo["006"])
+
+
+@MusicBoxBp.route(gen_prefix_api("/musicSets/<set_id>"), methods=["GET"])
+@token_required
+@page_args_required
+def get_music_set(set_id: str):
+    """获取合集详情"""
+    if is_str_empty(set_id):
+        return gen_fail_response(ReportInfo["033"])
+    if not MscSetServer.is_exist(set_id):
+        return gen_fail_response(ReportInfo["034"])
+    page = int(request.args.get("_page"))
+    limit = int(request.args.get("_limit"))
+    music_set_data = MscSetServer.get_data(set_id)
+    music_list, total = MscServer.search_data(set_id, page, limit)
+    music_set_data["contents"] = music_list
+    music_set_data["total"] = total
+    return jsonify(music_set_data)

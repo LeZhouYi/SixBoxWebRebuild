@@ -1,13 +1,11 @@
 import os
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
 
-from core.common.route_utils import is_key_str_empty, gen_fail_response, gen_id, gen_success_response, is_str_empty, \
-    extra_data_by_list
-from core.config.config import get_config_path
-from core.database.file_system import FileType
+from core.common.route_utils import is_key_str_empty, gen_id, gen_success_response, extra_data_by_list
 from core.log.log import logger
-from core.route.base.route_data import gen_prefix_api, ReportInfo, FsServer, token_required
+from core.route.base.route_data import *
+from core.route.base.route_decorate import token_required
 
 TinyMceBp = Blueprint("tinymce", __name__)
 

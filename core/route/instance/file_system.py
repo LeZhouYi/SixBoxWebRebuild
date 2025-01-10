@@ -2,15 +2,13 @@ import mimetypes
 import os.path
 import urllib.parse
 
-from flask import Blueprint, request, Response, jsonify
+from flask import Blueprint, jsonify, request
 
-from core.common.file_utils import get_file_ext, get_stream_io, is_path_within_folder, get_range_stream_io
-from core.common.route_utils import gen_fail_response, is_str_empty, gen_id, gen_success_response, is_key_str_empty
-from core.config.config import get_config_path
-from core.database.file_system import FileType
+from core.common.file_utils import get_stream_io, is_path_within_folder, get_range_stream_io
+from core.common.route_utils import gen_id, gen_success_response, is_key_str_empty
 from core.log.log import logger
-from core.route.base.route_data import ReportInfo, FsServer, FsConfig, gen_prefix_api, verify_page_limit, \
-    get_ext_key, is_default_folder, token_required, check_file_ext
+from core.route.base.route_data import *
+from core.route.base.route_decorate import token_required, page_args_required
 
 FileSystemBp = Blueprint("file_system", __name__)
 
@@ -165,15 +163,15 @@ def edit_file(file_id: str):
 
 @FileSystemBp.route(gen_prefix_api("/folders/<folder_id>"), methods=["GET"])
 @token_required
+@page_args_required
 def get_folder_content(folder_id: str):
     """获取文件夹"""
     if is_str_empty(folder_id) or not FsServer.is_folder_exist(folder_id):
         return gen_fail_response(ReportInfo["009"])
     search_type = request.args.get("type")
-    page_result = verify_page_limit(request)
-    if isinstance(page_result[0], Response):
-        return page_result
-    return jsonify(FsServer.get_folder_detail(folder_id, search_type, page_result[0], page_result[1]))
+    page = int(request.args.get("_page"))
+    limit = int(request.args.get("_limit"))
+    return jsonify(FsServer.get_folder_detail(folder_id, search_type, page, limit))
 
 
 @FileSystemBp.route(gen_prefix_api("/files/<file_id>"), methods=["DELETE"])
@@ -200,15 +198,15 @@ def delete_folder(folder_id: str):
 
 @FileSystemBp.route(gen_prefix_api("/files"), methods=["GET"])
 @token_required
+@page_args_required
 def search_file():
     """搜索文件和文件夹"""
-    page_result = verify_page_limit(request)
-    if isinstance(page_result[0], Response):
-        return page_result
+    page = int(request.args.get("_page"))
+    limit = int(request.args.get("_limit"))
     search_name = request.args.get("nameLike")
     if is_str_empty(search_name):
         return gen_fail_response(ReportInfo["021"])
-    return jsonify(FsServer.search_file(search_name, page_result[0], page_result[1]))
+    return jsonify(FsServer.search_file(search_name, page, limit))
 
 
 @FileSystemBp.route(gen_prefix_api("/filesTidyUp"), methods=["GET"])

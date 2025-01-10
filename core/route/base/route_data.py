@@ -1,9 +1,8 @@
 import re
-from functools import wraps
 from typing import Optional
 
 import flask
-from flask import Response, request
+from flask import Response
 from werkzeug.datastructures import FileStorage
 
 from core.common.file_utils import load_json_data, get_file_ext
@@ -79,37 +78,9 @@ def verify_token(request_in: flask.request) -> tuple[Response, int] | tuple[str,
     return data_or_info["userId"], client_ip
 
 
-def verify_page_limit(request_in: flask.request) -> tuple[Response, int] | tuple[int, int]:
-    """验证Page和Limit，验证成功则返回[page,limit]"""
-    page = request_in.args.get("_page")
-    if is_str_empty(page):
-        return gen_fail_response(ReportInfo["017"])
-    limit = request_in.args.get("_limit")
-    if is_str_empty(limit):
-        return gen_fail_response(ReportInfo["018"])
-    if int(page) < 0:
-        return gen_fail_response(ReportInfo["019"])
-    if int(limit) < 1:
-        return gen_fail_response(ReportInfo["020"])
-    return int(page), int(limit)
-
-
 def is_default_folder(folder_id: str) -> bool:
     """判断是否是默认文件夹"""
     for data in FsConfig["default_folders"]:
         if folder_id in data:
             return True
     return False
-
-
-def token_required(func):
-    """添加Token校验"""
-
-    @wraps(func)
-    def decorated(*args, **kwargs):
-        verify_result = verify_token(request)
-        if isinstance(verify_result[0], Response):
-            return verify_result
-        return func(*args, **kwargs)
-
-    return decorated

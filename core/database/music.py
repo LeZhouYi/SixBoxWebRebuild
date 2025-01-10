@@ -23,13 +23,29 @@ class MusicServer:
             self.db.insert(data)
 
     @staticmethod
-    def gen_add_dict(name: str, file_id: str, singer: str, set_id: str):
+    def gen_add_dict(name: str, file_id: str, singer: str, set_id: str, album: str, tags: str):
         return {
             "fileId": file_id,
             "name": name,
             "singer": singer,
-            "setId": set_id
+            "setId": set_id,
+            "album": album,
+            "tags": tags
         }
+
+    def search_data(self, set_id: str, page: int, limit: int) -> tuple[list, int]:
+        """搜索数据"""
+        with self.thread_lock:
+            if set_id is not None:
+                data = self.db.search(self.query.setId == set_id)
+            else:
+                data = self.db.all()
+            # 计算总数
+            total = len(data)
+            # 分页
+            if page is not None and limit is not None:
+                data = data[page * limit:(page + 1) * limit]
+            return data, total
 
 
 class MusicSetServer:
@@ -56,3 +72,9 @@ class MusicSetServer:
             if data is not None:
                 return True
             return False
+
+    def get_data(self, set_id: str) -> dict:
+        """获取合集详情"""
+        with self.thread_lock:
+            data = self.db.get(self.query.id == set_id)
+            return data
