@@ -1,0 +1,24 @@
+## 登录/接口请求
+  refreshToken: 刷新Token
+  accessToken: 访问Token
+
+## 背景图
+  userInfo: 当前的用户信息
+
+## 文件系统
+  nowFolderId: 当前访问的文件夹
+  nowControlData: 用于编辑/显示当前正在操作的数据
+
+## 分页
+  nowLimit: 当前每页项数
+  nowPage: 当前页数
+
+## 侧边栏
+  isShowSideBar: 是否显示侧边栏
+
+## TinyMce
+  tinymce-custom-colors-hilitecolor: tinymce自带
+  tinymce-custom-colors-forecolor: tinymce自带
+
+## 音乐盒
+  nowMscSetId: 当前访问的音频合集

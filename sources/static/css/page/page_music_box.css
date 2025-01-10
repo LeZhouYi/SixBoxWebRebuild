@@ -263,3 +263,13 @@
     margin-block-start: 0;
     margin-block-end: 0;
 }
+.music_item_name_icon{
+    width: 32px;
+    height: 32px;
+}
+.music_item_control_img{
+    width: var(--icon-base-size);
+    border: 2px solid var(--text-remark-color);
+    border-radius: var(--border-min-radius);
+    transition: border-color .5s ease;
+}
