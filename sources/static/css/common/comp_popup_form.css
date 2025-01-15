@@ -145,11 +145,11 @@
 }
 .form_file_select_item{
     display: flex;
-    grid-template-columns: 1fr var(--file-item-button-width);
+    grid-template-columns: 1fr 204px;
     grid-gap: var(--element-gap);
 }
 .form_file_select_button{
-    width: var(--file-item-button-width);
+    width: 204px;
     height: 44px;
     margin-bottom: var(--element-margin);
     font-size: var(--main-text-size);

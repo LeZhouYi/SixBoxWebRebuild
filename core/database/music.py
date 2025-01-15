@@ -3,6 +3,7 @@ import threading
 from tinydb import TinyDB, Query
 
 from core.common import route_utils
+from core.common.route_utils import extra_data_by_list
 
 
 class MusicServer:
@@ -18,34 +19,36 @@ class MusicServer:
 
     def add(self, data):
         """新增数据"""
+        data = extra_data_by_list(data, ["fileId", "name", "singer", "album", "tags"])
         data["id"] = route_utils.gen_id()
         with self.thread_lock:
             self.db.insert(data)
+        return data["id"]
 
     @staticmethod
-    def gen_add_dict(name: str, file_id: str, singer: str, set_id: str, album: str, tags: str):
+    def gen_add_dict(name: str, file_id: str, singer: str, album: str, tags: str):
         return {
             "fileId": file_id,
             "name": name,
             "singer": singer,
-            "setId": set_id,
             "album": album,
             "tags": tags
         }
 
-    def search_data(self, set_id: str, page: int, limit: int) -> tuple[list, int]:
+    def search_data(self, page: int, limit: int) -> tuple[list, int]:
         """搜索数据"""
         with self.thread_lock:
-            if set_id is not None:
-                data = self.db.search(self.query.setId == set_id)
-            else:
-                data = self.db.all()
+            data = self.db.all()
             # 计算总数
             total = len(data)
             # 分页
             if page is not None and limit is not None:
                 data = data[page * limit:(page + 1) * limit]
             return data, total
+
+    def get_data(self, music_id: str):
+        """获取数据"""
+        return self.db.get(self.query.id == music_id)
 
 
 class MusicSetServer:
@@ -78,3 +81,31 @@ class MusicSetServer:
         with self.thread_lock:
             data = self.db.get(self.query.id == set_id)
             return data
+
+    def search_data(self, page: int, limit: int):
+        """获取合集列表"""
+        with self.thread_lock:
+            data = self.db.all()
+            # 计算总数
+            total = len(data)
+            # 分页
+            if page is not None and limit is not None:
+                data = data[page * limit:(page + 1) * limit]
+            return data, total
+
+    def add_data(self, data: dict):
+        """新增合集"""
+        data = extra_data_by_list(data, ["name"])
+        data["id"] = route_utils.gen_id()
+        with self.thread_lock:
+            self.db.insert(data)
+
+    def add_music(self, set_id: str, music_id: str):
+        with self.thread_lock:
+            data = self.db.get(self.query.id == set_id)
+            if data is None:
+                return
+            if music_id in data["list"]:
+                return
+            data["list"].append(music_id)
+            self.db.update(data, self.query.id == set_id)

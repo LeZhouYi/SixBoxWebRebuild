@@ -273,3 +273,32 @@
     border-radius: var(--border-min-radius);
     transition: border-color .5s ease;
 }
+.music_content{
+    width: 100%;
+    height: 56px;
+    border-bottom: 1px dotted var(--text-remark-color);
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 2fr 50px;
+    grid-gap: var(--element-margin);
+    padding-left: var(--element-margin);
+    padding-right: var(--element-margin);
+    box-sizing: border-box;
+    align-items: center;
+}
+.music_item_name_div{
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: var(--icon-base-size) 1fr;
+    grid-gap: var(--element-margin);
+    align-items: center;
+    min-width: 50px;
+}
+.music_item_name_text{
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: var(--main-text-size);
+    color: var(--text-main-color);
+}

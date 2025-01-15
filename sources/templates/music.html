@@ -8,6 +8,8 @@
 
 {% block body_content %}
     {% include 'music_box/page_music_box.html' %}
+    {% include 'music_box/comp_popup_collect_add.html' %}
+    {% include 'music_box/comp_popup_music_add.html' %}
     {% include 'common/comp_side_bar.html' %}
 {% endblock %}
 
@@ -15,4 +17,6 @@
     {% assets "music_box_js" %}
         <script type="module" src="{{ ASSET_URL }}"></script>
     {% endassets %}
+    <script type="module" src="{{url_for('static', filename='js/howler/howler.min.js')}}" referrerpolicy="origin"
+            defer></script>
 {% endblock %}

@@ -11,7 +11,8 @@
     "music_set_defaults": [
         {
             "id": "1",
-            "name": "默认合集"
+            "name": "默认合集",
+            "list": []
         }
     ]
 }
