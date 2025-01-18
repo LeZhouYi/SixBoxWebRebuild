@@ -7,7 +7,7 @@
         "5": ["html"],
         "code": ["py","jar"],
         "text": ["yaml","xlsx","xls","docx","pdf","txt"],
-        "app": ["exe"]
+        "app": ["exe","dmg"]
     },
     "default_folders": [
         {

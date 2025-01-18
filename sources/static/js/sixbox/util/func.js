@@ -134,3 +134,31 @@ function getFullDomain(){
     let domain = window.location.protocol + "//" + window.location.host;
     return domain;
 }
+
+function parseLocalJson(itemName){
+    /*获取并解析数据*/
+    let data = localStorage.getItem(itemName);
+    if (!data){
+        return null;
+    }
+    return JSON.parse(data);
+}
+
+function randListItem(listData){
+    /*随机抽取一个无素*/
+    let length = listData.length;
+    if (length < 1){
+        return null;
+    }
+    return listData[Math.floor(Math.random() * length)];
+}
+
+function formatSeconds(seconds){
+    /*格式化秒数*/
+    seconds = Math.floor(seconds);
+    var minutes = Math.floor(seconds/60);
+    var secs = seconds % 60;
+    var formattedMinutes = minutes.toString().padStart(2, '0');
+    var formattedSecs = secs.toString().padStart(2, '0');
+    return formattedMinutes + ':' + formattedSecs;
+}

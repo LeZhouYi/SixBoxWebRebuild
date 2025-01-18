@@ -11,7 +11,7 @@
     /*颜色*/
     --theme-main-color: rgba(197,235,226,0.8); /*主题色*/
     --theme-part-color: #363B64;    /*次主题色*/
-    --theme-background-color: rgba(255,255,255,0.75); /*主题背景色*/
+    --theme-background-color: rgba(255,255,255,0.85); /*主题背景色*/
     --theme-active-color: #F4F7F9;  /*主题激活色*/
     --error-background-color: #FCDCDD;  /*警告背景色*/
     --error-border-color: #FC9C9E;  /*警告边框色*/

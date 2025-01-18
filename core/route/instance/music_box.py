@@ -37,8 +37,8 @@ def add_music():
         return gen_fail_response(ReportInfo["033"])
     if not MscSetServer.is_exist(set_id):
         return gen_fail_response(ReportInfo["034"])
-    album = request.files.get("album")
-    tags = request.files.get("tags")
+    album = request.form.get("album")
+    tags = request.form.get("tags")
 
     # 保存文件
     file_ext = get_file_ext(file.filename)

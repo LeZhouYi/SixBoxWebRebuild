@@ -135,6 +135,7 @@
     /*侧边栏*/
     .side_bar_container{
         transform: translateX(-100%);
+        background-color: white;
     }
     .side_bar_expand{
         padding-left: 0px;

@@ -22,3 +22,6 @@
 
 ## 音乐盒
   nowMscSetId: 当前访问的音频合集
+  nowPlayData: 当前播放的音频
+  nowPlaySetData: 当前播放的合集
+  nowPlayVolume: 当前播放的音量

@@ -83,6 +83,7 @@
                 "js/sixbox/common/navigation_bar.js",
                 "js/sixbox/music_box/music_collect_control.js",
                 "js/sixbox/music_box/music_file_control.js",
+                "js/sixbox/music_box/music_play.js",
                 "js/sixbox/music_box/music_box.js"
             ]
         }

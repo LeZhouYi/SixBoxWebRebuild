@@ -14,9 +14,9 @@
 {% endblock %}
 
 {% block js_file %}
+    <script type="module" src="{{url_for('static', filename='js/howler/howler.min.js')}}" referrerpolicy="origin">
+    </script>
     {% assets "music_box_js" %}
         <script type="module" src="{{ ASSET_URL }}"></script>
     {% endassets %}
-    <script type="module" src="{{url_for('static', filename='js/howler/howler.min.js')}}" referrerpolicy="origin"
-            defer></script>
 {% endblock %}

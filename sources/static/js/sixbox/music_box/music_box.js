@@ -14,11 +14,20 @@ window.addEventListener("load",function () {
     resizeFullScreen();
     updateCollectList();
     updateMusicList();
+    initMusicBar();
 
     window.addEventListener("resize", throttle(function () {
         resizeFullScreen("bodyContainer");
     }), 200);
 });
+
+function initMusicBar(){
+    /*初始化页面元素*/
+    callElement("music_bar_volume", element=>{
+        let nowPlayVolume = localStorage.getItem("nowPlayVolume");
+        element.value = nowPlayVolume;
+    });
+}
 
 function checkLocalStorage() {
     /*检查本地缓存，解析Url并将参数存入缓存*/
@@ -28,16 +37,14 @@ function checkLocalStorage() {
         window.location.href = "/login.html";
     }
     checkLocalDefault("nowMscSetId", "1");
+    checkLocalDefault("nowPlayVolume", "50");
 }
 
 async function updateMusicList(){
     /*更新并显示当前音频合集*/
     try{
-        let nowPage = localStorage.getItem("nowPage");
-        let pageIndex = parseInt(nowPage) - 1;
-        let nowLimit = localStorage.getItem("nowLimit");
         let nowMscSetId = localStorage.getItem("nowMscSetId");
-        let data = await getJsonWithAuth(`/musicSets/${nowMscSetId}?_page=${pageIndex}&_limit=${nowLimit}`);
+        let data = await getJsonWithAuth(`/musicSets/${nowMscSetId}?_page=0&_limit=999`);
 
         callElement("music_control_title_text", titleElement=>{
             titleElement.textContent = data.name;
@@ -46,7 +53,7 @@ async function updateMusicList(){
         callElement("music_content_row", rowElement=>{
             rowElement.innerHTML = null;
             contents.forEach(content => {
-                rowElement.appendChild(createMusicItem(content));
+                rowElement.appendChild(createMusicItem(content, data));
             });
         });
     } catch(error){
@@ -54,13 +61,15 @@ async function updateMusicList(){
     }
 }
 
-function createMusicItem(content){
+function createMusicItem(content, setData){
     /*创建单行音频元素*/
     let musicItem = document.createElement("div");
     musicItem.classList.add("music_content");
 
     let musicItemName = document.createElement("div");
-    musicItemName.classList.add("music_item_name_div");
+    musicItemName.classList.add("music_item_name_div", "clickable");
+
+    bindClickMusicItem(musicItemName, content, setData);
 
     let musicItemIcon = document.createElement("img");
     musicItemIcon.classList.add("music_item_name_icon");
@@ -120,7 +129,7 @@ async function updateCollectList(){
 function createMusicMenuItem(content){
     /*创建合集元素*/
     let menuItemDiv = document.createElement("div");
-    menuItemDiv.classList.add("music_menu_item");
+    menuItemDiv.classList.add("music_menu_item", "clickable");
 
     let menuItemIconDiv = document.createElement("div");
     menuItemIconDiv.classList.add("music_menu_image_div");
