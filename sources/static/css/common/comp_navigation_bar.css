@@ -42,6 +42,45 @@
 .navigation_icon>img:hover{
     mix-blend-mode: multiply;
 }
+.navigation_user_content{
+    width: var(--file-item-button-width);
+    background-color: white;
+    border: 2px solid var(--text-remark-color);
+    border-radius: calc( var(--border-radius) - 2px );
+    box-sizing: border-box;
+    position: fixed;
+    z-index: 2;
+}
+.navigation_control_item{
+    width: 100%;
+    height: var(--file-item-height);
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    border-radius: var(--border-min-radius);
+    border: 2px solid var(--theme-background-color);
+    background-color: var(--theme-background-color);
+    transition: background-color 1s ease, border-color 1s ease;
+}
+.navigation_control_item:hover{
+    background-color: var(--theme-active-color);
+    border-color: var(--theme-part-color);
+}
+.navigation_control_icon{
+    width: var(--icon-base-size);
+    height: var(--icon-base-size);
+    margin-left: var(--element-margin);
+    margin-right: var(--element-margin);
+}
+.navigation_control_text{
+    font-size: var(--main-text-size);
+    color: var(--text-main-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: var(--element-margin);
+}
+
 
 /*响应式*/
 @media (max-width: 999px), (max-device-width: 999px){
