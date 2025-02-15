@@ -1,12 +1,3 @@
-/*字体注册*/
-@font-face{
-    font-family: 'poppins';
-    src: url('/sources/fonts/poppins/Poppins-Regular.ttf') format('turetype'),
-        url('/sources/fonts/poppins/Poppins-Bold.ttf') format('turetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
 :root{
     /*颜色*/
     --theme-main-color: rgba(197,235,226,0.8); /*主题色*/

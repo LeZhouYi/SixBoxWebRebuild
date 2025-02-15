@@ -177,6 +177,9 @@ callElement("file_edit_form", element=>{
                 hiddenElementById("file_edit_popup_overlay");
                 updateFileList();
             })
+            .catch(error => {
+                displayError(error);
+            })
             .finally(()=>{
                 spinner?.remove();
             });
@@ -185,6 +188,9 @@ callElement("file_edit_form", element=>{
                 displayMessage(data.message);
                 hiddenElementById("file_edit_popup_overlay");
                 updateFileList();
+            })
+            .catch(error => {
+                displayError(error);
             })
             .finally(()=>{
                 spinner?.remove();

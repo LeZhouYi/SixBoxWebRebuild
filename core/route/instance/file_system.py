@@ -1,5 +1,6 @@
 import mimetypes
 import os.path
+import shutil
 import urllib.parse
 
 from flask import Blueprint, jsonify, request
@@ -17,6 +18,7 @@ FileSystemBp = Blueprint("file_system", __name__)
 def download_static_file():
     """下载静态资源文件"""
     filename = request.args.get('filename')
+    print(filename)
     if is_str_empty(filename):
         return gen_fail_response(ReportInfo["012"], 404)
     static_path = get_config_path("file_static_path")
@@ -42,6 +44,7 @@ def download_file(file_id: str):
         return gen_fail_response(ReportInfo["012"])
     data = FsServer.get_data(file_id)
     filepath = data["path"]
+    filepath = os.path.join(get_config_path("file_save_path"), str(filepath).split("/")[-1])
     filename = "%s.%s" % (data["name"], get_file_ext(filepath))
     if os.path.exists(filepath) and os.path.isfile(filepath):
         try:
@@ -214,6 +217,10 @@ def search_file():
 def tidy_up_file():
     """整理文件，调整文件类型"""
     FsServer.tidy_up_data(FsConfig["file_white_list"])
+    folder_path = get_config_path("file_save_path")
+    for file_name in os.listdir(folder_path):
+        if not FsServer.is_exist_by_filename(file_name):
+            shutil.rmtree(os.path.join(folder_path, file_name))
     return gen_success_response(ReportInfo["022"])
 
 

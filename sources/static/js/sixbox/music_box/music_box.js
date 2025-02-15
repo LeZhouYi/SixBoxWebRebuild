@@ -76,10 +76,10 @@ function createMusicItem(content, setData){
     musicItemIcon.src = "/static/icons/music.png";
     musicItemName.appendChild(musicItemIcon);
 
-    let musicItmeNameText = document.createElement("div");
-    musicItmeNameText.classList.add("music_item_name_text");
-    musicItmeNameText.textContent = content.name;
-    musicItemName.appendChild(musicItmeNameText);
+    let musicItemNameText = document.createElement("div");
+    musicItemNameText.classList.add("music_item_name_text");
+    musicItemNameText.textContent = content.name;
+    musicItemName.appendChild(musicItemNameText);
 
     musicItem.appendChild(musicItemName);
 
@@ -104,6 +104,7 @@ function createMusicItem(content, setData){
     let controlImg = document.createElement("img");
     controlImg.classList.add("music_item_control_img", "clickable");
     controlImg.src = "/static/icons/dots.png";
+    addClickMusicControl(controlImg, content);
     musicItemControl.appendChild(controlImg);
 
     musicItem.appendChild(musicItemControl);

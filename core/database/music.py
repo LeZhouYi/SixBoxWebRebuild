@@ -48,7 +48,24 @@ class MusicServer:
 
     def get_data(self, music_id: str):
         """获取数据"""
-        return self.db.get(self.query.id == music_id)
+        with self.thread_lock:
+            return self.db.get(self.query.id == music_id)
+
+    def is_exist(self, music_id: str):
+        """是否存在音频"""
+        with self.thread_lock:
+            return self.db.get(self.query.id == music_id) is not None
+
+    def edit_data(self, music_id: str, data_input: dict):
+        """编辑音频"""
+        data_input = extra_data_by_list(data_input, ["name", "singer", "album", "tags"])
+        with self.thread_lock:
+            data = self.db.get(self.query.id == music_id)
+            data.update(data_input)
+            self.db.update(data, self.query.id == music_id)
+
+    def delete_data(self, music_id: str):
+        """删除音频"""
 
 
 class MusicSetServer:

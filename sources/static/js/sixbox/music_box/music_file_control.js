@@ -1,5 +1,7 @@
 window.addEventListener("load",function () {
-    clickOverlayHidden("music_add_overlay", "music_collect_content");
+    clickOverlayHidden("music_add_overlay", "music_add_content");
+    clickOverlayHidden("music_edit_overlay", "music_edit_content");
+    clickOverlayHidden("confirm_popup_overlay", "confirm_popup_content");
 });
 
 callElement("add_music_button", element=>{
@@ -59,4 +61,81 @@ callElement("music_add_form", element=>{
             displayError(error);
         });
     });
+});
+
+callElement("music_edit_button", element=>{
+    /*点击编辑*/
+    element.addEventListener("click", function(event){
+        hiddenElementById("music_control_overlay");
+        displayElementById("music_edit_overlay");
+        let nowData = localStorage.getItem("nowControlData");
+        if(nowData){
+            nowData = JSON.parse(nowData);
+            callElement("music_edit_name", nameElement=>{
+                nameElement.value = nowData.name;
+            });
+            callElement("music_edit_singer", singerElement=>{
+                singerElement.value = nowData.singer;
+            });
+            callElement("music_edit_album", albumElement=>{
+                albumElement.value = nowData.album;
+            });
+            callElement("music_edit_tags", tagsElement=>{
+                tagsElement.value = nowData.tags;
+            });
+        }
+    });
+});
+
+callElement("music_edit_cancel", element=>{
+    /*取消编辑*/
+    element.addEventListener("click", function(event){
+        hiddenElementById("music_edit_overlay");
+    });
+});
+
+callElement("music_edit_form", element=>{
+    /*确认编辑*/
+    element.addEventListener("submit", function(event){
+        event.preventDefault();
+        let formData = {
+            name: document.getElementById("music_edit_name").value,
+            singer: document.getElementById("music_edit_singer").value,
+            album: document.getElementById("music_edit_album").value,
+            tags: document.getElementById("music_edit_tags").value
+        };
+        let nowControlData = localStorage.getItem("nowControlData");
+        nowControlData = JSON.parse(nowControlData);
+        putJsonWithAuth(`/musics/${nowControlData.id}`, formData).then(data => {
+            displayMessage(data.message);
+            hiddenElementById("music_edit_overlay");
+            updateMusicList();
+        })
+        .catch(error => {
+            displayError(error);
+        });
+    });
+});
+
+callElement("music_delete_button", element=>{
+    /*点击删除*/
+    element.addEventListener("click", function(event){
+        document.getElementById("confirm_pop_text").textContent = "确认删除？";
+        hiddenElementById("music_control_overlay");
+        displayElementById("confirm_popup_overlay");
+    });
+});
+
+callElement("cancel_popup_button", element=>{
+    /*取消删除*/
+    element.addEventListener("click", function(event){
+        hiddenElementById("confirm_popup_overlay");
+    });
+});
+
+callElement("confirm_popup_button", element=>{
+    /*确认删除*/
+    element.addEventListener("click", function(event){
+
+    }
 });

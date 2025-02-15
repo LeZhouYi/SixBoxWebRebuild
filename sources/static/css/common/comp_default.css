@@ -14,7 +14,7 @@
     width: 100vw;
     margin: 0px;
     background-color: var(--theme-main-color);
-    font-family: 'poppins';
+    font-family: Arial, Helvetica, sans-serif;
     background-size: cover;
     background-position: top;
     background-repeat: no-repeat;

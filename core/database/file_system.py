@@ -81,6 +81,11 @@ class FileSystemServer:
                 return True
             return False
 
+    def is_exist_by_filename(self, filename: str) -> bool:
+        """判断文件是否存在"""
+        with self.thread_lock:
+            return self.db.get(self.match_partial("path", filename)) is not None
+
     def get_data(self, data_id) -> Optional[dict]:
         """
         获取文件数据
