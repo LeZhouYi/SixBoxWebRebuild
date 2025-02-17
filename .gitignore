@@ -19,3 +19,6 @@ __pycache__/
 # 打包生成文件
 /build
 /dist
+
+# 系统派生文件
+.DS_Store

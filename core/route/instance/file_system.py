@@ -220,7 +220,7 @@ def tidy_up_file():
     folder_path = get_config_path("file_save_path")
     for file_name in os.listdir(folder_path):
         if not FsServer.is_exist_by_filename(file_name):
-            shutil.rmtree(os.path.join(folder_path, file_name))
+            os.remove(os.path.join(folder_path, file_name))
     return gen_success_response(ReportInfo["022"])
 
 
