@@ -46,6 +46,7 @@ def get_text(file_id: str):
         return gen_fail_response(ReportInfo["012"])
     data = FsServer.get_data(file_id)
     filepath = data["path"]
+    filepath = os.path.join(get_config_path("file_save_path"), str(filepath).split("/")[-1])
     data = extra_data_by_list(data, FsServer.key_list)
     try:
         with open(filepath, "r", encoding="utf-8") as file:
