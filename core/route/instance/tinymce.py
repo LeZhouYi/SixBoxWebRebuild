@@ -1,5 +1,3 @@
-import os
-
 from flask import Blueprint, jsonify, request
 
 from core.common.route_utils import is_key_str_empty, gen_id, gen_success_response, extra_data_by_list
@@ -45,8 +43,7 @@ def get_text(file_id: str):
     if is_str_empty(file_id) or not FsServer.is_file_exist(file_id):
         return gen_fail_response(ReportInfo["012"])
     data = FsServer.get_data(file_id)
-    filepath = data["path"]
-    filepath = os.path.join(get_config_path("file_save_path"), str(filepath).split("/")[-1])
+    filepath = get_real_filepath(data["path"])
     data = extra_data_by_list(data, FsServer.key_list)
     try:
         with open(filepath, "r", encoding="utf-8") as file:
@@ -64,7 +61,7 @@ def edit_text(file_id: str):
     if is_str_empty(file_id) or not FsServer.is_file_exist(file_id):
         return gen_fail_response(ReportInfo["012"])
     before_data = FsServer.get_data(file_id)
-    filepath = before_data["path"]
+    filepath = get_real_filepath(before_data["path"])
     if not os.path.exists(filepath):
         return gen_fail_response(ReportInfo["012"])
     now_data = request.json

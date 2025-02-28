@@ -1,5 +1,3 @@
-import os
-
 from flask import Blueprint, render_template, request, jsonify
 
 from core.common.route_utils import gen_id, gen_success_response, is_key_str_empty, extra_data_by_list
@@ -143,3 +141,5 @@ def delete_music(music_id: str):
     file_id = music_data["fileId"]
     if FsServer.is_file_exist(file_id):
         FsServer.delete_file(file_id)
+    MscSetServer.clear_by_music(music_id)
+    return gen_success_response(ReportInfo["016"])

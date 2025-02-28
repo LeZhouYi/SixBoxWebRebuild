@@ -126,3 +126,11 @@ class MusicSetServer:
                 return
             data["list"].append(music_id)
             self.db.update(data, self.query.id == set_id)
+
+    def clear_by_music(self, music_id: str):
+        """清空所有合集关该音频的内容"""
+        with self.thread_lock:
+            for data in self.db.all():
+                if music_id in data["list"]:
+                    data["list"].remove(music_id)
+                    self.db.update(data, self.query.id == data["id"])  # type:ignore

@@ -1,5 +1,7 @@
+import os
 import re
-from typing import Optional
+from os import PathLike
+from typing import Optional, Union
 
 import flask
 from flask import Response
@@ -84,3 +86,8 @@ def is_default_folder(folder_id: str) -> bool:
         if folder_id in data:
             return True
     return False
+
+
+def get_real_filepath(filepath: Union[PathLike | str]) -> Union[PathLike | str]:
+    """获取真实路径"""
+    return os.path.join(get_config_path("file_save_path"), str(filepath).split("/")[-1])

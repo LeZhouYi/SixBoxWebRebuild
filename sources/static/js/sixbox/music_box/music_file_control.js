@@ -136,6 +136,13 @@ callElement("cancel_popup_button", element=>{
 callElement("confirm_popup_button", element=>{
     /*确认删除*/
     element.addEventListener("click", function(event){
-
-    }
+        let nowControlData = localStorage.getItem("nowControlData");
+        nowControlData = JSON.parse(nowControlData);
+        let deleteUrl = `/musics/${nowControlData.id}`;
+        deleteJsonWithAuth(deleteUrl).then(data => {
+            displayMessage(data.message);
+            hiddenElementById("confirm_popup_overlay");
+            updateMusicList();
+        });
+    });
 });
