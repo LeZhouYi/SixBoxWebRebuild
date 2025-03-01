@@ -8,8 +8,8 @@ callElement("set_background_button", element=>{
         /*点击设置背景*/
         try{
             let spinner = createSpinner("set_background_button");
-            let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
-            let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+            let nowControlData = parseLocalJson("nowControlData");
+            let userInfo = parseLocalJson("userInfo");
             let content = await putJsonWithAuth(`/users/${userInfo.id}`, {
                 name: userInfo.name,
                 background: nowControlData.id
@@ -37,7 +37,7 @@ callElement("cancel_popup_button", element=>{
 callElement("confirm_popup_button", element=>{
     element.addEventListener("click", function (event) {
         /*点击确认删除*/
-        let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+        let nowControlData = parseLocalJson("nowControlData");
         let spinner = createSpinner("confirm_spin_panel");
         if (nowControlData.type === "0") {
             let deleteUrl = `/folders/${nowControlData.id}`;
@@ -76,7 +76,7 @@ callElement("copy_full_url_button", element=>{
 	element.addEventListener("click", async function (event) {
         /*点击拷贝完整链接*/
         hiddenElementById("file_control_overlay");
-        let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+        let nowControlData = parseLocalJson("nowControlData");
         let host = window.location.host;
         try {
             if (nowControlData.type === "0") {
@@ -98,7 +98,7 @@ callElement("copy_part_url_button", element=>{
 	element.addEventListener("click", async function (event) {
         /*点击拷贝部分链接*/
         hiddenElementById("file_control_overlay");
-        let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+        let nowControlData = parseLocalJson("nowControlData");
         try {
             if (nowControlData.type === "0") {
                 let clipText = `/home.html?nowFolderId=${nowControlData.id}`;
@@ -119,7 +119,7 @@ callElement("file_download_button", element=>{
 	element.addEventListener("click", function (event) {
         /*点击下载文件*/
         hiddenElementById("file_control_overlay");
-        let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+        let nowControlData = parseLocalJson("nowControlData");
         try {
             if (nowControlData.type === "0") {
                 return;
@@ -137,7 +137,7 @@ callElement("file_edit_button", element=>{
 	element.addEventListener("click", async function (event) {
         /*点击编辑*/
         try {
-            let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+            let nowControlData = parseLocalJson("nowControlData");
             let spinner = createSpinner("file_edit_button");
             if (nowControlData.type === "0") {
                 document.getElementById("file_edit_header_text").textContent = "编辑文件夹";

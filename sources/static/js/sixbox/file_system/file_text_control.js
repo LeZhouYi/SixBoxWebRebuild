@@ -51,7 +51,7 @@ callElement("text_add_form", element=>{
                     spinner?.remove();
                 });
             }else{
-                let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+                let nowControlData = parseLocalJson("nowControlData");
                 putJsonWithAuth(`/texts/${nowControlData.id}`, formData).then(data => {
                     displayMessage(data.message);
                     hiddenElementById("text_add_popup_overlay");
@@ -295,7 +295,7 @@ function onPopupEditText(textId, callback){
             callElement("text_add_name", nameElement=>{
                 nameElement.value = textData.name;
             });
-            let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+            let nowControlData = parseLocalJson("nowControlData");
             loadFolderSelect("text_add_folder_select", nowControlData.parentId);
             if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")){
                 displayElementById("text_add_popup_overlay");

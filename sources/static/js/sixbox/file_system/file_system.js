@@ -347,6 +347,7 @@ function addFilePathElement(parentId, folderName, folderId) {
             if (nowFolderId !== folderId || searchInput.value !== "") {
                 localStorage.setItem("nowFolderId", folderId);
                 searchInput.value = "";
+                localStorage.setItem("nowPage", "1");
                 updateFileList();
             }
         });

@@ -68,22 +68,19 @@ callElement("music_edit_button", element=>{
     element.addEventListener("click", function(event){
         hiddenElementById("music_control_overlay");
         displayElementById("music_edit_overlay");
-        let nowData = localStorage.getItem("nowControlData");
-        if(nowData){
-            nowData = JSON.parse(nowData);
-            callElement("music_edit_name", nameElement=>{
-                nameElement.value = nowData.name;
-            });
-            callElement("music_edit_singer", singerElement=>{
-                singerElement.value = nowData.singer;
-            });
-            callElement("music_edit_album", albumElement=>{
-                albumElement.value = nowData.album;
-            });
-            callElement("music_edit_tags", tagsElement=>{
-                tagsElement.value = nowData.tags;
-            });
-        }
+        let nowData = parseLocalJson("nowControlData");
+        callElement("music_edit_name", nameElement=>{
+            nameElement.value = nowData.name;
+        });
+        callElement("music_edit_singer", singerElement=>{
+            singerElement.value = nowData.singer;
+        });
+        callElement("music_edit_album", albumElement=>{
+            albumElement.value = nowData.album;
+        });
+        callElement("music_edit_tags", tagsElement=>{
+            tagsElement.value = nowData.tags;
+        });
     });
 });
 
@@ -104,8 +101,7 @@ callElement("music_edit_form", element=>{
             album: document.getElementById("music_edit_album").value,
             tags: document.getElementById("music_edit_tags").value
         };
-        let nowControlData = localStorage.getItem("nowControlData");
-        nowControlData = JSON.parse(nowControlData);
+        let nowControlData = parseLocalJson("nowControlData");
         putJsonWithAuth(`/musics/${nowControlData.id}`, formData).then(data => {
             displayMessage(data.message);
             hiddenElementById("music_edit_overlay");
@@ -136,8 +132,7 @@ callElement("cancel_popup_button", element=>{
 callElement("confirm_popup_button", element=>{
     /*确认删除*/
     element.addEventListener("click", function(event){
-        let nowControlData = localStorage.getItem("nowControlData");
-        nowControlData = JSON.parse(nowControlData);
+        let nowControlData = parseLocalJson("nowControlData");
         let deleteUrl = `/musics/${nowControlData.id}`;
         deleteJsonWithAuth(deleteUrl).then(data => {
             displayMessage(data.message);

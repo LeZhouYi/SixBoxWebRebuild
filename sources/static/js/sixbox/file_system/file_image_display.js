@@ -5,7 +5,7 @@ window.addEventListener("load",function () {
 callElement("image_edit_button", element=>{
     element.addEventListener("click", async function(event){
         try{
-            let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+            let nowControlData = parseLocalJson("nowControlData");
             document.getElementById("file_edit_header_text").textContent = "编辑文件";
             document.getElementById("file_edit_name").value = nowControlData.name;
             await loadFolderSelect("file_edit_folder_select", nowControlData.parentId);
@@ -22,8 +22,8 @@ callElement("image_set_button", element=>{
     element.addEventListener("click", async function(event){
         /*点击设置背景*/
         try{
-            let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
-            let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+            let nowControlData = parseLocalJson("nowControlData");
+            let userInfo = parseLocalJson("userInfo");
             let content = await putJsonWithAuth(`/users/${userInfo.id}`, {
                 name: userInfo.name,
                 background: nowControlData.id
@@ -42,7 +42,7 @@ callElement("image_download_button", element=>{
     element.addEventListener("click", function(event){
         /*点击下载图片*/
         let accessToken = localStorage.getItem("accessToken");
-        let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+        let nowControlData = parseLocalJson("nowControlData");
         let downloadUrl = `api/v1/files/${nowControlData.id}/download?token=${accessToken}`;
         downloadByA(downloadUrl);
     })
@@ -52,7 +52,7 @@ callElement("image_last_button", element=>{
     element.addEventListener("click", async function(event){
         /*切换至上一张图片*/
         let accessToken = localStorage.getItem("accessToken");
-        let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+        let nowControlData = parseLocalJson("nowControlData");
         let getUrl = `/files/${nowControlData.id}/near`;
         try{
             let data = await getJsonWithAuth(getUrl);
@@ -74,7 +74,7 @@ callElement("image_next_button", element=>{
     element.addEventListener("click", async function(event){
         /*切换至上一张图片*/
         let accessToken = localStorage.getItem("accessToken");
-        let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+        let nowControlData = parseLocalJson("nowControlData");
         let getUrl = `/files/${nowControlData.id}/near`;
         try{
             let data = await getJsonWithAuth(getUrl);

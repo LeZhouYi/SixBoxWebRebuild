@@ -162,3 +162,12 @@ function formatSeconds(seconds){
     var formattedSecs = secs.toString().padStart(2, '0');
     return formattedMinutes + ':' + formattedSecs;
 }
+
+function shuffleArray(array) {
+    /*洗牌算法打乱数组*/
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}

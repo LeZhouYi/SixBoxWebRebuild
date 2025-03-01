@@ -170,7 +170,7 @@ callElement("file_edit_form", element=>{
             name: document.getElementById("file_edit_name").value,
             parentId: document.getElementById("file_edit_folder_select").value
         };
-        let nowControlData = JSON.parse(localStorage.getItem("nowControlData"));
+        let nowControlData = parseLocalJson("nowControlData");
         if (nowControlData.type === "0") {
             putJsonWithAuth(`/folders/${nowControlData.id}`, formData).then(data => {
                 displayMessage(data.message);

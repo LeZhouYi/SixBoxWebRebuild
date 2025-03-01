@@ -27,6 +27,16 @@ function initMusicBar(){
         let nowPlayVolume = localStorage.getItem("nowPlayVolume");
         element.value = nowPlayVolume;
     });
+    callElement("music_bar_order_button", element=>{
+        let nowPlayMode = localStorage.getItem("nowPlayMode");
+        if (nowPlayMode === "order"){
+            element.src = "/static/icons/order_play.png";
+        } else if (nowPlayMode === "random"){
+            element.src = "/static/icons/random_order.png";
+        } else{
+            element.src = "/static/icons/only_play.png";
+        }
+    });
 }
 
 function checkLocalStorage() {
@@ -38,6 +48,7 @@ function checkLocalStorage() {
     }
     checkLocalDefault("nowMscSetId", "1");
     checkLocalDefault("nowPlayVolume", "50");
+    checkLocalDefault("nowPlayMode", "order");
 }
 
 async function updateMusicList(){

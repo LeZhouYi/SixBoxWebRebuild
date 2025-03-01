@@ -25,3 +25,5 @@
   nowPlayData: 当前播放的音频
   nowPlaySetData: 当前播放的合集
   nowPlayVolume: 当前播放的音量
+  nowPlayMode: 当前播放模式，order为顺序循环，random为随机循环，only为单曲循环
+  nowPlayOrder: 当前的随机播放顺序

@@ -16,7 +16,7 @@ function playMusic(){
         return;
     }
     let nowPlayData = parseLocalJson("nowPlayData");
-    if (!nowPlayData || !isInSet(nowPlaySetData, nowPlayData)){
+    if (!nowPlayData || !isInSet(nowPlaySetData.contents, nowPlayData)){
         return;
     }
     if (nowMusicPlayer !== null){
@@ -29,19 +29,64 @@ function playMusic(){
         src: [`api/v1/files/${nowPlayData.fileId}/download?token=${accessToken}`],
         format: ["mp3"],
         volume: volume,
-        onload: onPlayMusic
+        onload: onPlayMusic,
+        onend: onEndMusic
     });
+}
+
+function onEndMusic(){
+    /*歌曲播放完成事件*/
+    let nowPlaySetData = parseLocalJson("nowPlaySetData");
+    if (!nowPlaySetData || nowPlaySetData.contents.length < 1){
+        /*结束播放*/
+        callElement("music_bar_play_button", element=>{
+            element.src = "/static/icons/next_page_trans.png";
+        });
+        return;
+    }
+    let nowPlayData = parseLocalJson("nowPlayData");
+    if (!nowPlayData || !isInSet(nowPlaySetData.contents, nowPlayData)){
+        /*结束播放*/
+        callElement("music_bar_play_button", element=>{
+            element.src = "/static/icons/next_page_trans.png";
+        });
+        return;
+    }
+    let nowPlayMode = localStorage.getItem("nowPlayMode");
+    if (nowPlayMode === "only"){
+        /*单曲循环*/
+        if (!nowMusicPlayer){
+            nowMusicPlayer.play();
+        }
+    }else if (nowPlayMode === "random"){
+        /*随机播放*/
+        let nowPlayOrder = parseLocalJson("nowPlayOrder");
+        if (!nowPlayOrder || nowPlayOrder.length !== nowPlaySetData.contents.length || !isInSet(nowPlayOrder, nowPlayData)){
+            nowPlayOrder = shuffleArray(nowPlaySetData.contents);
+            localStorage.setItem("nowPlayOrder", JSON.stringify(nowPlayOrder));
+        }
+        localStorage.setItem("nowPlayData", JSON.stringify(getNextMusic(nowPlayOrder, nowPlayData)));
+        playMusic();
+    }else{
+        /*顺序播放*/
+        localStorage.setItem("nowPlayData", JSON.stringify(getNextMusic(nowPlaySetData.contents, nowPlayData)));
+        playMusic();
+    }
+}
+
+function getNextMusic(setData, nowPlayData){
+    /*获取下一首歌曲的数据*/
+    let musicId = nowPlayData.id;
+    let index = setData.findIndex(item => item.id === musicId);
+    let nextIndex = (index + 1) % (setData.length || 1);
+    return setData[nextIndex];
 }
 
 function isInSet(setData, nowPlayData){
     /*判断歌曲是否在合集内*/
     let musicId = nowPlayData.id;
-    for (const musicData of setData.contents){
-        if (musicId === musicData.id){
-            return true;
-        }
-    }
-    return false;
+    let index = setData.findIndex(item => item.id === musicId);
+    return index !== -1;
 }
 
 function onPlayMusic(){
@@ -52,7 +97,7 @@ function onPlayMusic(){
     }
     nowMusicPlayer.play();
     callElement("music_bar_play_button", element=>{
-        element.src = "/static/icons/pause.png"
+        element.src = "/static/icons/pause.png";
     });
     callElement("music_bar_play_name", element=>{
         element.textContent = nowPlayData.name;
@@ -155,3 +200,90 @@ callElement("music_bar_play_progress", element=>{
         isDragging = false;
     });
 });
+
+callElement("music_bar_order_button", element=>{
+    element.addEventListener("click", function(event){
+        /*点击切换播放模式*/
+        let nowPlayMode = localStorage.getItem("nowPlayMode");
+        if (nowPlayMode === "order"){
+            localStorage.setItem("nowPlayMode", "random");
+            event.target.src = "/static/icons/random_order.png";
+        } else if (nowPlayMode === "random"){
+            localStorage.setItem("nowPlayMode", "only");
+            event.target.src = "/static/icons/only_play.png";
+        } else{
+            localStorage.setItem("nowPlayMode", "order");
+            event.target.src = "/static/icons/order_play.png";
+        }
+    });
+})
+
+callElement("music_bar_rewind_button", element=>{
+    element.addEventListener("click", function(event){
+        /*点击上一首*/
+        let nowPlaySetData = parseLocalJson("nowPlaySetData");
+        if (!nowPlaySetData || nowPlaySetData.contents.length < 1){
+            playMusic();
+            return;
+        }
+        let nowPlayData = parseLocalJson("nowPlayData");
+        if (!nowPlayData || !isInSet(nowPlaySetData.contents, nowPlayData)){
+            playMusic();
+            return;
+        }
+        let nowPlayMode = localStorage.getItem("nowPlayMode");
+        if (nowPlayMode === "random"){
+            /*随机播放*/
+            let nowPlayOrder = parseLocalJson("nowPlayOrder");
+            if (!nowPlayOrder || nowPlayOrder.length !== nowPlaySetData.contents.length || !isInSet(nowPlayOrder, nowPlayData)){
+                nowPlayOrder = shuffleArray(nowPlaySetData.contents);
+                localStorage.setItem("nowPlayOrder", JSON.stringify(nowPlayOrder));
+            }
+            localStorage.setItem("nowPlayData", JSON.stringify(getBeforeMusic(nowPlayOrder, nowPlayData)));
+            playMusic();
+        }else{
+            /*顺序播放*/
+            localStorage.setItem("nowPlayData", JSON.stringify(getBeforeMusic(nowPlaySetData.contents, nowPlayData)));
+            playMusic();
+        }
+    });
+})
+
+callElement("music_bar_forward_button", element=>{
+    element.addEventListener("click", function(event){
+        /*点击下一首*/
+        let nowPlaySetData = parseLocalJson("nowPlaySetData");
+        if (!nowPlaySetData || nowPlaySetData.contents.length < 1){
+            playMusic();
+            return;
+        }
+        let nowPlayData = parseLocalJson("nowPlayData");
+        if (!nowPlayData || !isInSet(nowPlaySetData.contents, nowPlayData)){
+            playMusic();
+            return;
+        }
+        let nowPlayMode = localStorage.getItem("nowPlayMode");
+        if (nowPlayMode === "random"){
+            /*随机播放*/
+            let nowPlayOrder = parseLocalJson("nowPlayOrder");
+            if (!nowPlayOrder || nowPlayOrder.length !== nowPlaySetData.contents.length || !isInSet(nowPlayOrder, nowPlayData)){
+                nowPlayOrder = shuffleArray(nowPlaySetData.contents);
+                localStorage.setItem("nowPlayOrder", JSON.stringify(nowPlayOrder));
+            }
+            localStorage.setItem("nowPlayData", JSON.stringify(getNextMusic(nowPlayOrder, nowPlayData)));
+            playMusic();
+        }else{
+            /*顺序播放*/
+            localStorage.setItem("nowPlayData", JSON.stringify(getNextMusic(nowPlaySetData.contents, nowPlayData)));
+            playMusic();
+        }
+    });
+});
+
+function getBeforeMusic(setData, nowPlayData){
+    /*获取上一首歌曲的数据*/
+    let musicId = nowPlayData.id;
+    let index = setData.findIndex(item => item.id === musicId);
+    let nextIndex = (index - 1 + (setData.length || 1)) % (setData.length || 1);
+    return setData[nextIndex];
+}
