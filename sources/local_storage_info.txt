@@ -1,29 +1,29 @@
 ## 登录/接口请求
-  refreshToken: 刷新Token
-  accessToken: 访问Token
+  local: refreshToken: 刷新Token
+  local: accessToken: 访问Token
 
 ## 背景图
-  userInfo: 当前的用户信息
+  local: userInfo: 当前的用户信息
 
 ## 文件系统
-  nowFolderId: 当前访问的文件夹
-  nowControlData: 用于编辑/显示当前正在操作的数据
+  session: nowFolderId: 当前访问的文件夹
+  session: nowControlData: 用于编辑/显示当前正在操作的数据
 
 ## 分页
-  nowLimit: 当前每页项数
-  nowPage: 当前页数
+  session: nowLimit: 当前每页项数
+  session: nowPage: 当前页数
 
 ## 侧边栏
-  isShowSideBar: 是否显示侧边栏
+  session: isShowSideBar: 是否显示侧边栏
 
 ## TinyMce
-  tinymce-custom-colors-hilitecolor: tinymce自带
-  tinymce-custom-colors-forecolor: tinymce自带
+  local: tinymce-custom-colors-hilitecolor: tinymce自带
+  local: tinymce-custom-colors-forecolor: tinymce自带
 
 ## 音乐盒
-  nowMscSetId: 当前访问的音频合集
-  nowPlayData: 当前播放的音频
-  nowPlaySetData: 当前播放的合集
-  nowPlayVolume: 当前播放的音量
-  nowPlayMode: 当前播放模式，order为顺序循环，random为随机循环，only为单曲循环
-  nowPlayOrder: 当前的随机播放顺序
+  session: nowMscSetId: 当前访问的音频合集
+  session: nowPlayData: 当前播放的音频
+  session: nowPlaySetData: 当前播放的合集
+  session: nowPlayVolume: 当前播放的音量
+  session: nowPlayMode: 当前播放模式，order为顺序循环，random为随机循环，only为单曲循环
+  session: nowPlayOrder: 当前的随机播放顺序
