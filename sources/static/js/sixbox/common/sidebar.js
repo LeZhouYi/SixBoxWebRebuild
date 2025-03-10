@@ -26,7 +26,7 @@ function initSidebar(nowPage, contentId, sidebarId = "side_bar_container", overl
         });
     }
     /*初始设置为展示状态*/
-    checkLocalDefault("isShowSidebar", "1");
+    checkSessionDefault("isShowSidebar", "1");
     updateSidebar(contentId, sidebarId, overlayId);
 }
 
@@ -35,7 +35,7 @@ function updateSidebar(contentId, sidebarId = "side_bar_container", overlayId = 
     let contentElement = document.getElementById(contentId);
     let overlayElement = document.getElementById(overlayId);
     let sidebarElement = document.getElementById(sidebarId);
-    let isShowSidebar = localStorage.getItem("isShowSidebar");
+    let isShowSidebar = sessionStorage.getItem("isShowSidebar");
     if (!contentElement || !overlayElement || !sidebarElement || !isShowSidebar) {
         return;
     }
@@ -99,10 +99,10 @@ function bindSidebarEvent(controlId, contentId, sidebarId = "side_bar_container"
 
 function reverseIsShowSidebar() {
     /*反转是否显示/隐藏侧边栏*/
-    if (localStorage.getItem("isShowSidebar") === "1") {
-        localStorage.setItem("isShowSidebar", "0");
+    if (sessionStorage.getItem("isShowSidebar") === "1") {
+        sessionStorage.setItem("isShowSidebar", "0");
     } else {
-        localStorage.setItem("isShowSidebar", "1");
+        sessionStorage.setItem("isShowSidebar", "1");
     }
 }
 
@@ -115,7 +115,7 @@ function onSidebarResize(contentId, sidebarId = "side_bar_container", overlayId 
         return;
     }
     if(!isInClientWidth(0,SideBarWidth)){
-        localStorage.setItem("isShowSidebar", "0");
+        sessionStorage.setItem("isShowSidebar", "0");
         updateSidebar(contentId, sidebarId, overlayId);
     }
 }

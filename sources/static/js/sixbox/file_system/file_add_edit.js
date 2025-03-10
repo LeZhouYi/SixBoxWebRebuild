@@ -9,7 +9,7 @@ callElement("file_add_pop_button", element=>{
         hiddenFileMenu();
         let fileAddContent = document.getElementById("file_add_content");
         displayElementById("file_add_popup_overlay", function () {
-            let nowFolderId = localStorage.getItem("nowFolderId");
+            let nowFolderId = sessionStorage.getItem("nowFolderId");
             loadFolderSelect("file_add_folder_select", nowFolderId);
             loadFolderSelect("folder_add_folder_select", nowFolderId);
         })
@@ -170,7 +170,7 @@ callElement("file_edit_form", element=>{
             name: document.getElementById("file_edit_name").value,
             parentId: document.getElementById("file_edit_folder_select").value
         };
-        let nowControlData = parseLocalJson("nowControlData");
+        let nowControlData = parseSessionJson("nowControlData");
         if (nowControlData.type === "0") {
             putJsonWithAuth(`/folders/${nowControlData.id}`, formData).then(data => {
                 displayMessage(data.message);

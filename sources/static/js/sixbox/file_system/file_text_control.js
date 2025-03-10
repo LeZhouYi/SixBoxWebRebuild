@@ -7,7 +7,7 @@ callElement("text_edit_button", editElement=>{
     editElement.addEventListener("click", function(event){
         try{
             let spinner = createSpinner("text_display_button_panel");
-            let fileId = localStorage.getItem("nowDisplayId");
+            let fileId = sessionStorage.getItem("nowDisplayId");
             onPopupEditText(fileId, function(){
                 hiddenElementById("text_display_popup_overlay");
                 spinner.remove();
@@ -51,7 +51,7 @@ callElement("text_add_form", element=>{
                     spinner?.remove();
                 });
             }else{
-                let nowControlData = parseLocalJson("nowControlData");
+                let nowControlData = parseSessionJson("nowControlData");
                 putJsonWithAuth(`/texts/${nowControlData.id}`, formData).then(data => {
                     displayMessage(data.message);
                     hiddenElementById("text_add_popup_overlay");
@@ -91,7 +91,7 @@ callElement("add_text_button", element=>{
                         titleElement.textContent="新增文本";
                     }
                 });
-                let nowFolderId = localStorage.getItem("nowFolderId");
+                let nowFolderId = sessionStorage.getItem("nowFolderId");
                 loadFolderSelect("text_add_folder_select", nowFolderId);
                 if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")){
                     displayElementById("text_add_popup_overlay");
@@ -187,13 +187,13 @@ function onTextAddFullChange(){
 function bindClickText(fileItem, element, fileData){
     /*绑定点击富文本事件*/
     element.addEventListener("click", function(event){
-        localStorage.setItem("nowDisplayId", fileData.id);
-        localStorage.setItem("nowControlData", JSON.stringify(fileData));
+        sessionStorage.setItem("nowDisplayId", fileData.id);
+        sessionStorage.setItem("nowControlData", JSON.stringify(fileData));
         callElement("text_display_mce_field", async function(fieldElement){
             let tinymceElement = fieldElement.nextElementSibling;
             let spinner = createSpinnerByElement(fileItem, "spin_panel_light");
             try{
-                let fileId = localStorage.getItem("nowDisplayId");
+                let fileId = sessionStorage.getItem("nowDisplayId");
                 let textData = await getJsonWithAuth(`/texts/${fileId}`);
                 callElement("text_display_name", nameElement=>{
                     text_display_name.value = textData.name;
@@ -295,7 +295,7 @@ function onPopupEditText(textId, callback){
             callElement("text_add_name", nameElement=>{
                 nameElement.value = textData.name;
             });
-            let nowControlData = parseLocalJson("nowControlData");
+            let nowControlData = parseSessionJson("nowControlData");
             loadFolderSelect("text_add_folder_select", nowControlData.parentId);
             if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")){
                 displayElementById("text_add_popup_overlay");

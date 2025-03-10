@@ -6,7 +6,7 @@ function setTotalPage(total, textId = "page_text_id", nowLimit = "10") {
         totalPage = 1;
     }
     callElement(textId, textElement=>{
-        localStorage.setItem("nowTotalPage", String(totalPage));
+        sessionStorage.setItem("nowTotalPage", String(totalPage));
         textElement.textContent = `页/共${totalPage}页`;
     });
 }

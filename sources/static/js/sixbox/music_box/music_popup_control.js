@@ -9,7 +9,7 @@ function addClickMusicControl(element, data){
             displayElementById("music_control_overlay");
             adjustRelativeLDPopup("music_control_content", event.pageX, event.pageY);
             addObserveResizeHiddenById("music_control_overlay");
-            localStorage.setItem("nowControlData", JSON.stringify(data));
+            sessionStorage.setItem("nowControlData", JSON.stringify(data));
         });
     }
 }

@@ -3,19 +3,19 @@ var nowMusicPlayer = null; //底边栏播放器
 function bindClickMusicItem(element, musicData, setData){
     /*绑定点击元素Item*/
     element.addEventListener("click", function(event){
-        localStorage.setItem("nowPlayData", JSON.stringify(musicData));
-        localStorage.setItem("nowPlaySetData", JSON.stringify(setData));
+        sessionStorage.setItem("nowPlayData", JSON.stringify(musicData));
+        sessionStorage.setItem("nowPlaySetData", JSON.stringify(setData));
         playMusic();
     });
 }
 
 function playMusic(){
     /*播放音乐*/
-    let nowPlaySetData = parseLocalJson("nowPlaySetData");
+    let nowPlaySetData = parseSessionJson("nowPlaySetData");
     if (!nowPlaySetData || nowPlaySetData.contents.length < 1){
         return;
     }
-    let nowPlayData = parseLocalJson("nowPlayData");
+    let nowPlayData = parseSessionJson("nowPlayData");
     if (!nowPlayData || !isInSet(nowPlaySetData.contents, nowPlayData)){
         return;
     }
@@ -36,7 +36,7 @@ function playMusic(){
 
 function onEndMusic(){
     /*歌曲播放完成事件*/
-    let nowPlaySetData = parseLocalJson("nowPlaySetData");
+    let nowPlaySetData = parseSessionJson("nowPlaySetData");
     if (!nowPlaySetData || nowPlaySetData.contents.length < 1){
         /*结束播放*/
         callElement("music_bar_play_button", element=>{
@@ -44,7 +44,7 @@ function onEndMusic(){
         });
         return;
     }
-    let nowPlayData = parseLocalJson("nowPlayData");
+    let nowPlayData = parseSessionJson("nowPlayData");
     if (!nowPlayData || !isInSet(nowPlaySetData.contents, nowPlayData)){
         /*结束播放*/
         callElement("music_bar_play_button", element=>{
@@ -52,7 +52,7 @@ function onEndMusic(){
         });
         return;
     }
-    let nowPlayMode = localStorage.getItem("nowPlayMode");
+    let nowPlayMode = sessionStorage.getItem("nowPlayMode");
     if (nowPlayMode === "only"){
         /*单曲循环*/
         if (!nowMusicPlayer){
@@ -60,16 +60,16 @@ function onEndMusic(){
         }
     }else if (nowPlayMode === "random"){
         /*随机播放*/
-        let nowPlayOrder = parseLocalJson("nowPlayOrder");
+        let nowPlayOrder = parseSessionJson("nowPlayOrder");
         if (!nowPlayOrder || nowPlayOrder.length !== nowPlaySetData.contents.length || !isInSet(nowPlayOrder, nowPlayData)){
             nowPlayOrder = shuffleArray(nowPlaySetData.contents);
-            localStorage.setItem("nowPlayOrder", JSON.stringify(nowPlayOrder));
+            sessionStorage.setItem("nowPlayOrder", JSON.stringify(nowPlayOrder));
         }
-        localStorage.setItem("nowPlayData", JSON.stringify(getNextMusic(nowPlayOrder, nowPlayData)));
+        sessionStorage.setItem("nowPlayData", JSON.stringify(getNextMusic(nowPlayOrder, nowPlayData)));
         playMusic();
     }else{
         /*顺序播放*/
-        localStorage.setItem("nowPlayData", JSON.stringify(getNextMusic(nowPlaySetData.contents, nowPlayData)));
+        sessionStorage.setItem("nowPlayData", JSON.stringify(getNextMusic(nowPlaySetData.contents, nowPlayData)));
         playMusic();
     }
 }
@@ -91,7 +91,7 @@ function isInSet(setData, nowPlayData){
 
 function onPlayMusic(){
     /*点击播放事件*/
-    let nowPlayData = parseLocalJson("nowPlayData");
+    let nowPlayData = parseSessionJson("nowPlayData");
     if (!nowMusicPlayer || !nowPlayData){
         return;
     }
@@ -113,14 +113,14 @@ callElement("music_bar_play_button", element=>{
     /*点击播放暂停按钮事件*/
     element.addEventListener("click", async function(event){
         if (!nowMusicPlayer){
-            let nowPlaySetData = parseLocalJson("nowPlaySetData");
+            let nowPlaySetData = parseSessionJson("nowPlaySetData");
             if (!nowPlaySetData){
                 try{
-                    let nowMscSetId = localStorage.getItem("nowMscSetId");
+                    let nowMscSetId = sessionStorage.getItem("nowMscSetId");
                     let data = await getJsonWithAuth(`/musicSets/${nowMscSetId}?_page=0&_limit=999`);
-                    localStorage.setItem("nowPlaySetData", JSON.stringify(data));
+                    sessionStorage.setItem("nowPlaySetData", JSON.stringify(data));
                     let musicData = randListItem(data.contents);
-                    localStorage.setItem("nowPlayData", JSON.stringify(musicData));
+                    sessionStorage.setItem("nowPlayData", JSON.stringify(musicData));
                 }catch(error){
                     displayError(error);
                 }
@@ -204,15 +204,15 @@ callElement("music_bar_play_progress", element=>{
 callElement("music_bar_order_button", element=>{
     element.addEventListener("click", function(event){
         /*点击切换播放模式*/
-        let nowPlayMode = localStorage.getItem("nowPlayMode");
+        let nowPlayMode = sessionStorage.getItem("nowPlayMode");
         if (nowPlayMode === "order"){
-            localStorage.setItem("nowPlayMode", "random");
+            sessionStorage.setItem("nowPlayMode", "random");
             event.target.src = "/static/icons/random_order.png";
         } else if (nowPlayMode === "random"){
-            localStorage.setItem("nowPlayMode", "only");
+            sessionStorage.setItem("nowPlayMode", "only");
             event.target.src = "/static/icons/only_play.png";
         } else{
-            localStorage.setItem("nowPlayMode", "order");
+            sessionStorage.setItem("nowPlayMode", "order");
             event.target.src = "/static/icons/order_play.png";
         }
     });
@@ -221,29 +221,29 @@ callElement("music_bar_order_button", element=>{
 callElement("music_bar_rewind_button", element=>{
     element.addEventListener("click", function(event){
         /*点击上一首*/
-        let nowPlaySetData = parseLocalJson("nowPlaySetData");
+        let nowPlaySetData = parseSessionJson("nowPlaySetData");
         if (!nowPlaySetData || nowPlaySetData.contents.length < 1){
             playMusic();
             return;
         }
-        let nowPlayData = parseLocalJson("nowPlayData");
+        let nowPlayData = parseSessionJson("nowPlayData");
         if (!nowPlayData || !isInSet(nowPlaySetData.contents, nowPlayData)){
             playMusic();
             return;
         }
-        let nowPlayMode = localStorage.getItem("nowPlayMode");
+        let nowPlayMode = sessionStorage.getItem("nowPlayMode");
         if (nowPlayMode === "random"){
             /*随机播放*/
-            let nowPlayOrder = parseLocalJson("nowPlayOrder");
+            let nowPlayOrder = parseSessionJson("nowPlayOrder");
             if (!nowPlayOrder || nowPlayOrder.length !== nowPlaySetData.contents.length || !isInSet(nowPlayOrder, nowPlayData)){
                 nowPlayOrder = shuffleArray(nowPlaySetData.contents);
-                localStorage.setItem("nowPlayOrder", JSON.stringify(nowPlayOrder));
+                sessionStorage.setItem("nowPlayOrder", JSON.stringify(nowPlayOrder));
             }
-            localStorage.setItem("nowPlayData", JSON.stringify(getBeforeMusic(nowPlayOrder, nowPlayData)));
+            sessionStorage.setItem("nowPlayData", JSON.stringify(getBeforeMusic(nowPlayOrder, nowPlayData)));
             playMusic();
         }else{
             /*顺序播放*/
-            localStorage.setItem("nowPlayData", JSON.stringify(getBeforeMusic(nowPlaySetData.contents, nowPlayData)));
+            sessionStorage.setItem("nowPlayData", JSON.stringify(getBeforeMusic(nowPlaySetData.contents, nowPlayData)));
             playMusic();
         }
     });
@@ -252,29 +252,29 @@ callElement("music_bar_rewind_button", element=>{
 callElement("music_bar_forward_button", element=>{
     element.addEventListener("click", function(event){
         /*点击下一首*/
-        let nowPlaySetData = parseLocalJson("nowPlaySetData");
+        let nowPlaySetData = parseSessionJson("nowPlaySetData");
         if (!nowPlaySetData || nowPlaySetData.contents.length < 1){
             playMusic();
             return;
         }
-        let nowPlayData = parseLocalJson("nowPlayData");
+        let nowPlayData = parseSessionJson("nowPlayData");
         if (!nowPlayData || !isInSet(nowPlaySetData.contents, nowPlayData)){
             playMusic();
             return;
         }
-        let nowPlayMode = localStorage.getItem("nowPlayMode");
+        let nowPlayMode = sessionStorage.getItem("nowPlayMode");
         if (nowPlayMode === "random"){
             /*随机播放*/
-            let nowPlayOrder = parseLocalJson("nowPlayOrder");
+            let nowPlayOrder = parseSessionJson("nowPlayOrder");
             if (!nowPlayOrder || nowPlayOrder.length !== nowPlaySetData.contents.length || !isInSet(nowPlayOrder, nowPlayData)){
                 nowPlayOrder = shuffleArray(nowPlaySetData.contents);
-                localStorage.setItem("nowPlayOrder", JSON.stringify(nowPlayOrder));
+                sessionStorage.setItem("nowPlayOrder", JSON.stringify(nowPlayOrder));
             }
-            localStorage.setItem("nowPlayData", JSON.stringify(getNextMusic(nowPlayOrder, nowPlayData)));
+            sessionStorage.setItem("nowPlayData", JSON.stringify(getNextMusic(nowPlayOrder, nowPlayData)));
             playMusic();
         }else{
             /*顺序播放*/
-            localStorage.setItem("nowPlayData", JSON.stringify(getNextMusic(nowPlaySetData.contents, nowPlayData)));
+            sessionStorage.setItem("nowPlayData", JSON.stringify(getNextMusic(nowPlaySetData.contents, nowPlayData)));
             playMusic();
         }
     });

@@ -28,7 +28,7 @@ function initMusicBar(){
         element.value = nowPlayVolume;
     });
     callElement("music_bar_order_button", element=>{
-        let nowPlayMode = localStorage.getItem("nowPlayMode");
+        let nowPlayMode = sessionStorage.getItem("nowPlayMode");
         if (nowPlayMode === "order"){
             element.src = "/static/icons/order_play.png";
         } else if (nowPlayMode === "random"){
@@ -46,15 +46,15 @@ function checkLocalStorage() {
     if (accessToken === null || refreshToken === null) {
         window.location.href = "/login.html";
     }
-    checkLocalDefault("nowMscSetId", "1");
+    checkSessionDefault("nowMscSetId", "1");
     checkLocalDefault("nowPlayVolume", "50");
-    checkLocalDefault("nowPlayMode", "order");
+    checkSessionDefault("nowPlayMode", "order");
 }
 
 async function updateMusicList(){
     /*更新并显示当前音频合集*/
     try{
-        let nowMscSetId = localStorage.getItem("nowMscSetId");
+        let nowMscSetId = sessionStorage.getItem("nowMscSetId");
         let data = await getJsonWithAuth(`/musicSets/${nowMscSetId}?_page=0&_limit=999`);
 
         callElement("music_control_title_text", titleElement=>{

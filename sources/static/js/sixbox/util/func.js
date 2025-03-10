@@ -39,10 +39,34 @@ function loadUrlParamInLocal(paramArray) {
     });
 }
 
+function loadUrlParamInSession(paramArray) {
+    /*读取特定参数并将读取到的值写入sessionStorage*/
+    if (!Array.isArray(paramArray)) {
+        return;
+    }
+    let queryString = window.location.search;
+    let params = new URLSearchParams(queryString);
+    paramArray.forEach(element => {
+        if (params.has(element)) {
+            let value = params.get(element);
+            if (value) {
+                sessionStorage.setItem(element, value);
+            }
+        }
+    });
+}
+
 function checkLocalDefault(itemKey, defaultValue) {
     /*检查LocalStorage,若不存在数据则设置默认值*/
     if (localStorage.getItem(itemKey) === null) {
         localStorage.setItem(itemKey, defaultValue);
+    }
+}
+
+function checkSessionDefault(itemKey, defaultValue) {
+    /*检查LocalStorage,若不存在数据则设置默认值*/
+    if (sessionStorage.getItem(itemKey) === null) {
+        sessionStorage.setItem(itemKey, defaultValue);
     }
 }
 
@@ -138,6 +162,15 @@ function getFullDomain(){
 function parseLocalJson(itemName){
     /*获取并解析数据*/
     let data = localStorage.getItem(itemName);
+    if (!data){
+        return null;
+    }
+    return JSON.parse(data);
+}
+
+function parseSessionJson(itemName){
+    /*获取并解析数据*/
+    let data = sessionStorage.getItem(itemName);
     if (!data){
         return null;
     }

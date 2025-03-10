@@ -68,7 +68,7 @@ callElement("music_edit_button", element=>{
     element.addEventListener("click", function(event){
         hiddenElementById("music_control_overlay");
         displayElementById("music_edit_overlay");
-        let nowData = parseLocalJson("nowControlData");
+        let nowData = parseSessionJson("nowControlData");
         callElement("music_edit_name", nameElement=>{
             nameElement.value = nowData.name;
         });
@@ -101,7 +101,7 @@ callElement("music_edit_form", element=>{
             album: document.getElementById("music_edit_album").value,
             tags: document.getElementById("music_edit_tags").value
         };
-        let nowControlData = parseLocalJson("nowControlData");
+        let nowControlData = parseSessionJson("nowControlData");
         putJsonWithAuth(`/musics/${nowControlData.id}`, formData).then(data => {
             displayMessage(data.message);
             hiddenElementById("music_edit_overlay");
@@ -132,7 +132,7 @@ callElement("cancel_popup_button", element=>{
 callElement("confirm_popup_button", element=>{
     /*确认删除*/
     element.addEventListener("click", function(event){
-        let nowControlData = parseLocalJson("nowControlData");
+        let nowControlData = parseSessionJson("nowControlData");
         let deleteUrl = `/musics/${nowControlData.id}`;
         deleteJsonWithAuth(deleteUrl).then(data => {
             displayMessage(data.message);

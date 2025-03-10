@@ -33,8 +33,8 @@ callElement("page_input_id", element=>{
 callElement("page_select_limit", element=>{
 	element.addEventListener("change", function (event) {
         /*更改每页项数*/
-        localStorage.setItem("nowPage", "1");
-        localStorage.setItem("nowLimit", event.target.value);
+        sessionStorage.setItem("nowPage", "1");
+        sessionStorage.setItem("nowLimit", event.target.value);
         updateFileList();
     });
 });
@@ -42,9 +42,9 @@ callElement("page_select_limit", element=>{
 callElement("last_page_button", element=>{
 	element.addEventListener("click", function (event) {
         /*点击上一页*/
-        let nowPage = parseInt(localStorage.getItem("nowPage"));
+        let nowPage = parseInt(sessionStorage.getItem("nowPage"));
         if (nowPage > 1) {
-            localStorage.setItem("nowPage", String(nowPage - 1));
+            sessionStorage.setItem("nowPage", String(nowPage - 1));
             updateFileList();
         }
     });
@@ -53,10 +53,10 @@ callElement("last_page_button", element=>{
 callElement("next_page_button", element=>{
 	element.addEventListener("click", function (event) {
         /*点击下一页*/
-        let nowPage = parseInt(localStorage.getItem("nowPage"));
-        let nowTotalPage = parseInt(localStorage.getItem("nowTotalPage"));
+        let nowPage = parseInt(sessionStorage.getItem("nowPage"));
+        let nowTotalPage = parseInt(sessionStorage.getItem("nowTotalPage"));
         if (nowPage <= nowTotalPage - 1) {
-            localStorage.setItem("nowPage", String(nowPage + 1));
+            sessionStorage.setItem("nowPage", String(nowPage + 1));
             updateFileList();
         }
     });

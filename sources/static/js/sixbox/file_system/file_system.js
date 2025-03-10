@@ -73,13 +73,13 @@ callElement("all_file_button", element=>{
 	element.addEventListener("click", function (event) {
         /*点击所有文件*/
         hiddenFileMenu();
-        let nowFolderId = localStorage.getItem("nowFolderId");
-        let nowPage = localStorage.getItem("nowPage");
+        let nowFolderId = sessionStorage.getItem("nowFolderId");
+        let nowPage = sessionStorage.getItem("nowPage");
         let searchInput = document.getElementById("file_search_input");
         callElement("file_search_input", searchInput=>{
             if (nowFolderId !== "1" || nowPage !== "1" || searchInput.value !== "") {
-                localStorage.setItem("nowFolderId", "1");
-                localStorage.setItem("nowPage", "1");
+                sessionStorage.setItem("nowFolderId", "1");
+                sessionStorage.setItem("nowPage", "1");
                 searchInput.value = "";
                 updateFileList();
             }
@@ -112,7 +112,7 @@ function updatePageInput(event) {
     if (value < 1) {
         value = 1;
     }
-    let nowTotalPage = parseInt(localStorage.getItem("nowTotalPage"));
+    let nowTotalPage = parseInt(sessionStorage.getItem("nowTotalPage"));
     if (value > nowTotalPage) {
         value = nowTotalPage;
     }
@@ -120,17 +120,17 @@ function updatePageInput(event) {
     let elementWidth = 44 + (String(value).length - 1) * 10;
     event.target.style.width = elementWidth + "px";
 
-    let nowPage = parseInt(localStorage.getItem("nowPage"));
+    let nowPage = parseInt(sessionStorage.getItem("nowPage"));
     if (nowPage !== value) {
-        localStorage.setItem("nowPage", String(value));
+        sessionStorage.setItem("nowPage", String(value));
         updateFileList();
     }
 }
 
 async function updateFileList() {
     /*更新文件列表*/
-    let nowPage = localStorage.getItem("nowPage");
-    let nowLimit = localStorage.getItem("nowLimit");
+    let nowPage = sessionStorage.getItem("nowPage");
+    let nowLimit = sessionStorage.getItem("nowLimit");
     setPageLimit("page_select_limit", nowLimit);
     setNowPage("page_input_id", nowPage);
     let pageIndex = parseInt(nowPage) - 1;
@@ -158,7 +158,7 @@ async function updateFileList() {
     }
 
     try {
-        let nowFolderId = localStorage.getItem("nowFolderId");
+        let nowFolderId = sessionStorage.getItem("nowFolderId");
         let data = await getJsonWithAuth(`/folders/${nowFolderId}?_page=${pageIndex}&_limit=${nowLimit}`);
         let contents = data.contents;
         callElement("file_table_body", fileListTable=>{
@@ -178,8 +178,8 @@ async function updateFileList() {
     }
     catch (error) {
         displayError(error);
-        if (localStorage.getItem("nowFolderId") !== "1") {
-            localStorage.setItem("nowFolderId", "1")
+        if (sessionStorage.getItem("nowFolderId") !== "1") {
+            sessionStorage.setItem("nowFolderId", "1")
             updateFileList();
         }
         spinner?.remove();
@@ -293,7 +293,7 @@ function createFileItem(fileData) {
 function bindClickFolder(element, fileData) {
     /*绑定文件夹点击事件*/
     element.addEventListener("click", function (event) {
-        localStorage.setItem("nowFolderId", fileData.id);
+        sessionStorage.setItem("nowFolderId", fileData.id);
         callElement("file_search_input", element=>{
             element.value = "";
         });
@@ -327,12 +327,12 @@ function checkLocalStorage() {
         window.location.href = "/login.html";
     }
 
-    loadUrlParamInLocal(["nowFolderId"]);
-    checkLocalDefault("nowFolderId", "1");
-    checkLocalDefault("nowLimit", "20");
+    loadUrlParamInSession(["nowFolderId"]);
+    checkSessionDefault("nowFolderId", "1");
+    checkSessionDefault("nowLimit", "20");
 
-    localStorage.setItem("nowPage", "1");
-    localStorage.setItem("nowTotalPage", "1");
+    sessionStorage.setItem("nowPage", "1");
+    sessionStorage.setItem("nowTotalPage", "1");
 }
 
 function addFilePathElement(parentId, folderName, folderId) {
@@ -342,12 +342,12 @@ function addFilePathElement(parentId, folderName, folderId) {
         folderElement.textContent = folderName;
         folderElement.classList.add("file_path_text", "clickable");
         folderElement.addEventListener("click", function (event) {
-            let nowFolderId = localStorage.getItem("nowFolderId");
+            let nowFolderId = sessionStorage.getItem("nowFolderId");
             let searchInput = document.getElementById("file_search_input");
             if (nowFolderId !== folderId || searchInput.value !== "") {
-                localStorage.setItem("nowFolderId", folderId);
+                sessionStorage.setItem("nowFolderId", folderId);
                 searchInput.value = "";
-                localStorage.setItem("nowPage", "1");
+                sessionStorage.setItem("nowPage", "1");
                 updateFileList();
             }
         });
