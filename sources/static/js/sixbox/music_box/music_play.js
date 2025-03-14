@@ -55,7 +55,7 @@ function onEndMusic(){
     let nowPlayMode = sessionStorage.getItem("nowPlayMode");
     if (nowPlayMode === "only"){
         /*单曲循环*/
-        if (!nowMusicPlayer){
+        if (nowMusicPlayer){
             nowMusicPlayer.play();
         }
     }else if (nowPlayMode === "random"){

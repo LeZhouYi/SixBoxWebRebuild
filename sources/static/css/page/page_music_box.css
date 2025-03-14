@@ -361,3 +361,28 @@
     text-overflow: ellipsis;
     margin-right: var(--element-margin);
 }
+.music_item_text{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: var(--main-text-size);
+    color: var(--text-main-color);
+}
+.music_item_tags_div{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: var(--main-text-size);
+    color: var(--text-main-color);
+}
+
+@media (max-width: 999px), (max-device-width: 999px){
+    /*登录页面*/
+    .music_bar_volume{
+        display: none;
+    }
+}
