@@ -37,6 +37,7 @@
     height: 48px;
     display: grid;
     align-items: center;
+    justify-content: center;
     box-sizing: border-box;
 }
 .music_play_image{
@@ -268,6 +269,10 @@
     overflow-y: auto;
     margin-inline-start: 0;
 }
+.music_content_table::-webkit-scrollbar{
+    /*侧边栏列表栏，隐藏滚动条*/
+    width: 0px;
+}
 .music_content_row{
     width: 100%;
     height: 56px;
@@ -381,8 +386,130 @@
 }
 
 @media (max-width: 999px), (max-device-width: 999px){
-    /*登录页面*/
-    .music_bar_volume{
+    .music_play_volume_bar{
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+    .music_play_volume_bar>*:last-child{
         display: none;
     }
+    .music_play_bar_content{
+        display: grid;
+        grid-template-columns: 48px 1fr repeat(5,48px) 2fr 48px;
+    }
+    .music_main_container{
+        padding-left: var(--element-margin);
+        padding-right: var(--element-margin);
+        padding-bottom: var(--element-margin);
+    }
+    .music_content_panel{
+        grid-gap: var(--element-margin);
+    }
+    .music_play_bar{
+        padding-left: var(--element-margin);
+        padding-right: var(--element-margin);
+    }
+    .music_box_container{
+        grid-template-rows: calc(110px * .75) 1fr 80px;
+    }
 }
+
+@media (min-width: 951px), (min-device-width: 951px){
+    .music_control_panel>*:nth-child(1){
+        display: none;
+    }
+    .music_control_panel{
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+@media (max-width: 950px), (max-device-width: 950px){
+    .music_collect_menu{
+        display: none;
+    }
+    .music_main_container{
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 850px), (max-device-width: 850px){
+    .music_play_progress_bar{
+        display: none;
+    }
+    .music_play_volume_bar>*:last-child{
+        display: block;
+    }
+    .music_play_volume_bar{
+        display: grid;
+        grid-template-columns: 48px 1fr;
+    }
+    .music_play_bar_content{
+        display: grid;
+        grid-template-columns: 48px 1fr repeat(5,48px) 1fr;
+    }
+}
+
+@media (max-width: 730px), (max-device-width: 730px){
+    .music_play_volume_bar{
+        display: none;
+    }
+    .music_play_bar_content{
+        display: grid;
+        grid-template-columns: 48px 1fr repeat(5,48px);
+    }
+}
+
+@media (max-width: 680px), (max-device-width: 680px){
+    .music_content>*:nth-last-child(2){
+        display: none;
+    }
+    .music_content{
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 50px;
+    }
+    .music_content_header>*:nth-last-child(2){
+        display: none;
+    }
+    .music_content_header{
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 50px;
+    }
+}
+
+@media (max-width: 480px), (max-device-width: 480px){
+    .music_content>*:nth-last-child(3){
+        display: none;
+    }
+    .music_content{
+        display: grid;
+        grid-template-columns: 2fr 1fr 50px;
+    }
+    .music_content_header>*:nth-last-child(3){
+        display: none;
+    }
+    .music_content_header{
+        display: grid;
+        grid-template-columns: 2fr 1fr 50px;
+    }
+    .music_play_bar_content{
+        display: grid;
+        grid-template-columns: repeat(5,1fr);
+    }
+    .music_play_bar_content>*:nth-child(1), .music_play_bar_content>*:nth-child(2){
+        display: none;
+    }
+    .music_box_container{
+        display: grid;
+        grid-template-rows: 110px 1fr 64px;
+    }
+    .music_play_image{
+        width: 36px;
+        height: 36px;
+    }
+    .music_play_bar{
+
+    }
+}
+
