@@ -47,7 +47,7 @@ function checkLocalStorage() {
         window.location.href = "/login.html";
     }
     checkSessionDefault("nowMscSetId", "1");
-    checkLocalDefault("nowPlayVolume", "50");
+    checkLocalDefault("nowPlayVolume", "10");
     checkSessionDefault("nowPlayMode", "order");
 }
 

@@ -90,4 +90,6 @@ def is_default_folder(folder_id: str) -> bool:
 
 def get_real_filepath(filepath: Union[PathLike | str]) -> Union[PathLike | str]:
     """获取真实路径"""
-    return os.path.join(get_config_path("file_save_path"), str(filepath).split("/")[-1])
+    filepath = str(filepath).split("/")[-1]
+    filepath = filepath.split("\\")[-1]
+    return os.path.join(get_config_path("file_save_path"), filepath)

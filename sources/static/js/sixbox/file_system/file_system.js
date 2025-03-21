@@ -328,6 +328,7 @@ function checkLocalStorage() {
     }
 
     loadUrlParamInSession(["nowFolderId"]);
+    checkLocalDefault("nowPlayVolume", "10");
     checkSessionDefault("nowFolderId", "1");
     checkSessionDefault("nowLimit", "20");
 

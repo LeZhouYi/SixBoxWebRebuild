@@ -94,16 +94,26 @@ function initVideo(videoId, fileId, fileType, callback){
     let accessToken = localStorage.getItem("accessToken");
     let fullDomain = getFullDomain();
     let videoUrl = `${fullDomain}/api/v1/videos/${fileId}/play?token=${accessToken}`;
-    videojs(videoId, {
+    let nowPlayVolume = localStorage.getItem("nowPlayVolume");
+    nowPlayVolume = nowPlayVolume/100;
+    let player = videojs(videoId, {
         controls: true,
         autoplay: false,
         fluid: false,
-        preload: false
+        preload: false,
+        volume: nowPlayVolume,
+        muted: false
     }).ready(function(){
         this.src({
             src: videoUrl,
             type: fileType
         });
         callback?.();
+    });
+    player.on("volumechange", function(){
+        if (!this.muted()){
+            let currentVolume = Math.round(this.volume()*100);
+            localStorage.setItem("nowPlayVolume", currentVolume);
+        }
     });
 }

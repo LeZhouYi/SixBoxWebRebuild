@@ -6,7 +6,7 @@
         "4": ["mp4","mov"],
         "5": ["html"],
         "code": ["py","jar"],
-        "text": ["yaml","xlsx","xls","docx","pdf","txt"],
+        "text": ["yaml","xlsx","xls","docx","pdf","txt","csv"],
         "app": ["exe","dmg"]
     },
     "default_folders": [
