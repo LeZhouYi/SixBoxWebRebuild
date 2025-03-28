@@ -1,0 +1,975 @@
+{
+	"info": {
+		"_postman_id": "27df1957-c7bd-4301-afd2-00cd6366d343",
+		"name": "SixBoxRebuild",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34501361",
+		"_collection_link": "https://grey-shuttle-619082.postman.co/workspace/Team-Workspace~9487cf2c-06bb-4953-8de2-ad09c1ef12de/collection/34501361-27df1957-c7bd-4301-afd2-00cd6366d343?action=share&source=collection_link&creator=34501361"
+	},
+	"item": [
+		{
+			"name": "安全",
+			"item": [
+				{
+					"name": "登录",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"accessToken\",jsonData.accessToken);",
+									"pm.collectionVariables.set(\"refreshToken\",jsonData.refreshToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account\": \"admin\",\n    \"password\": \"1234567a\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/sessions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "登出",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/sessions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "刷新Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"accessToken\",jsonData.accessToken);",
+									"pm.environment.set(\"refreshToken\",jsonData.refreshToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "文件",
+			"item": [
+				{
+					"name": "下载文件",
+					"item": [
+						{
+							"name": "下载静态文件",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{web_url}}/sources?filename=fonts/poppins/Poppins-Black.ttf",
+									"host": [
+										"{{web_url}}"
+									],
+									"path": [
+										"sources"
+									],
+									"query": [
+										{
+											"key": "filename",
+											"value": "fonts/poppins/Poppins-Black.ttf"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "下载文件",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/files/1731492349429/download",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"files",
+										"1731492349429",
+										"download"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "下载文件-参数形式",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/files/1731492349429/download?token={{accessToken}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"files",
+										"1731492349429",
+										"download"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "获取详情",
+					"item": [
+						{
+							"name": "获取相邻文件",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/files/1731492169397/near",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"files",
+										"1731492169397",
+										"near"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取文件夹内容",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/folders/1?_page=0&_limit=10",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"folders",
+										"1"
+									],
+									"query": [
+										{
+											"key": "type",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "_page",
+											"value": "0"
+										},
+										{
+											"key": "_limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "新增文件",
+					"item": [
+						{
+							"name": "新增文件",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "test2",
+											"type": "text"
+										},
+										{
+											"key": "parentId",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/Users/lz2021/Desktop/src/4e86101ab051f819ef7d756e9cb44aed2f73e7d4.jpeg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/files",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"files"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "新增文件夹",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"test\",\n    \"parentId\": \"1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/folders",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"folders"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "编辑文件",
+					"item": [
+						{
+							"name": "编辑文件夹",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"tset333\",\n    \"parentId\": \"1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/folders/1731496462740",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"folders",
+										"1731496462740"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "编辑文件",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"tset333\",\n    \"parentId\": \"1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/files/1732167271303",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"files",
+										"1732167271303"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "删除文件",
+					"item": [
+						{
+							"name": "删除文件",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/files/1731492112231",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"files",
+										"1731492112231"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "删除文件夹",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/folders/1731492112231",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"folders",
+										"1731492112231"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "其它功能",
+					"item": [
+						{
+							"name": "搜索文件",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/files?nameLike=test2&_page=0&_limit=10",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"files"
+									],
+									"query": [
+										{
+											"key": "nameLike",
+											"value": "test2"
+										},
+										{
+											"key": "_page",
+											"value": "0"
+										},
+										{
+											"key": "_limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "整理文件",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/filesTidyUp",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"filesTidyUp"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "富文本",
+			"item": [
+				{
+					"name": "新增富文本",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"富文本标题\",\n    \"parentId\": \"1\",\n    \"content\": \"这是一段富文本\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/texts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"texts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取富文本详情",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/texts/1734075112265",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"texts",
+								"1734075112265"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "编辑富文本",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"富文本标题\",\n    \"parentId\": \"1\",\n    \"content\": \"这是一段富文本\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/texts/1734075112265",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"texts",
+								"1734075112265"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "视频",
+			"item": [
+				{
+					"name": "流式播放视频",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/videos/1733812087650/play",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"videos",
+								"1733812087650",
+								"play"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "流式播放视频-参数形式",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/videos/1731492349429/play?token={{accessToken}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"videos",
+								"1731492349429",
+								"play"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "用户",
+			"item": [
+				{
+					"name": "整理用户数据",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/usersTidyUp",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usersTidyUp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "编辑用户",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"background\": \"1733564012256\",\n    \"name\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取自身用户详情",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/userDetail",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"userDetail"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "音乐",
+			"item": [
+				{
+					"name": "合集",
+					"item": [
+						{
+							"name": "获取合集详情",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/musicSets/1?_page=0&_limit=10",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"musicSets",
+										"1"
+									],
+									"query": [
+										{
+											"key": "_page",
+											"value": "0"
+										},
+										{
+											"key": "_limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取合集列表",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/musicSets?_page=0&_limit=999",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"musicSets"
+									],
+									"query": [
+										{
+											"key": "_page",
+											"value": "0"
+										},
+										{
+											"key": "_limit",
+											"value": "999"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "新增合集",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"test\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/musicSets",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"musicSets"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "音频",
+					"item": [
+						{
+							"name": "获取音频",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "编辑音频",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"test\",\n    \"singer\": \"test\",\n    \"album\": \"test\",\n    \"tags\": \"test\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/musics/1736942265730",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"musics",
+										"1736942265730"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "新增音频",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/Users/lz2021/Desktop/六号盒子/data/music/audio/當山みれい-よかった。.mp3"
+										},
+										{
+											"key": "name",
+											"value": "よかった。",
+											"type": "text"
+										},
+										{
+											"key": "singer",
+											"value": "當山みれい",
+											"type": "text"
+										},
+										{
+											"key": "album",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "tags",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "setId",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/musics",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"musics"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{accessToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:5001/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refreshToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "web_url",
+			"value": "http://127.0.0.1:5001",
+			"type": "string"
+		}
+	]
+}

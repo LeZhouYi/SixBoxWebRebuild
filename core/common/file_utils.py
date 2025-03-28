@@ -17,8 +17,9 @@ def get_file_ext(filename: str) -> str:
     :param filename:
     :return:
     """
-    if filename.find(".") > -1:
-        return filename.rsplit(".", 1)[1]
+    file_ext = os.path.splitext(filename)[1]
+    if re.match(r"^.\w+$", file_ext):
+        return file_ext[1:]
     return ""
 
 

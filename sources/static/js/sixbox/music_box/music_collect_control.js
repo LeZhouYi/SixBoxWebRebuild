@@ -1,5 +1,6 @@
 window.addEventListener("load",function () {
-    clickOverlayHidden("msc_collect_add_overlay", "msc_collect_content");
+    clickOverlayHidden("msc_collect_add_overlay", "msc_collect_add_content");
+    clickOverlayHidden("msc_collect_edit_overlay", "msc_collect_edit_content");
 });
 
 callElement("add_collect_button", element=>{
@@ -33,3 +34,81 @@ callElement("msc_collect_add_form", formElement=>{
         });
     });
 });
+
+callElement("edit_music_set_button", element=>{
+    element.addEventListener("click", async function(event){
+        /*点击编辑*/
+        try{
+            let nowMscSetId = sessionStorage.getItem("nowMscSetId");
+            let mscSetData = await getJsonWithAuth(`/musicSets/${nowMscSetId}?_page=0&_limit=10`);
+            callElement("msc_collect_edit_name", inputElement=>{
+                inputElement.value = mscSetData.name;
+            });
+            displayElementById("msc_collect_edit_overlay");
+        }catch(error){
+            displayError(error);
+        }
+    });
+});
+
+callElement("msc_collect_edit_cancel", element=>{
+    element.addEventListener("click", async function(event){
+        /*点击取消编辑*/
+        hiddenElementById("msc_collect_edit_overlay");
+    });
+});
+
+callElement("delete_music_set_button", element=>{
+    element.addEventListener("click", async function(event){
+        /*点击删除合集*/
+        let nowMscSetId = sessionStorage.getItem("nowMscSetId");
+        if(nowMscSetId === "1"){
+            displayError("默认合集不能删除");
+        }else{
+            let nowMscSetId = sessionStorage.getItem("nowMscSetId");
+            sessionStorage.setItem("nowControlData", JSON.stringify({
+                "id": nowMscSetId,
+                "type": "musicSet"
+            }));
+            document.getElementById("confirm_pop_text").textContent = "确认删除？";
+            displayElementById("confirm_popup_overlay");
+        }
+    });
+});
+
+callElement("msc_collect_edit_form", element=>{
+    element.addEventListener("submit", function(event){
+        /*点击编辑合集*/
+        event.preventDefault();
+        let nowMscSetId = sessionStorage.getItem("nowMscSetId");
+        let formData = {
+            name: document.getElementById("msc_collect_edit_name").value
+        };
+        putJsonWithAuth(`/musicSets/${nowMscSetId}`, formData).then(data => {
+            displayMessage(data.message);
+            callElement("music_control_title_text", inputElement=>{
+                inputElement.textContent = formData.name;
+            });
+            hiddenElementById("msc_collect_edit_overlay");
+            updateCollectList();
+        })
+        .catch(error => {
+            displayError(error);
+        });
+    });
+});
+
+function binkClickMenuItem(menuItem, data){
+    /*绑定点击事件*/
+    menuItem.addEventListener("click", function(event){
+        let nowMscSetId = sessionStorage.getItem("nowMscSetId");
+        if (nowMscSetId === data.id) {
+            return;
+        }
+        sessionStorage.setItem("nowMscSetId", data.id);
+        callElement("music_control_title_text", element=>{
+            element.textContent = data.name;
+        });
+        updateMusicList();
+    });
+}

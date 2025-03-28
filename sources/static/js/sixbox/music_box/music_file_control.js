@@ -121,23 +121,3 @@ callElement("music_delete_button", element=>{
         displayElementById("confirm_popup_overlay");
     });
 });
-
-callElement("cancel_popup_button", element=>{
-    /*取消删除*/
-    element.addEventListener("click", function(event){
-        hiddenElementById("confirm_popup_overlay");
-    });
-});
-
-callElement("confirm_popup_button", element=>{
-    /*确认删除*/
-    element.addEventListener("click", function(event){
-        let nowControlData = parseSessionJson("nowControlData");
-        let deleteUrl = `/musics/${nowControlData.id}`;
-        deleteJsonWithAuth(deleteUrl).then(data => {
-            displayMessage(data.message);
-            hiddenElementById("confirm_popup_overlay");
-            updateMusicList();
-        });
-    });
-});

@@ -74,7 +74,10 @@ def get_music_set(set_id: str):
 
     music_set_data = MscSetServer.get_data(set_id)
 
-    music_list = music_set_data["list"]
+    if is_key_str_empty(music_set_data, "list"):
+        music_list = []
+    else:
+        music_list = music_set_data["list"]
     music_set_data["total"] = len(music_list)
     music_list = music_list[page * limit:(page + 1) * limit]
 
@@ -110,6 +113,17 @@ def add_collect():
     MscSetServer.add_data(data)
     return gen_success_response(ReportInfo["006"])
 
+@MusicBoxBp.route(gen_prefix_api("/musicSets/<collect_id>"), methods=["PUT"])
+@token_required
+def edit_collect(collect_id: str):
+    """编辑合集"""
+    input_data = request.json
+    if is_key_str_empty(input_data, "name"):
+        return gen_fail_response(ReportInfo["035"])
+    if not MscSetServer.is_exist(collect_id):
+        return gen_fail_response(ReportInfo["034"])
+    MscSetServer.edit_data(collect_id,input_data)
+    return gen_success_response(ReportInfo["014"])
 
 @MusicBoxBp.route(gen_prefix_api("/musics/<music_id>"), methods=["PUT"])
 @token_required

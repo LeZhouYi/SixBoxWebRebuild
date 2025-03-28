@@ -102,20 +102,31 @@ class MusicSetServer:
     def search_data(self, page: int, limit: int):
         """获取合集列表"""
         with self.thread_lock:
-            data = self.db.all()
+            datas = self.db.all()
             # 计算总数
-            total = len(data)
+            total = len(datas)
             # 分页
             if page is not None and limit is not None:
-                data = data[page * limit:(page + 1) * limit]
-            return data, total
+                datas = datas[page * limit:(page + 1) * limit]
+            for i, data in enumerate(datas):
+                datas[i] = extra_data_by_list(data, ["id", "name"])
+            return datas, total
 
     def add_data(self, data: dict):
         """新增合集"""
         data = extra_data_by_list(data, ["name"])
         data["id"] = route_utils.gen_id()
+        data["list"] = []
         with self.thread_lock:
             self.db.insert(data)
+
+    def edit_data(self, set_id: str, input_data: dict):
+        """编辑合集"""
+        input_data = extra_data_by_list(input_data, ["name"])
+        with self.thread_lock:
+            data = self.db.get(self.query.id == set_id)
+            data.update(input_data)
+            self.db.update(data, self.query.id == set_id)
 
     def add_music(self, set_id: str, music_id: str):
         with self.thread_lock:
