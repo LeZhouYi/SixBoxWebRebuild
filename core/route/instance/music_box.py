@@ -147,6 +147,7 @@ def edit_music(music_id: str):
 
 
 @MusicBoxBp.route(gen_prefix_api("/musics/<music_id>"), methods=["DELETE"])
+@token_required
 def delete_music(music_id: str):
     """删除音频"""
     if is_str_empty(music_id) or not MscServer.is_exist(music_id):
@@ -157,3 +158,31 @@ def delete_music(music_id: str):
         FsServer.delete_file(file_id)
     MscSetServer.clear_by_music(music_id)
     return gen_success_response(ReportInfo["016"])
+
+@MusicBoxBp.route(gen_prefix_api("/musicSets/<collect_id>"), methods=["DELETE"])
+@token_required
+def delete_collect(collect_id : str):
+    """删除合集"""
+    if is_str_empty(collect_id):
+        return gen_fail_response(ReportInfo["034"])
+    if not MscSetServer.is_exist(collect_id):
+        return gen_fail_response(ReportInfo["034"])
+    MscSetServer.delete_data(collect_id)
+    return gen_success_response(ReportInfo["016"])
+
+@MusicBoxBp.route(gen_prefix_api("/musicSets/<collect_id>/add"), methods=["POST"])
+@token_required
+def add_music_in_set(collect_id: str):
+    """添加音频到合集"""
+    if is_str_empty(collect_id):
+        return gen_fail_response(ReportInfo["034"])
+    if not MscSetServer.is_exist(collect_id):
+        return gen_fail_response(ReportInfo["034"])
+    input_data = request.json
+    if is_key_str_empty(input_data,"music_id"):
+        return gen_fail_response(ReportInfo["037"])
+    music_id = input_data["music_id"]
+    if not MscServer.is_exist(music_id):
+        return gen_fail_response(ReportInfo["036"])
+    MscSetServer.add_music(collect_id, music_id)
+    return gen_success_response(ReportInfo["022"])

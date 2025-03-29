@@ -1,3 +1,7 @@
+window.addEventListener("load",function () {
+    clickOverlayHidden("msc_add_set_overlay", "msc_add_set_content");
+});
+
 var nowMusicPlayer = null; //底边栏播放器
 
 function bindClickMusicItem(element, musicData, setData){
@@ -287,3 +291,62 @@ function getBeforeMusic(setData, nowPlayData){
     let nextIndex = (index - 1 + (setData.length || 1)) % (setData.length || 1);
     return setData[nextIndex];
 }
+
+callElement("music_add_set_button", element=>{
+    element.addEventListener("click", function(event){
+        /*添加点击事件*/
+        let nowPlayData = parseSessionJson("nowPlayData");
+        if (!nowPlayData){
+            displayError("未选择音频")
+        }
+        sessionStorage.setItem("nowControlData", JSON.stringify(nowPlayData));
+        callElement("msc_add_set_name", async function(selectElement){
+            await create_collect_option(selectElement);
+        });
+        displayElementById("msc_add_set_overlay");
+    });
+});
+
+async function create_collect_option(element){
+    /*添加合集选项*/
+    try{
+        let getUrl = "/musicSets?_page=0&_limit=999";
+        let setData = await getJsonWithAuth(getUrl);
+        setData.forEach(setDataItem=>{
+            let option = createOption(setDataItem.name, setDataItem.id);
+            element.appendChild(option);
+        });
+    }catch(error){
+        displayError(error);
+    }
+}
+
+callElement("msc_add_set_cancel", element=>{
+    element.addEventListener("click", function(event){
+        /*点击关闭*/
+        hiddenElementById("msc_add_set_overlay");
+    });
+});
+
+callElement("msc_add_set_form", element=>{
+	element.addEventListener("submit", function (event) {
+        event.preventDefault();
+        let nowControlData = parseSessionJson("nowControlData");
+        let formData = {
+            "music_id": nowControlData.id
+        }
+        let setId = document.getElementById("msc_add_set_name").value;
+        let postUrl = `/musicSets/${setId}/add`;
+        let nowMscSetId = sessionStorage.getItem("nowMscSetId");
+        postJsonWithAuth(postUrl, formData).then(data => {
+            displayMessage(data.message);
+            if (setId === nowMscSetId){
+                updateMusicList();
+            }
+            hiddenElementById("msc_add_set_overlay");
+        })
+        .catch(error => {
+            displayError(error);
+        });
+	});
+});

@@ -174,7 +174,7 @@ callElement("confirm_popup_button", element=>{
         let nowControlData = parseSessionJson("nowControlData");
         if (nowControlData.type){
             if(nowControlData.type==="musicSet"){
-                let deleteUrl = `musicSets/${nowControlData.id}`;
+                let deleteUrl = `/musicSets/${nowControlData.id}`;
                 deleteJsonWithAuth(deleteUrl).then(data => {
                     displayMessage(data.message);
                     hiddenElementById("confirm_popup_overlay");

@@ -120,6 +120,11 @@ class MusicSetServer:
         with self.thread_lock:
             self.db.insert(data)
 
+    def delete_data(self, set_id: str):
+        """删除合集"""
+        with self.thread_lock:
+            self.db.remove(self.query.id == set_id)
+
     def edit_data(self, set_id: str, input_data: dict):
         """编辑合集"""
         input_data = extra_data_by_list(input_data, ["name"])

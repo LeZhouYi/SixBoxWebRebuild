@@ -209,6 +209,10 @@
     grid-template-columns: 25px 1fr 25px 25px;
     grid-gap: var(--element-margin);
 }
+.music_control_title>*:nth-child(1):hover{
+    border: 0px;
+}
+
 .music_control_info_icon{
     display: grid;
     align-items: center;
