@@ -55,16 +55,20 @@
 .music_play_info{
     width: 100%;
     display: grid;
-    padding-top: 16px;
-    padding-bottom: 16px;
 }
 .music_play_name{
     color: var(--theme-part-color);
     font-size: var(--main-text-size);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .music_play_singer{
     color: var(--text-remark-color);
     font-size: var(--text-label-size);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .music_play_progress_bar{
     display: grid;
