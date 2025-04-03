@@ -301,6 +301,7 @@ callElement("music_add_set_button", element=>{
         }
         sessionStorage.setItem("nowControlData", JSON.stringify(nowPlayData));
         callElement("msc_add_set_name", async function(selectElement){
+            selectElement.innerHTML = null;
             await create_collect_option(selectElement);
         });
         displayElementById("msc_add_set_overlay");

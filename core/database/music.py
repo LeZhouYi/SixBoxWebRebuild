@@ -134,6 +134,7 @@ class MusicSetServer:
             self.db.update(data, self.query.id == set_id)
 
     def add_music(self, set_id: str, music_id: str):
+        """添加音频到合集"""
         with self.thread_lock:
             data = self.db.get(self.query.id == set_id)
             if data is None:
@@ -141,6 +142,18 @@ class MusicSetServer:
             if music_id in data["list"]:
                 return
             data["list"].append(music_id)
+            self.db.update(data, self.query.id == set_id)
+
+    def remove_music(self, set_id: str, music_id: str):
+        """将音频移除出合集"""
+        with self.thread_lock:
+            data = self.db.get(self.query.id == set_id)
+            if data is None:
+                return
+            if music_id not in data["list"]:
+                return
+            data["list"].remove(music_id)
+            print(data)
             self.db.update(data, self.query.id == set_id)
 
     def clear_by_music(self, music_id: str):

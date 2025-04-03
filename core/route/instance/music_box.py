@@ -186,3 +186,20 @@ def add_music_in_set(collect_id: str):
         return gen_fail_response(ReportInfo["036"])
     MscSetServer.add_music(collect_id, music_id)
     return gen_success_response(ReportInfo["022"])
+
+@MusicBoxBp.route(gen_prefix_api("/musicSets/<collect_id>/remove"), methods=["POST"])
+@token_required
+def remove_music_out_set(collect_id: str):
+    """添加音频到合集"""
+    if is_str_empty(collect_id):
+        return gen_fail_response(ReportInfo["034"])
+    if not MscSetServer.is_exist(collect_id):
+        return gen_fail_response(ReportInfo["034"])
+    input_data = request.json
+    if is_key_str_empty(input_data,"music_id"):
+        return gen_fail_response(ReportInfo["037"])
+    music_id = input_data["music_id"]
+    if not MscServer.is_exist(music_id):
+        return gen_fail_response(ReportInfo["036"])
+    MscSetServer.remove_music(collect_id, music_id)
+    return gen_success_response(ReportInfo["022"])

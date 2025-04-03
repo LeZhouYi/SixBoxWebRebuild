@@ -121,3 +121,40 @@ callElement("music_delete_button", element=>{
         displayElementById("confirm_popup_overlay");
     });
 });
+
+callElement("msc_ctrl_add_set_button", element=>{
+    /*点击添加合集*/
+    element.addEventListener("click", function(event){
+        callElement("msc_add_set_name", async function(selectElement){
+            selectElement.innerHTML = null;
+            await create_collect_option(selectElement);
+        });
+        displayElementById("msc_add_set_overlay");
+        hiddenElementById("music_control_overlay");
+    });
+})
+
+callElement("msc_ctrl_del_set_button", element=>{
+    /*点击删除合集*/
+    element.addEventListener("click", function(event){
+        let nowMscSetId = sessionStorage.getItem("nowMscSetId");
+        if(nowMscSetId === "1"){
+            displayError("不能移除出默认合集");
+            hiddenElementById("music_control_overlay");
+            return;
+        }
+        let nowControlData = parseSessionJson("nowControlData");
+        let removeUrl = `/musicSets/${nowMscSetId}/remove`;
+        postJsonWithAuth(removeUrl,{
+            "music_id": `${nowControlData.id}`
+        }).then(data => {
+            displayMessage(data.message);
+            hiddenElementById("music_control_overlay");
+            updateCollectList();
+            updateMusicList();
+        })
+        .catch(error => {
+            displayError(error);
+        });
+    });
+})
