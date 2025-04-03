@@ -67,7 +67,14 @@ callElement("video_close_button", element=>{
         /*点击关闭视频*/
         hiddenElementById("video_display_overlay");
         let player = videojs("video_display_panel");
-        player.pause();
+        player.dispose();
+        callElement("video_display_content", element=>{
+            let videoPanel = document.createElement("video");
+            videoPanel.id = "video_display_panel";
+            videoPanel.controls = true;
+            videoPanel.classList.add("video-js","video_display_panel");
+            element.insertBefore(videoPanel,element.firstChild);
+        });
     });
 });
 
@@ -101,9 +108,9 @@ function initVideo(videoId, fileId, fileType, callback){
         autoplay: false,
         fluid: false,
         preload: false,
-        volume: nowPlayVolume,
         muted: false
     }).ready(function(){
+        this.volume(nowPlayVolume);
         this.src({
             src: videoUrl,
             type: fileType

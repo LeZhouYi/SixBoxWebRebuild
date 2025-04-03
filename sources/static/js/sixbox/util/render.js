@@ -28,6 +28,7 @@ function displayMessage(messageText, iconUrl = "/static/icons/correct.png", remo
         setTimeout(() => {
             showMessage.remove();
         }, removeTime);
+        console.log(messageText);
     }
 }
 
@@ -53,6 +54,7 @@ function displayErrorMessage(errorMessageText, iconUrl = "/static/icons/alert.pn
         setTimeout(() => {
             errorMessage.remove();
         }, removeTime);
+        console.log(errorMessageText);
     }
 }
 

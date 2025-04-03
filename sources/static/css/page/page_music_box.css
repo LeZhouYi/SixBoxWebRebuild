@@ -240,6 +240,7 @@
     padding-left: var(--element-margin);
     padding-right: var(--element-margin);
     box-sizing: border-box;
+    align-items: center;
 }
 .music_search_input{
     height: 100%;
