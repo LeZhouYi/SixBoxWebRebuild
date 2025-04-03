@@ -74,14 +74,14 @@ callElement("video_close_button", element=>{
 function bindClickVideo(fileItem, element, fileData){
     /*绑定点击视频事件*/
     element.addEventListener("click", function(event){
+        let spinner = null;
         try{
-            let spinner = createSpinnerByElement(fileItem, "spin_panel_light");
+            spinner = createSpinnerByElement(fileItem, "spin_panel_light");
             sessionStorage.setItem("nowDisplayId", fileData.id);
             initVideo("video_display_panel", fileData.id, fileData.mimeType, function(){
                 displayElementById("video_display_overlay");
                 spinner.remove();
             });
-
         } catch (error){
             displayError(error);
             spinner?.remove();
@@ -96,7 +96,7 @@ function initVideo(videoId, fileId, fileType, callback){
     let videoUrl = `${fullDomain}/api/v1/videos/${fileId}/play?token=${accessToken}`;
     let nowPlayVolume = localStorage.getItem("nowPlayVolume");
     nowPlayVolume = nowPlayVolume/100;
-    let player = videojs(videoId, {
+    videojs(videoId, {
         controls: true,
         autoplay: false,
         fluid: false,
@@ -108,12 +108,13 @@ function initVideo(videoId, fileId, fileType, callback){
             src: videoUrl,
             type: fileType
         });
+        this.on("volumechange", function(){
+            if (!this.muted()){
+                let currentVolume = Math.round(this.volume()*100);
+                localStorage.setItem("nowPlayVolume", currentVolume);
+            }
+        });
         callback?.();
     });
-    player.on("volumechange", function(){
-        if (!this.muted()){
-            let currentVolume = Math.round(this.volume()*100);
-            localStorage.setItem("nowPlayVolume", currentVolume);
-        }
-    });
+
 }
