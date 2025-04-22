@@ -769,6 +769,33 @@
 							"response": []
 						},
 						{
+							"name": "修改合集",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"默认合集2\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/musicSets/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"musicSets",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "获取合集列表",
 							"request": {
 								"method": "GET",
@@ -816,6 +843,62 @@
 									],
 									"path": [
 										"musicSets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "合集添加音频",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"music_id\": \"1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/musicSets/1/add",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"musicSets",
+										"1",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "合集移除音频",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"music_id\": \"1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/musicSets/1/remove",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"musicSets",
+										"1",
+										"remove"
 									]
 								}
 							},

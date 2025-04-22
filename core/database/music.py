@@ -35,16 +35,29 @@ class MusicServer:
             "tags": tags
         }
 
-    def search_data(self, page: int, limit: int) -> tuple[list, int]:
+    def search_data(self, page: int, limit: int, name_like: str = None) -> tuple[list, int]:
         """搜索数据"""
         with self.thread_lock:
-            data = self.db.all()
+            if name_like is None:
+                data = self.db.all()
+            else:
+                data = self.db.get()
             # 计算总数
             total = len(data)
             # 分页
             if page is not None and limit is not None:
                 data = data[page * limit:(page + 1) * limit]
             return data, total
+
+    @staticmethod
+    def match_partial(field, search_value):
+        """部分匹配"""
+
+        def query(item):
+            text = str(item.get(field, "")).lower()
+            return search_value.lower() in text
+
+        return query
 
     def get_data(self, music_id: str):
         """获取数据"""

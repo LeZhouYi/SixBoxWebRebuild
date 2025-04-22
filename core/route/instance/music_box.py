@@ -203,3 +203,15 @@ def remove_music_out_set(collect_id: str):
         return gen_fail_response(ReportInfo["036"])
     MscSetServer.remove_music(collect_id, music_id)
     return gen_success_response(ReportInfo["022"])
+
+@MusicBoxBp.route(gen_prefix_api("/musics"), methods=["GET"])
+@token_required
+@page_args_required
+def search_music():
+    """搜索音乐"""
+    page = int(request.args.get("_page"))
+    limit = int(request.args.get("_limit"))
+    search_name = request.args.get("nameLike")
+    if is_str_empty(search_name):
+        return gen_fail_response(ReportInfo["021"])
+    # return jsonify(FsServer.search_file(search_name, page, limit))
