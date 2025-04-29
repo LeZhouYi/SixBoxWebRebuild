@@ -221,12 +221,12 @@ class FileSystemServer:
         return return_data
 
     @staticmethod
-    def match_partial(field, search_value):
+    def match_partial(field: str, search_value: str):
         """部分匹配"""
-
+        search_value = search_value.strip().lower()
         def query(item):
             text = str(item.get(field, "")).lower()
-            return search_value.lower() in text
+            return search_value in text
 
         return query
 

@@ -910,14 +910,6 @@
 					"name": "音频",
 					"item": [
 						{
-							"name": "获取音频",
-							"request": {
-								"method": "GET",
-								"header": []
-							},
-							"response": []
-						},
-						{
 							"name": "编辑音频",
 							"request": {
 								"method": "PUT",
@@ -991,6 +983,72 @@
 									],
 									"path": [
 										"musics"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "删除音频",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/musics/1736942265730",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"musics",
+										"1736942265730"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "搜索音频",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/musics?nameLike=test&_page=0&_limit=10",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"musics"
+									],
+									"query": [
+										{
+											"key": "nameLike",
+											"value": "test"
+										},
+										{
+											"key": "_page",
+											"value": "0"
+										},
+										{
+											"key": "_limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "整理音频",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/musicsTidyUp",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"musicsTidyUp"
 									]
 								}
 							},

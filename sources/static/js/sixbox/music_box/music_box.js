@@ -55,11 +55,20 @@ async function updateMusicList(){
     /*更新并显示当前音频合集*/
     try{
         let nowMscSetId = sessionStorage.getItem("nowMscSetId");
-        let data = await getJsonWithAuth(`/musicSets/${nowMscSetId}?_page=0&_limit=999`);
+        let searchInput = document.getElementById("music_search_input");
+        let data = null;
 
-        callElement("music_control_title_text", titleElement=>{
-            titleElement.textContent = data.name;
-        });
+        if (searchInput.value !== ""){
+            data = await getJsonWithAuth(`/musics?_page=0&_limit=999&nameLike=${searchInput.value}`);
+            callElement("music_control_title_text", titleElement=>{
+                titleElement.textContent = "搜索";
+            });
+        } else{
+            data = await getJsonWithAuth(`/musicSets/${nowMscSetId}?_page=0&_limit=999`);
+            callElement("music_control_title_text", titleElement=>{
+                titleElement.textContent = data.name;
+            });
+        }
         let contents = data.contents;
         callElement("music_content_row", rowElement=>{
             rowElement.innerHTML = null;
@@ -67,6 +76,8 @@ async function updateMusicList(){
                 rowElement.appendChild(createMusicItem(content, data));
             });
         });
+
+
     } catch(error){
         displayError(error);
     }
@@ -197,5 +208,20 @@ callElement("confirm_popup_button", element=>{
                 displayError(error);
             });
         }
+    });
+});
+
+callElement("music_search_input", element=>{
+    element.addEventListener("keydown", function (event) {
+        /*输入搜索文件*/
+        if (event.key === "Enter" || event.keyCode === 13) {
+            event.preventDefault();
+            event.target.blur();
+        }
+    });
+    element.addEventListener("blur", function (event) {
+        /*失去焦点触发页面输入*/
+        event.preventDefault();
+        updateMusicList();
     });
 });
