@@ -120,8 +120,14 @@ callElement("music_bar_play_button", element=>{
             let nowPlaySetData = parseSessionJson("nowPlaySetData");
             if (!nowPlaySetData){
                 try{
-                    let nowMscSetId = sessionStorage.getItem("nowMscSetId");
-                    let data = await getJsonWithAuth(`/musicSets/${nowMscSetId}?_page=0&_limit=999`);
+                    let data = null;
+                    let searchInput = document.getElementById("music_search_input");
+                    if(searchInput.value === ""){
+                        let nowMscSetId = sessionStorage.getItem("nowMscSetId");
+                        data = await getJsonWithAuth(`/musicSets/${nowMscSetId}?_page=0&_limit=999`);
+                    } else {
+                        data = await getJsonWithAuth(`/musics?_page=0&_limit=999&nameLike=${searchInput.value}`);
+                    }
                     sessionStorage.setItem("nowPlaySetData", JSON.stringify(data));
                     let musicData = randListItem(data.contents);
                     sessionStorage.setItem("nowPlayData", JSON.stringify(musicData));

@@ -39,6 +39,11 @@ callElement("edit_music_set_button", element=>{
     element.addEventListener("click", async function(event){
         /*点击编辑*/
         try{
+            let searchInput = document.getElementById("music_search_input");
+            if (searchInput.value !== ""){
+                displayError("临时合集不能编辑");
+                return;
+            }
             let nowMscSetId = sessionStorage.getItem("nowMscSetId");
             let mscSetData = await getJsonWithAuth(`/musicSets/${nowMscSetId}?_page=0&_limit=10`);
             callElement("msc_collect_edit_name", inputElement=>{
@@ -62,7 +67,10 @@ callElement("delete_music_set_button", element=>{
     element.addEventListener("click", async function(event){
         /*点击删除合集*/
         let nowMscSetId = sessionStorage.getItem("nowMscSetId");
-        if(nowMscSetId === "1"){
+        let searchInput = document.getElementById("music_search_input");
+        if (searchInput.value !== ""){
+            displayError("临时合集不需删除");
+        }else if(nowMscSetId === "1"){
             displayError("默认合集不能删除");
         }else{
             let nowMscSetId = sessionStorage.getItem("nowMscSetId");
@@ -102,13 +110,15 @@ function binkClickMenuItem(menuItem, data){
     /*绑定点击事件*/
     menuItem.addEventListener("click", function(event){
         let nowMscSetId = sessionStorage.getItem("nowMscSetId");
-        if (nowMscSetId === data.id) {
+        let searchInput = document.getElementById("music_search_input");
+        if (nowMscSetId === data.id && searchInput.value === "") {
             return;
         }
         sessionStorage.setItem("nowMscSetId", data.id);
         callElement("music_control_title_text", element=>{
             element.textContent = data.name;
         });
+        searchInput.value="";
         updateMusicList();
     });
 }

@@ -123,6 +123,11 @@
 }
 .music_menu_dd{
     margin-inline-start: 0;
+    overflow-y: auto;
+}
+.music_menu_dd::-webkit-scrollbar{
+    /*隐藏滚动条*/
+    width: 0px;
 }
 .music_menu_dl{
     width: 100%;
