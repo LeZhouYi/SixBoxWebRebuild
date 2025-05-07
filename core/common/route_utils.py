@@ -1,16 +1,14 @@
+import random
 import time
-from random import Random
 from typing import Optional
 
 import flask
 from flask import Response, jsonify
 
-Rand = Random()
-
 
 def gen_id() -> str:
     """生成ID"""
-    return "%s%s" % (int(time.time()), str(Rand.randint(100, 999)))
+    return "%s%s" % (int(time.time()), str(random.randint(100, 999)))
 
 
 def gen_fail_response(text: str, error_code: int = 400) -> tuple[Response, int]:

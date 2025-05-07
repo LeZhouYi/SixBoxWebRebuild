@@ -1,0 +1,27 @@
+{
+    "flask": {
+        "app_port": 5002
+    },
+    "logger": {
+        "level": "INFO",
+        "save_path": "data/log",
+        "format": "%(asctime)s-%(name)s-%(levelname)s-%(message)s",
+        "when": "D",
+        "interval": 1,
+        "backup_count": 7,
+        "encoding": "utf-8",
+        "delay": false,
+        "utc": false
+    },
+    "path": {
+        "sources_config": "sources/config/sources_config.json",
+        "database_config": "sources/config/database_config.json",
+        "lang_config": "sources/config/lang_config.json",
+        "file_sys_db": "data/db/file_system.json",
+        "file_sys_config": "sources/config/file_system_config.json",
+        "file_save": "data\\file",
+        "file_static": "data/static",
+        "user_db": "data/db/user.json",
+        "session_db": "data/db/session.json"
+    }
+}

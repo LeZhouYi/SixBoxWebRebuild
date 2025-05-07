@@ -1,22 +1,28 @@
 import logging
 import os
 import sys
-import time
+from logging.handlers import TimedRotatingFileHandler
 
 from core.config.config import get_config
 
 
 def init_logger():
     """初始化日志记录器"""
-    logger_save_path = get_config("logger_path")
-    os.makedirs(logger_save_path, exist_ok=True)
-    logger_file = "%s/log_%s.log" % (logger_save_path, int(time.time()))
-
+    logger_config = get_config("logger")
+    os.makedirs(logger_config["save_path"], exist_ok=True)
     logging.basicConfig(
-        level=get_config("logger_level"),
-        format='%(asctime)s-%(name)s-%(levelname)s-%(message)s',
+        level=logger_config["logger_level"],
+        format=logger_config["format"],
         handlers=[
-            logging.FileHandler(logger_file, encoding="utf-8"),
+            TimedRotatingFileHandler(
+                filename="%s/log.log" % logger_config["save_path"],
+                when=logger_config["when"],
+                interval=logger_config["interval"],
+                backupCount=logger_config["backup_count"],
+                encoding=logger_config["encoding"],
+                delay=logger_config["delay"],
+                utc=logger_config["utc"]
+            ),
             logging.StreamHandler(sys.stdout)
         ]
     )
