@@ -8,12 +8,12 @@ import jwt
 from tinydb import TinyDB, Query
 
 from core.common.route_utils import gen_id, is_key_str_empty, extra_data_by_list
-from core.config.config import get_config
+from core.config.config import get_config_by_section
 from core.log.log import logger
 
-JWT_SECRET_KEY = get_config("jwt_secret_key")
-JWT_ALGORITHM = get_config("jwt_algorithm")
-JWT_EXP_DELTA_SECONDS = int(get_config("jwt_exp_delta_seconds"))
+JWT_SECRET_KEY = get_config_by_section("jwt", "secret_key")
+JWT_ALGORITHM = get_config_by_section("jwt", "algorithm")
+JWT_EXP_DELTA_SECONDS = get_config_by_section("jwt", "exp_delta_seconds")
 
 
 class SessionServer:

@@ -21,7 +21,7 @@ def register_blueprints(app: flask.Flask):
 
 def register_assets(assets: Environment):
     """通过json注册资源"""
-    asset_configs = load_json_data(get_config_path("sources_config_path"))
+    asset_configs = load_json_data(get_config_path("sources_config"))
     for filter_type, asset_dict in asset_configs.items():
         for asset_name, asset_attr in asset_dict.items():
             assets.register(

@@ -12,7 +12,7 @@ def pre_init():
         if not os.path.exists(local_path):
             os.makedirs(local_path, exist_ok=True)
     # 配置路径
-    config_keys = ["logger_path", "file_save_path", "file_static_path"]
+    config_keys = ["logger_save", "file_save", "file_static"]
     for config_key in config_keys:
         local_path = get_config_path(config_key)
         if not os.path.exists(local_path):

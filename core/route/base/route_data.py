@@ -9,24 +9,25 @@ from werkzeug.datastructures import FileStorage
 
 from core.common.file_utils import load_json_data, get_file_ext
 from core.common.route_utils import get_bearer_token, is_str_empty, gen_fail_response, get_client_ip
+from core.config.config import get_config_path
 from core.database.file_system import FileSystemServer, FileType
 from core.database.music import MusicServer, MusicSetServer
 from core.database.user import SessionServer
 from core.database.user import UserServer
 
-ReportInfo = load_json_data(get_config_path("lang_config_path"))
+ReportInfo = load_json_data(get_config_path("lang_config"))
 
-DbConfig = load_json_data(get_config_path("database_config_path"))
+DbConfig = load_json_data(get_config_path("database_config"))
 
-FsConfig = load_json_data(get_config_path("file_sys_config_path"))
-FsServer = FileSystemServer(get_config_path("file_sys_db_path"), FsConfig)
+FsConfig = load_json_data(get_config_path("file_sys_config"))
+FsServer = FileSystemServer(get_config_path("file_sys_db"), FsConfig)
 
-UsrServer = UserServer(get_config_path("user_db_path"), DbConfig)
+UsrServer = UserServer(get_config_path("user_db"), DbConfig)
 
-SessServer = SessionServer(get_config_path("session_db_path"))
+SessServer = SessionServer(get_config_path("session_db"))
 
-MscServer = MusicServer(get_config_path("music_db_path"))
-MscSetServer = MusicSetServer(get_config_path("music_set_db_path"), DbConfig)
+MscServer = MusicServer(get_config_path("music_db"))
+MscSetServer = MusicSetServer(get_config_path("music_set_db"), DbConfig)
 
 API_PREFIX = "/api/v1"
 
@@ -91,4 +92,4 @@ def get_real_filepath(filepath: Union[PathLike | str]) -> Union[PathLike | str]:
     """获取真实路径"""
     filepath = str(filepath).split("/")[-1]
     filepath = filepath.split("\\")[-1]
-    return os.path.join(get_config_path("file_save_path"), filepath)
+    return os.path.join(get_config_path("file_save"), filepath)

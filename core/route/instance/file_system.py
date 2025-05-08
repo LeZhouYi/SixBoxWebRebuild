@@ -19,7 +19,7 @@ def download_static_file():
     filename = request.args.get('filename')
     if is_str_empty(filename):
         return gen_fail_response(ReportInfo["012"], 404)
-    static_path = get_config_path("file_static_path")
+    static_path = get_config_path("file_static")
     filepath = os.path.join(static_path, filename)
     if os.path.exists(filepath) and os.path.isfile(filepath) and is_path_within_folder(static_path, filepath):
         try:
@@ -94,7 +94,7 @@ def add_file():
     # 保存文件
     file_ext = get_file_ext(file.filename)
     local_name = "%s.%s" % (gen_id(), file_ext)
-    filepath = os.path.join(get_config_path("file_save_path"), local_name)
+    filepath = os.path.join(get_config_path("file_save"), local_name)
     try:
         file.save(filepath)
     except Exception as e:
@@ -214,7 +214,7 @@ def search_file():
 def tidy_up_file():
     """整理文件，调整文件类型"""
     FsServer.tidy_up_data(FsConfig["file_white_list"])
-    folder_path = get_config_path("file_save_path")
+    folder_path = get_config_path("file_save")
     for file_name in os.listdir(folder_path):
         if not FsServer.is_exist_by_filename(file_name):
             os.remove(os.path.join(folder_path, file_name))

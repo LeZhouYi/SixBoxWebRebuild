@@ -41,7 +41,7 @@ def add_music():
     # 保存文件
     file_ext = get_file_ext(file.filename)
     local_name = "%s.%s" % (gen_id(), file_ext)
-    filepath = os.path.join(get_config_path("file_save_path"), local_name)
+    filepath = os.path.join(get_config_path("file_save"), local_name)
     try:
         file.save(filepath)
     except Exception as e:

@@ -11,7 +11,7 @@ def init_logger():
     logger_config = get_config("logger")
     os.makedirs(logger_config["save_path"], exist_ok=True)
     logging.basicConfig(
-        level=logger_config["logger_level"],
+        level=logger_config["level"],
         format=logger_config["format"],
         handlers=[
             TimedRotatingFileHandler(

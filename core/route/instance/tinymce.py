@@ -24,7 +24,7 @@ def add_text():
         return gen_fail_response(ReportInfo["024"])
 
     local_name = "%s.%s" % (gen_id(), "html")
-    filepath = os.path.join(get_config_path("file_save_path"), local_name)
+    filepath = os.path.join(get_config_path("file_save"), local_name)
     try:
         with open(filepath, "w", encoding="utf-8") as file:
             file.write(data["content"])

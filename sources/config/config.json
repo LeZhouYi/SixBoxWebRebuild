@@ -14,6 +14,7 @@
         "utc": false
     },
     "path": {
+        "logger_save": "data/log",
         "sources_config": "sources/config/sources_config.json",
         "database_config": "sources/config/database_config.json",
         "lang_config": "sources/config/lang_config.json",
@@ -22,6 +23,13 @@
         "file_save": "data\\file",
         "file_static": "data/static",
         "user_db": "data/db/user.json",
-        "session_db": "data/db/session.json"
+        "session_db": "data/db/session.json",
+        "music_db": "data/db/music.json",
+        "music_set_db": "data/db/music_set.json"
+    },
+    "jwt": {
+        "secret_key": "vU7yZ4iH8pP7",
+        "algorithm": "HS256",
+        "exp_delta_seconds": 86400
     }
 }

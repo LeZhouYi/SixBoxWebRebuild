@@ -1,10 +1,9 @@
-import configparser
 import json
 import os
 
 from core.common.file_utils import get_local_path
 
-with open(os.path.join(os.getcwd(), "config/config.json"), "r", encoding="utf-8") as file:
+with open(os.path.join(os.getcwd(), "sources/config/config.json"), "r", encoding="utf-8") as file:
     __config = json.load(file)
 
 
@@ -25,11 +24,11 @@ def get_config_path(option: str) -> str:
     :param option: 字段名
     :return: DEFAULT中字段对应的路径值并合并为绝对路径
     """
-    path = __config.get(section="path", option=option)
+    path = __config["path"][option]
     return get_local_path(path)
 
 
-def get_config_by_section(section: str, option: str) ->any:
+def get_config_by_section(section: str, option: str) -> any:
     """
     读取当前配置对应字段的值
     :param section: [str]对应节点
