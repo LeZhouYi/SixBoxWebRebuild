@@ -122,6 +122,17 @@ callElement("music_delete_button", element=>{
     });
 });
 
+callElement("music_download_button", element=>{
+    /*点击下载*/
+    element.addEventListener("click", function(event){
+        hiddenElementById("music_control_overlay");
+        let accessToken = localStorage.getItem("accessToken");
+        let nowControlData = parseSessionJson("nowControlData");
+        let downloadUrl = `api/v1/files/${nowControlData.fileId}/download?token=${accessToken}`;
+        downloadByA(downloadUrl);
+    });
+});
+
 callElement("msc_ctrl_add_set_button", element=>{
     /*点击添加合集*/
     element.addEventListener("click", function(event){
