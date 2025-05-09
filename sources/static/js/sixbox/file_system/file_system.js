@@ -64,15 +64,13 @@ window.addEventListener("load",function () {
     window.addEventListener("resize", throttle(function () {
         resizeFullScreen("bodyContainer");
     }), 200);
-    window.addEventListener("resize", throttle(function () {
-        onFileMenuResize();
-    }), 2000);
+    registerFixedElement("file_sys_container","file_sys_menu","file_menu_pop_button",999);
 });
 
 callElement("all_file_button", element=>{
 	element.addEventListener("click", function (event) {
         /*点击所有文件*/
-        hiddenFileMenu();
+        hiddenFixedElement("file_sys_menu",999);
         let nowFolderId = sessionStorage.getItem("nowFolderId");
         let nowPage = sessionStorage.getItem("nowPage");
         let searchInput = document.getElementById("file_search_input");

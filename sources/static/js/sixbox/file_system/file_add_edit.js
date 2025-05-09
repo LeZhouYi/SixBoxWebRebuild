@@ -6,7 +6,7 @@ window.addEventListener("load",function () {
 callElement("file_add_pop_button", element=>{
 	element.addEventListener("click", function (event) {
         /*点击弹出新增文件弹窗*/
-        hiddenFileMenu();
+        hiddenFixedElement("file_sys_menu",999);
         let fileAddContent = document.getElementById("file_add_content");
         displayElementById("file_add_popup_overlay", function () {
             let nowFolderId = sessionStorage.getItem("nowFolderId");

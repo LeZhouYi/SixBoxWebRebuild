@@ -95,14 +95,14 @@ callElement("add_text_button", element=>{
                 loadFolderSelect("text_add_folder_select", nowFolderId);
                 if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")){
                     displayElementById("text_add_popup_overlay");
-                    hiddenFileMenu();
+                    hiddenFixedElement("file_sys_menu",999);
                     spinner?.remove();
                 }else{
                     initEditMce(
                         "text_add_mce_field",
                         function(){
                             displayElementById("text_add_popup_overlay");
-                            hiddenFileMenu();
+                            hiddenFixedElement("file_sys_menu",999);
                             spinner?.remove();
                         },
                         onTextAddFullChange

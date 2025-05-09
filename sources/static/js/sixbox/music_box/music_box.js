@@ -19,6 +19,7 @@ window.addEventListener("load",function () {
     window.addEventListener("resize", throttle(function () {
         resizeFullScreen("bodyContainer");
     }), 200);
+    registerFixedElement("music_box_container","music_collect_menu","music_menu_pop_button",950);
 });
 
 function initMusicBar(){

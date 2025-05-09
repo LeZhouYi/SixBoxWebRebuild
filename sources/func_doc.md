@@ -130,6 +130,23 @@ function createSpinner(elementId, className="spin_panel")
     /*创建进度加载条*/
 function createSpinnerByElement(target, className="spin_panel")
     /*创建进度加载条*/
+function registerFixedElement(containerId, elementId, popButtonId,maxWidth,displayStyle="grid",interval=2000)
+    /*
+    注册元素，使元素在页面低于width时，以fixed的形式浮动显示，并有相关的控制显示隐藏;
+    containerId，包含要浮动的元素的上级元素，当点击在浮动元素外的位置时，隐藏浮动元素;
+    elementId, 要浮动的元素;
+    popButtonId, 控制元素显示的元素；
+    maxWidth, 最大切换浮动的网页/设备宽度；
+    displayStyle: 显示时的样式
+    interval, 节流，避免监听事件影响性能；
+    */
+function hiddenFixedElement(elementId,maxWidth,displayStyle="grid")
+    /*
+    根据Width判断元素是否要隐藏
+    elementId, 要浮动的元素;
+    maxWidth, 最大切换浮动的网页/设备宽度；
+    displayStyle: 显示时的样式
+    */
 
 # requestor.js
 

@@ -1,7 +1,7 @@
 <div class="music_box_container side_bar_expand padding_trans" id="music_box_container">
     {% include 'common/comp_navigation_bar.html' %}
     <div class="music_main_container">
-        <div class="music_collect_menu">
+        <div class="music_collect_menu" id="music_collect_menu">
             <button class="music_menu_button clickable" id="add_collect_button">新增合集</button>
             <button class="music_menu_button clickable" id="add_music_button">新增歌曲</button>
             <dd class="music_menu_dd">
@@ -13,7 +13,7 @@
         <div class="music_content_panel">
             <div class="music_control_panel">
                 <div class="music_control_icon_div clickable">
-                    <img src="/static/icons/dashboard.png" class="music_control_icon">
+                    <img src="/static/icons/dashboard.png" class="music_control_img" id="music_menu_pop_button">
                 </div>
                 <div class="music_control_title">
                     <div class="music_control_info_icon">

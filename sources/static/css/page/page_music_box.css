@@ -184,7 +184,7 @@
     height: 37px;
     width: 100%;
     display: grid;
-    grid-template-columns: 37px 2fr 1fr;
+    grid-template-columns: 2fr 1fr;
     grid-gap: var(--element-margin);
 }
 .music_content_main_panel{
@@ -202,11 +202,22 @@
     align-items: center;
     justify-content: center;
 }
+.music_control_img{
+    width: var(--icon-base-size);
+    border: 2px solid var(--text-remark-color);
+    border-radius: var(--border-min-radius);
+    transition: border-color 0.5s ease;
+}
+.music_control_img:hover{
+    border-color: var(--theme-part-color);
+}
 .music_control_icon{
     height: 32px;
     width: 32px;
     border-radius: 13px;
     border: 2px solid var(--text-remark-color);
+    margin-left: var(--element-margin);
+    margin-right: var(--element-margin);
 }
 .music_control_title{
     background-color: var(--theme-background-color);
@@ -376,12 +387,6 @@
     background-color: var(--theme-active-color);
     border-color: var(--theme-part-color);
 }
-.music_control_icon{
-    width: var(--icon-base-size);
-    height: var(--icon-base-size);
-    margin-left: var(--element-margin);
-    margin-right: var(--element-margin);
-}
 .music_control_text{
     font-size: var(--main-text-size);
     color: var(--text-main-color);
@@ -407,6 +412,13 @@
     text-overflow: ellipsis;
     font-size: var(--main-text-size);
     color: var(--text-main-color);
+}
+.music_control_title_text{
+    color: var(--theme-part-color);
+    font-size: var(--main-text-size);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 @media (max-width: 999px), (max-device-width: 999px){
@@ -442,19 +454,27 @@
     .music_control_panel>*:nth-child(1){
         display: none;
     }
-    .music_control_panel{
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-    }
 }
 
 @media (max-width: 950px), (max-device-width: 950px){
     .music_collect_menu{
         display: none;
+        position: fixed;
+        width: 257px;
+        height: calc( 100% - var(--element-margin) * 2 - 70px );
+        border: 2px solid var(--theme-part-color);
+        z-index: 1;
+        background-color: white;
     }
     .music_main_container{
         display: grid;
         grid-template-columns: 1fr;
+    }
+    .music_control_panel{
+        grid-template-columns: 37px 2fr 1fr;
+    }
+    .music_control_panel>*:nth-child(1){
+        display: block;
     }
 }
 
