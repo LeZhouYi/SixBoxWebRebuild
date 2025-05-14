@@ -145,7 +145,7 @@ function callElement(elementId, callback) {
     }
 }
 
-function callElementsByClass(elementClass, callback){
+function callElementsByClass(elementClass, callback) {
     /*获取元素并校验是否存在，存在则执行callback*/
     let elements = document.querySelectorAll(elementClass);
     if (elements && callback) {
@@ -153,43 +153,43 @@ function callElementsByClass(elementClass, callback){
     }
 }
 
-function getFullDomain(){
+function getFullDomain() {
     /*获取当前完整的域名*/
     let domain = window.location.protocol + "//" + window.location.host;
     return domain;
 }
 
-function parseLocalJson(itemName){
+function parseLocalJson(itemName) {
     /*获取并解析数据*/
     let data = localStorage.getItem(itemName);
-    if (!data){
+    if (!data) {
         return null;
     }
     return JSON.parse(data);
 }
 
-function parseSessionJson(itemName){
+function parseSessionJson(itemName) {
     /*获取并解析数据*/
     let data = sessionStorage.getItem(itemName);
-    if (!data){
+    if (!data) {
         return null;
     }
     return JSON.parse(data);
 }
 
-function randListItem(listData){
+function randListItem(listData) {
     /*随机抽取一个无素*/
     let length = listData.length;
-    if (length < 1){
+    if (length < 1) {
         return null;
     }
     return listData[Math.floor(Math.random() * length)];
 }
 
-function formatSeconds(seconds){
+function formatSeconds(seconds) {
     /*格式化秒数*/
     seconds = Math.floor(seconds);
-    var minutes = Math.floor(seconds/60);
+    var minutes = Math.floor(seconds / 60);
     var secs = seconds % 60;
     var formattedMinutes = minutes.toString().padStart(2, '0');
     var formattedSecs = secs.toString().padStart(2, '0');

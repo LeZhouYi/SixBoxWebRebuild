@@ -142,7 +142,7 @@ function addObserveResizeHidden(element) {
 
 function clickOverlayHidden(overlayId, contentId) {
     /*点击overlay区域将隐藏元素*/
-    callElement(overlayId, overlayElement=>{
+    callElement(overlayId, overlayElement => {
         overlayElement.addEventListener("click", function (event) {
             /*监听元素是否在弹窗外部*/
             let contentElement = document.getElementById(contentId);
@@ -156,18 +156,18 @@ function clickOverlayHidden(overlayId, contentId) {
 
 function clickMultiOverlayHidden(overlayId, contentIds) {
     /*点击overlay区域将隐藏元素*/
-    callElement(overlayId, overlayElement=>{
+    callElement(overlayId, overlayElement => {
         overlayElement.addEventListener("click", function (event) {
             /*监听元素是否在弹窗外部*/
             let isInside = false;
-            contentIds.forEach(contentId=>{
-                callElement(contentId, contentElement=>{
-                    if(contentElement.contains(event.target)){
+            contentIds.forEach(contentId => {
+                callElement(contentId, contentElement => {
+                    if (contentElement.contains(event.target)) {
                         isInside = true;
                     }
                 });
             });
-            if(!isInside){
+            if (!isInside) {
                 hiddenElement(overlayElement);
                 event.preventDefault();
             }
@@ -248,14 +248,14 @@ function isInClientWidth(start = 0, end = 399, callback) {
     }
 }
 
-function createOptGroup(name){
+function createOptGroup(name) {
     /*创建下拉选项组*/
     let optGroup = document.createElement("optgroup");
     optGroup.setAttribute("label", name);
     return optGroup;
 }
 
-function createOption(text, value){
+function createOption(text, value) {
     /*创建下拉选项*/
     let option = document.createElement("option");
     option.value = value;
@@ -263,19 +263,19 @@ function createOption(text, value){
     return option;
 }
 
-function createSpinner(elementId, className="spin_panel"){
+function createSpinner(elementId, className = "spin_panel") {
     /*创建进度加载条*/
     let target = document.getElementById(elementId);
-    if(target){
+    if (target) {
         let spinPanel = document.createElement("div");
         spinPanel.classList.add(className);
-        spinPanel.addEventListener("click", function(event){
+        spinPanel.addEventListener("click", function (event) {
             event.preventDefault();
             event.stopPropagation();
         });
-        if(target.firstChild){
+        if (target.firstChild) {
             target.insertBefore(spinPanel, target.firstChild);
-        }else{
+        } else {
             target.appendChild(spinPanel);
         }
         new Spinner().spin(spinPanel);
@@ -283,14 +283,14 @@ function createSpinner(elementId, className="spin_panel"){
     }
 }
 
-function createSpinnerByElement(target, className="spin_panel"){
+function createSpinnerByElement(target, className = "spin_panel") {
     /*创建进度加载条*/
-    if(target){
+    if (target) {
         let spinPanel = document.createElement("div");
         spinPanel.classList.add(className);
-        if(target.firstChild){
+        if (target.firstChild) {
             target.insertBefore(spinPanel, target.firstChild);
-        }else{
+        } else {
             target.appendChild(spinPanel);
         }
         new Spinner().spin(spinPanel);
@@ -298,7 +298,7 @@ function createSpinnerByElement(target, className="spin_panel"){
     }
 }
 
-function registryFixedElement(containerId, elementId, popButtonId,maxWidth,displayStyle="grid",interval=2000){
+function registryFixedElement(containerId, elementId, popButtonId, maxWidth, displayStyle = "grid", interval = 2000) {
     /*
     注册元素，使元素在页面低于width时，以fixed的形式浮动显示，并有相关的控制显示隐藏;
     containerId，包含要浮动的元素的上级元素，当点击在浮动元素外的位置时，隐藏浮动元素;
@@ -310,13 +310,13 @@ function registryFixedElement(containerId, elementId, popButtonId,maxWidth,displ
     */
     /*监听页面变化*/
     window.addEventListener("resize", throttle(function () {
-        callElement(elementId, menuElement=>{
+        callElement(elementId, menuElement => {
             if (isInClientWidth(0, maxWidth)) {
-                if (isDisplayValue(menuElement, displayStyle)){
+                if (isDisplayValue(menuElement, displayStyle)) {
                     menuElement.style.display = "none";
                 }
-            }else{
-                if (isDisplayValue(menuElement, "none")){
+            } else {
+                if (isDisplayValue(menuElement, "none")) {
                     menuElement.style.display = displayStyle;
                 }
             }
@@ -325,12 +325,12 @@ function registryFixedElement(containerId, elementId, popButtonId,maxWidth,displ
     }), interval);
 
     /*绑定上层元素*/
-    callElement(containerId, element=>{
+    callElement(containerId, element => {
         element.addEventListener("click", function (event) {
             /*点击容器关闭元素*/
             if (isInClientWidth(0, maxWidth)) {
-                callElement(elementId, menuElement=>{
-                    if(isDisplayValue(menuElement, "grid")&&!menuElement.contains(event.target)){
+                callElement(elementId, menuElement => {
+                    if (isDisplayValue(menuElement, "grid") && !menuElement.contains(event.target)) {
                         menuElement.style.display = "none";
                     }
                 });
@@ -340,7 +340,7 @@ function registryFixedElement(containerId, elementId, popButtonId,maxWidth,displ
 
     /*绑定按钮点击控制显示、隐藏*/
     callElement(popButtonId, element => {
-        element.addEventListener("click", function(event) {
+        element.addEventListener("click", function (event) {
             if (!isInClientWidth(0, maxWidth)) {
                 return;
             }
@@ -356,7 +356,7 @@ function registryFixedElement(containerId, elementId, popButtonId,maxWidth,displ
     });
 }
 
-function hiddenFixedElement(elementId,maxWidth,displayStyle="grid"){
+function hiddenFixedElement(elementId, maxWidth, displayStyle = "grid") {
     /*
     根据Width判断元素是否要隐藏
     elementId, 要浮动的元素;
@@ -364,8 +364,8 @@ function hiddenFixedElement(elementId,maxWidth,displayStyle="grid"){
     displayStyle: 显示时的样式
     */
     if (isInClientWidth(0, maxWidth)) {
-        callElement(elementId, element=>{
-            if (isDisplayValue(element, displayStyle)){
+        callElement(elementId, element => {
+            if (isDisplayValue(element, displayStyle)) {
                 element.style.display = "none";
             }
         });

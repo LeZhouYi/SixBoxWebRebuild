@@ -1,14 +1,14 @@
-callElement("tidy_up_button", element=>{
-    element.addEventListener("click", async function(event){
+callElement("tidy_up_button", element => {
+    element.addEventListener("click", async function (event) {
         /*点击整理文件*/
-        try{
-            let spinner = createSpinner("tidy_up_button");
+        let spinner = createSpinner("tidy_up_button");
+        try {
             let result = await getJsonWithAuth("/filesTidyUp");
             displayMessage(result.message);
             updateFileList();
-            spinner.remove();
-        }catch(error){
+        } catch (error) {
             displayError(error);
+        } finally {
             spinner?.remove();
         }
     });

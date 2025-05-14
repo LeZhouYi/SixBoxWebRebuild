@@ -6,7 +6,7 @@ class ConfirmPopup {
     static spinnerId = "confirm_spin_panel";
     static popupTextId = "confirm_pop_text";
 
-    constructor(displayText="确认？",onConfirm=null,onCancel=null){
+    constructor(displayText = "确认？", onConfirm = null, onCancel = null) {
         /*
             onConfirm 点击确认按钮时的回调
             onCancel 点击取消按钮时的回调
@@ -23,68 +23,68 @@ class ConfirmPopup {
         this.hide = this.hide.bind(this);
     }
 
-    bindEvent(key,func){
+    bindEvent(key, func) {
         /*绑定回调函数*/
-        if(key === "onConfirm"){
+        if (key === "onConfirm") {
             this._onConfirm = func;
-            callElement(ConfirmPopup.confirmButtonId, element=>{
+            callElement(ConfirmPopup.confirmButtonId, element => {
                 element.removeEventListener("click", this.confirm)
                 element.addEventListener("click", this.confirm);
             });
-        } else if (key === "onCancel"){
+        } else if (key === "onCancel") {
             this.onCancel = func;
-            callElement(ConfirmPopup.cancelButtonId, element=>{
+            callElement(ConfirmPopup.cancelButtonId, element => {
                 element.removeEventListener("click", this.cancel)
                 element.addEventListener("click", this.cancel);
             });
         }
     }
 
-    confirm(event){
+    confirm(event) {
         /*确认*/
         let spinner = createSpinner(ConfirmPopup.spinnerId);
-        try{
+        try {
             this._onConfirm?.(event);
-        } catch(error){
+        } catch (error) {
             displayErrorMessage(error);
         } finally {
             spinner?.remove();
         }
     }
 
-    cancel(event){
+    cancel(event) {
         /*取消*/
-        try{
+        try {
             hiddenElementById(ConfirmPopup.overlayId);
             this._onCancel?.(event);
-        } catch(error){
+        } catch (error) {
             displayErrorMessage(error);
         }
     }
 
-    init(){
+    init() {
         /*初始化*/
-        window.addEventListener("load",function () {
+        window.addEventListener("load", function () {
             /*点击元素外关闭*/
             clickOverlayHidden(ConfirmPopup.overlayId, ConfirmPopup.contentId);
         });
-        callElement(ConfirmPopup.cancelButtonId, element=>{
+        callElement(ConfirmPopup.cancelButtonId, element => {
             element.addEventListener("click", this.cancel);
         });
-        callElement(ConfirmPopup.confirmButtonId, element=>{
+        callElement(ConfirmPopup.confirmButtonId, element => {
             element.addEventListener("click", this.confirm);
         });
     }
 
-    display(){
+    display() {
         /*显示弹窗*/
-        callElement(ConfirmPopup.popupTextId, element=>{
+        callElement(ConfirmPopup.popupTextId, element => {
             element.textContent = this.displayText;
         });
         displayElementById(ConfirmPopup.overlayId);
     }
 
-    hide(){
+    hide() {
         /*隐藏弹窗*/
         hiddenElementById(ConfirmPopup.overlayId);
     }

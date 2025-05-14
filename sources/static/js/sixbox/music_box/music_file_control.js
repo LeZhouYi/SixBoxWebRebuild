@@ -1,17 +1,17 @@
 let confirmPopup = new ConfirmPopup();
 
-window.addEventListener("load",function () {
+window.addEventListener("load", function () {
     clickOverlayHidden("music_add_overlay", "music_add_content");
     clickOverlayHidden("music_edit_overlay", "music_edit_content");
     confirmPopup.init();
-    confirmPopup.bindEvent("onConfirm",onConfirmDelete);
+    confirmPopup.bindEvent("onConfirm", onConfirmDelete);
 });
 
-function onConfirmDelete(event){
+function onConfirmDelete(event) {
     /*确认删除*/
     let nowControlData = parseSessionJson("nowControlData");
-    if (nowControlData.type){
-        if(nowControlData.type==="musicSet"){
+    if (nowControlData.type) {
+        if (nowControlData.type === "musicSet") {
             let deleteUrl = `/musicSets/${nowControlData.id}`;
             deleteJsonWithAuth(deleteUrl).then(data => {
                 displayMessage(data.message);
@@ -20,39 +20,39 @@ function onConfirmDelete(event){
                 updateCollectList();
                 updateMusicList();
             })
-            .catch(error =>{
-                displayError(error);
-            });
+                .catch(error => {
+                    displayError(error);
+                });
         }
-    }else{
+    } else {
         let deleteUrl = `/musics/${nowControlData.id}`;
         deleteJsonWithAuth(deleteUrl).then(data => {
             displayMessage(data.message);
             confirmPopup.hide();
             updateMusicList();
         })
-        .catch(error =>{
-            displayError(error);
-        });
+            .catch(error => {
+                displayError(error);
+            });
     }
 }
 
-callElement("add_music_button", element=>{
+callElement("add_music_button", element => {
     /*点击新增歌曲弹窗*/
-    element.addEventListener("click", function(event){
+    element.addEventListener("click", function (event) {
         displayElementById("music_add_overlay");
     });
 });
 
-callElement("music_add_cancel", element=>{
+callElement("music_add_cancel", element => {
     /*点击取消新增歌曲*/
-    element.addEventListener("click", function(event){
+    element.addEventListener("click", function (event) {
         hiddenElementById("music_add_overlay");
     });
 });
 
-callElement("music_add_select_element", element=>{
-	element.addEventListener("change", function (event) {
+callElement("music_add_select_element", element => {
+    element.addEventListener("change", function (event) {
         /*点击选择文件*/
         if (event.target.files && event.target.files.length > 0) {
             let fileName = event.target.files[0].name;
@@ -63,15 +63,15 @@ callElement("music_add_select_element", element=>{
     });
 });
 
-callElement("music_add_item_button", element=>{
-	element.addEventListener("click", function (event) {
+callElement("music_add_item_button", element => {
+    element.addEventListener("click", function (event) {
         /*点击新增选择文件*/
         document.getElementById("music_add_select_element").click();
     });
 });
 
-callElement("music_add_form", element=>{
-	element.addEventListener("submit", function (event) {
+callElement("music_add_form", element => {
+    element.addEventListener("submit", function (event) {
         /*点击新增文件*/
         event.preventDefault();
         let fileElement = document.getElementById("music_add_select_element");
@@ -90,43 +90,43 @@ callElement("music_add_form", element=>{
             hiddenElementById("music_add_overlay");
             updateMusicList();
         })
-        .catch(error => {
-            displayError(error);
-        });
+            .catch(error => {
+                displayError(error);
+            });
     });
 });
 
-callElement("music_edit_button", element=>{
+callElement("music_edit_button", element => {
     /*点击编辑*/
-    element.addEventListener("click", function(event){
+    element.addEventListener("click", function (event) {
         hiddenElementById("music_control_overlay");
         displayElementById("music_edit_overlay");
         let nowData = parseSessionJson("nowControlData");
-        callElement("music_edit_name", nameElement=>{
+        callElement("music_edit_name", nameElement => {
             nameElement.value = nowData.name;
         });
-        callElement("music_edit_singer", singerElement=>{
+        callElement("music_edit_singer", singerElement => {
             singerElement.value = nowData.singer;
         });
-        callElement("music_edit_album", albumElement=>{
+        callElement("music_edit_album", albumElement => {
             albumElement.value = nowData.album;
         });
-        callElement("music_edit_tags", tagsElement=>{
+        callElement("music_edit_tags", tagsElement => {
             tagsElement.value = nowData.tags;
         });
     });
 });
 
-callElement("music_edit_cancel", element=>{
+callElement("music_edit_cancel", element => {
     /*取消编辑*/
-    element.addEventListener("click", function(event){
+    element.addEventListener("click", function (event) {
         hiddenElementById("music_edit_overlay");
     });
 });
 
-callElement("music_edit_form", element=>{
+callElement("music_edit_form", element => {
     /*确认编辑*/
-    element.addEventListener("submit", function(event){
+    element.addEventListener("submit", function (event) {
         event.preventDefault();
         let formData = {
             name: document.getElementById("music_edit_name").value,
@@ -140,24 +140,24 @@ callElement("music_edit_form", element=>{
             hiddenElementById("music_edit_overlay");
             updateMusicList();
         })
-        .catch(error => {
-            displayError(error);
-        });
+            .catch(error => {
+                displayError(error);
+            });
     });
 });
 
-callElement("music_delete_button", element=>{
+callElement("music_delete_button", element => {
     /*点击删除*/
-    element.addEventListener("click", function(event){
+    element.addEventListener("click", function (event) {
         hiddenElementById("music_control_overlay");
         confirmPopup.displayText = "确认删除？";
         confirmPopup.display();
     });
 });
 
-callElement("music_download_button", element=>{
+callElement("music_download_button", element => {
     /*点击下载*/
-    element.addEventListener("click", function(event){
+    element.addEventListener("click", function (event) {
         hiddenElementById("music_control_overlay");
         let accessToken = localStorage.getItem("accessToken");
         let nowControlData = parseSessionJson("nowControlData");
@@ -166,10 +166,10 @@ callElement("music_download_button", element=>{
     });
 });
 
-callElement("msc_ctrl_add_set_button", element=>{
+callElement("msc_ctrl_add_set_button", element => {
     /*点击添加合集*/
-    element.addEventListener("click", function(event){
-        callElement("msc_add_set_name", async function(selectElement){
+    element.addEventListener("click", function (event) {
+        callElement("msc_add_set_name", async function (selectElement) {
             selectElement.innerHTML = null;
             await create_collect_option(selectElement);
         });
@@ -178,18 +178,18 @@ callElement("msc_ctrl_add_set_button", element=>{
     });
 })
 
-callElement("msc_ctrl_del_set_button", element=>{
+callElement("msc_ctrl_del_set_button", element => {
     /*点击删除合集*/
-    element.addEventListener("click", function(event){
+    element.addEventListener("click", function (event) {
         let nowMscSetId = sessionStorage.getItem("nowMscSetId");
-        if(nowMscSetId === "1"){
+        if (nowMscSetId === "1") {
             displayError("不能移除出默认合集");
             hiddenElementById("music_control_overlay");
             return;
         }
         let nowControlData = parseSessionJson("nowControlData");
         let removeUrl = `/musicSets/${nowMscSetId}/remove`;
-        postJsonWithAuth(removeUrl,{
+        postJsonWithAuth(removeUrl, {
             "music_id": `${nowControlData.id}`
         }).then(data => {
             displayMessage(data.message);
@@ -197,8 +197,8 @@ callElement("msc_ctrl_del_set_button", element=>{
             updateCollectList();
             updateMusicList();
         })
-        .catch(error => {
-            displayError(error);
-        });
+            .catch(error => {
+                displayError(error);
+            });
     });
 })

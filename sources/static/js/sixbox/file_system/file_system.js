@@ -17,7 +17,7 @@ const FileTypeMap = {
         "src": "/static/icons/image.png",
         "text": "图片",
         "controls": [
-            0, 1, 2, 3, 4 ,5
+            0, 1, 2, 3, 4, 5
         ]
     },
     "3": {
@@ -43,7 +43,7 @@ const FileTypeMap = {
     }
 }
 
-window.addEventListener("load",function () {
+window.addEventListener("load", function () {
     /*检查并初始化存储数据*/
     checkLocalStorage();
 
@@ -56,7 +56,7 @@ window.addEventListener("load",function () {
 
     /*页面调整*/
     setNavigationBarTitle("文件仓库");
-    loadUserInfo(function(){
+    loadUserInfo(function () {
         initBackground();
     });
     resizeFullScreen();
@@ -64,17 +64,17 @@ window.addEventListener("load",function () {
     window.addEventListener("resize", throttle(function () {
         resizeFullScreen("bodyContainer");
     }), 200);
-    registryFixedElement("file_sys_container","file_sys_menu","file_menu_pop_button",999);
+    registryFixedElement("file_sys_container", "file_sys_menu", "file_menu_pop_button", 999);
 });
 
-callElement("all_file_button", element=>{
-	element.addEventListener("click", function (event) {
+callElement("all_file_button", element => {
+    element.addEventListener("click", function (event) {
         /*点击所有文件*/
-        hiddenFixedElement("file_sys_menu",999);
+        hiddenFixedElement("file_sys_menu", 999);
         let nowFolderId = sessionStorage.getItem("nowFolderId");
         let nowPage = sessionStorage.getItem("nowPage");
         let searchInput = document.getElementById("file_search_input");
-        callElement("file_search_input", searchInput=>{
+        callElement("file_search_input", searchInput => {
             if (nowFolderId !== "1" || nowPage !== "1" || searchInput.value !== "") {
                 sessionStorage.setItem("nowFolderId", "1");
                 sessionStorage.setItem("nowPage", "1");
@@ -85,7 +85,7 @@ callElement("all_file_button", element=>{
     });
 });
 
-callElement("file_search_input", element=>{
+callElement("file_search_input", element => {
     element.addEventListener("keydown", function (event) {
         /*输入搜索文件*/
         if (event.key === "Enter" || event.keyCode === 13) {
@@ -133,53 +133,51 @@ async function updateFileList() {
     setNowPage("page_input_id", nowPage);
     let pageIndex = parseInt(nowPage) - 1;
 
-    let spinner = createSpinner("file_table_spinner","spin_panel_light");
+    let spinner = createSpinner("file_table_spinner", "spin_panel_light");
     try {
         let searchInput = document.getElementById("file_search_input");
         if (searchInput.value !== "") {
             let data = await getJsonWithAuth(`/files?nameLike=${searchInput.value}&_page=${pageIndex}&_limit=${nowLimit}`);
 
             let contents = data.contents;
-            callElement("file_table_body", fileListTable=>{
+            callElement("file_table_body", fileListTable => {
                 fileListTable.innerHTML = null;
                 contents.forEach(content => {
                     fileListTable.appendChild(createFileItem(content));
                 });
             });
             setTotalPage(data.total, "page_text_id", nowLimit);
-            spinner?.remove();
             return;
+        }
+
+        try {
+            let nowFolderId = sessionStorage.getItem("nowFolderId");
+            let data = await getJsonWithAuth(`/folders/${nowFolderId}?_page=${pageIndex}&_limit=${nowLimit}`);
+            let contents = data.contents;
+            callElement("file_table_body", fileListTable => {
+                fileListTable.innerHTML = null;
+                contents.forEach(content => {
+                    fileListTable.appendChild(createFileItem(content));
+                });
+            });
+            setTotalPage(data.total, "page_text_id", nowLimit);
+
+            clearElementByStart("file_path_bar", 1);
+            data.parents.forEach(parentData => {
+                addFilePathElement("file_path_bar", parentData.name, parentData.id);
+            });
+            addFilePathElement("file_path_bar", data.name, data.id);
+        }
+        catch (error) {
+            if (sessionStorage.getItem("nowFolderId") !== "1") {
+                sessionStorage.setItem("nowFolderId", "1")
+                updateFileList();
+            }
+            throw error;
         }
     } catch (error) {
         displayError(error);
-        spinner?.remove();
-    }
-
-    try {
-        let nowFolderId = sessionStorage.getItem("nowFolderId");
-        let data = await getJsonWithAuth(`/folders/${nowFolderId}?_page=${pageIndex}&_limit=${nowLimit}`);
-        let contents = data.contents;
-        callElement("file_table_body", fileListTable=>{
-            fileListTable.innerHTML = null;
-            contents.forEach(content => {
-                fileListTable.appendChild(createFileItem(content));
-            });
-        });
-        setTotalPage(data.total, "page_text_id", nowLimit);
-
-        clearElementByStart("file_path_bar", 1);
-        data.parents.forEach(parentData => {
-            addFilePathElement("file_path_bar", parentData.name, parentData.id);
-        });
-        addFilePathElement("file_path_bar", data.name, data.id);
-        spinner?.remove();
-    }
-    catch (error) {
-        displayError(error);
-        if (sessionStorage.getItem("nowFolderId") !== "1") {
-            sessionStorage.setItem("nowFolderId", "1")
-            updateFileList();
-        }
+    } finally {
         spinner?.remove();
     }
 }
@@ -188,7 +186,7 @@ async function loadFolderSelect(dataListId, nowFolderId, editFolderId = null) {
     /*为特定元素提供候选输入*/
     try {
         let data = await getJsonWithAuth(`/folders/${nowFolderId}?type=0&_page=0&_limit=999`);
-        callElement(dataListId, selectElement=>{
+        callElement(dataListId, selectElement => {
             selectElement.innerHTML = null;
             /*默认选项*/
             let defaultOptGroup = createOptGroup("默认");
@@ -213,14 +211,14 @@ async function loadFolderSelect(dataListId, nowFolderId, editFolderId = null) {
             }
             selectElement.value = data.id;
         });
-        if(!data.parentId){
+        if (!data.parentId) {
             return;
         }
         data = await getJsonWithAuth(`/folders/${data.parentId}?type=0&_page=0&_limit=10`);
         let parentOptGroup = createOptGroup("父文件夹");
         let parentOption = createOption(data.name, data.id);
         parentOptGroup.appendChild(parentOption);
-        callElement(dataListId, selectElement=>{
+        callElement(dataListId, selectElement => {
             selectElement.appendChild(parentOptGroup);
         });
     }
@@ -250,11 +248,11 @@ function createFileItem(fileData) {
     /*绑定事件*/
     if (fileType === "0") {
         bindClickFolder(fileNameDiv, fileData);
-    }else if(fileType === "2"){
+    } else if (fileType === "2") {
         bindClickImage(fileNameDiv, fileData);
-    }else if(fileType === "4"){
+    } else if (fileType === "4") {
         bindClickVideo(fileItem, fileNameDiv, fileData);
-    }else if(fileType === "5"){
+    } else if (fileType === "5") {
         bindClickText(fileItem, fileNameDiv, fileData);
     }
 
@@ -292,7 +290,7 @@ function bindClickFolder(element, fileData) {
     /*绑定文件夹点击事件*/
     element.addEventListener("click", function (event) {
         sessionStorage.setItem("nowFolderId", fileData.id);
-        callElement("file_search_input", element=>{
+        callElement("file_search_input", element => {
             element.value = "";
         });
         updateFileList();
@@ -336,7 +334,7 @@ function checkLocalStorage() {
 
 function addFilePathElement(parentId, folderName, folderId) {
     /*为文件路径添加单个可点击路径*/
-    callElement(parentId, parentElement=>{
+    callElement(parentId, parentElement => {
         let folderElement = document.createElement("div");
         folderElement.textContent = folderName;
         folderElement.classList.add("file_path_text", "clickable");

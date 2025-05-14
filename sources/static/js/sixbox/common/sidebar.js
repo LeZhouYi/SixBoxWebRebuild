@@ -106,7 +106,7 @@ function reverseIsShowSidebar() {
     }
 }
 
-function onSidebarResize(contentId, sidebarId = "side_bar_container", overlayId = "side_bar_overlay"){
+function onSidebarResize(contentId, sidebarId = "side_bar_container", overlayId = "side_bar_overlay") {
     /*当元素尺寸变化*/
     let controlElement = document.getElementById(controlId);
     let overlayElement = document.getElementById(overlayId);
@@ -114,7 +114,7 @@ function onSidebarResize(contentId, sidebarId = "side_bar_container", overlayId 
     if (!controlElement || !overlayElement || !sidebarElement) {
         return;
     }
-    if(!isInClientWidth(0,SideBarWidth)){
+    if (!isInClientWidth(0, SideBarWidth)) {
         sessionStorage.setItem("isShowSidebar", "0");
         updateSidebar(contentId, sidebarId, overlayId);
     }

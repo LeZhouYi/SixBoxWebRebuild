@@ -12,7 +12,7 @@ function setBackgroundImage(className, fileUrl) {
     });
 }
 
-async function loadUserInfo(callback){
+async function loadUserInfo(callback) {
     /*加载用户信息*/
     try {
         let userInfo = await getJsonWithAuth("/userDetail");
@@ -27,7 +27,7 @@ function initBackground() {
     /*初始化主题背景*/
     let userInfo = JSON.parse(localStorage.getItem("userInfo"));
     let accessToken = localStorage.getItem("accessToken");
-    if(userInfo.background){
+    if (userInfo.background) {
         setBackgroundImage("body_default", `api/v1/files/${userInfo.background}/download?token=${accessToken}`);
     }
 }

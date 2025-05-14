@@ -5,7 +5,7 @@ function setTotalPage(total, textId = "page_text_id", nowLimit = "10") {
     if (totalPage < 1) {
         totalPage = 1;
     }
-    callElement(textId, textElement=>{
+    callElement(textId, textElement => {
         sessionStorage.setItem("nowTotalPage", String(totalPage));
         textElement.textContent = `页/共${totalPage}页`;
     });
@@ -23,7 +23,7 @@ function setNowPage(inputId = "page_input_id", page = "1") {
 
 function setPageLimit(elementId = "page_select_limit", limit = "10") {
     /*更新每页项数*/
-    callElement(elementId, selectElement=>{
+    callElement(elementId, selectElement => {
         selectElement.value = limit;
     });
 }

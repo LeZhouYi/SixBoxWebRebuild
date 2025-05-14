@@ -7,8 +7,8 @@ window.addEventListener("resize", throttle(function () {
     resizeFullScreen("bodyContainer");
 }), 200);
 
-callElement("login_form", element=>{
-	element.addEventListener("submit", function (event) {
+callElement("login_form", element => {
+    element.addEventListener("submit", function (event) {
         /*点击登录*/
         event.preventDefault();
         let spinner = createSpinner("login_button_panel");
@@ -19,15 +19,15 @@ callElement("login_form", element=>{
         postJson("/sessions", formData).then(data => {
             localStorage.setItem("accessToken", data.accessToken);
             localStorage.setItem("refreshToken", data.refreshToken);
-            history.replaceState(null,document.title, "/home.html");
+            history.replaceState(null, document.title, "/home.html");
             window.location.href = "/home.html";
             spinner.remove();
         })
-        .catch(error => {
-            displayError(error);
-        })
-        .finally(()=>{
-            spinner?.remove();
-        });
+            .catch(error => {
+                displayError(error);
+            })
+            .finally(() => {
+                spinner?.remove();
+            });
     });
 });

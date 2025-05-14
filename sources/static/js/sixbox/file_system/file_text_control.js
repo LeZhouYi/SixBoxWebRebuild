@@ -1,123 +1,111 @@
-window.addEventListener("load",function () {
+window.addEventListener("load", function () {
     clickOverlayHidden("text_add_popup_overlay", "text_add_content");
     clickOverlayHidden("text_display_popup_overlay", "text_display_content");
 });
 
-callElement("text_edit_button", editElement=>{
-    editElement.addEventListener("click", function(event){
-        try{
-            let spinner = createSpinner("text_display_button_panel");
+callElement("text_edit_button", editElement => {
+    editElement.addEventListener("click", function (event) {
+        let spinner = createSpinner("text_display_button_panel");
+        try {
             let fileId = sessionStorage.getItem("nowDisplayId");
-            onPopupEditText(fileId, function(){
+            onPopupEditText(fileId, function () {
                 hiddenElementById("text_display_popup_overlay");
                 spinner.remove();
             });
-        } catch (error){
+        } catch (error) {
             displayError(error);
+        } finally {
             spinner?.remove();
         }
     });
 });
 
-callElement("text_close_button", element=>{
-    element.addEventListener("click", function(event){
+callElement("text_close_button", element => {
+    element.addEventListener("click", function (event) {
         /*点击隐藏显示文本*/
         hiddenElementById("text_display_popup_overlay");
     });
 })
 
-callElement("text_add_form", element=>{
-    element.addEventListener("submit", function(event){
+callElement("text_add_form", element => {
+    element.addEventListener("submit", function (event) {
         /*点击新增富文本*/
         event.preventDefault();
-        try{
+        let spinner = createSpinner("text_add_button_panel");
+        try {
             let title = document.getElementById("text_add_title").textContent;
-            let spinner = createSpinner("text_add_button_panel");
             let formData = {
                 name: document.getElementById("text_add_name").value,
                 parentId: document.getElementById("text_add_folder_select").value,
                 content: tinymce.get("text_add_mce_field").getContent()
             };
-            if(title==="新增文本"){
+            if (title === "新增文本") {
                 postJsonWithAuth("/texts", formData).then(data => {
                     displayMessage(data.message);
                     hiddenElementById("text_add_popup_overlay");
                     updateFileList();
-                })
-                .catch(error => {
-                    displayError(error);
-                })
-                .finally(()=>{
-                    spinner?.remove();
                 });
-            }else{
+            } else {
                 let nowControlData = parseSessionJson("nowControlData");
                 putJsonWithAuth(`/texts/${nowControlData.id}`, formData).then(data => {
                     displayMessage(data.message);
                     hiddenElementById("text_add_popup_overlay");
                     updateFileList();
-                })
-                .catch(error => {
-                    displayError(error);
-                })
-                .finally(()=>{
-                    spinner?.remove();
                 });
             }
-        } catch (error){
+        } catch (error) {
             displayError(error);
+        } finally {
             spinner?.remove();
         }
     });
 });
 
-callElement("text_add_cancel", element=>{
-    element.addEventListener("click", function(event){
+callElement("text_add_cancel", element => {
+    element.addEventListener("click", function (event) {
         /*隐藏弹窗*/
         hiddenElementById("text_add_popup_overlay");
     });
 });
 
-callElement("add_text_button", element=>{
-    element.addEventListener("click", function(event){
+callElement("add_text_button", element => {
+    element.addEventListener("click", function (event) {
         /*点击弹出新增文本*/
-        callElement("text_add_mce_field", fieldElement=>{
+        callElement("text_add_mce_field", fieldElement => {
             let tinymceElement = fieldElement.nextElementSibling;
-            let spinner = createSpinner("add_text_button","spin_panel");
-            try{
-                callElement("text_add_title", titleElement=>{
-                    if(titleElement.textContent!=="新增文本"){
+            let spinner = createSpinner("add_text_button", "spin_panel");
+            try {
+                callElement("text_add_title", titleElement => {
+                    if (titleElement.textContent !== "新增文本") {
                         tinymce.get("text_add_mce_field").setContent("");
-                        titleElement.textContent="新增文本";
+                        titleElement.textContent = "新增文本";
                     }
                 });
                 let nowFolderId = sessionStorage.getItem("nowFolderId");
                 loadFolderSelect("text_add_folder_select", nowFolderId);
-                if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")){
+                if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")) {
                     displayElementById("text_add_popup_overlay");
-                    hiddenFixedElement("file_sys_menu",999);
-                    spinner?.remove();
-                }else{
+                    hiddenFixedElement("file_sys_menu", 999);
+                } else {
                     initEditMce(
                         "text_add_mce_field",
-                        function(){
+                        function () {
                             displayElementById("text_add_popup_overlay");
-                            hiddenFixedElement("file_sys_menu",999);
-                            spinner?.remove();
+                            hiddenFixedElement("file_sys_menu", 999);
                         },
                         onTextAddFullChange
                     );
                 }
-            }
-            catch (error){
+            } catch (error) {
                 displayError(error);
+            } finally {
                 spinner?.remove();
             }
         });
     });
 });
 
-function initEditMce(mceInputId, initCallBack, fullChangeBack){
+function initEditMce(mceInputId, initCallBack, fullChangeBack) {
     /*初始化富文本编辑框*/
     tinymce.init({
         selector: `#${mceInputId}`,
@@ -140,15 +128,15 @@ function initEditMce(mceInputId, initCallBack, fullChangeBack){
         promotion: false,
         license_key: "gpl",
         fullscreen_native: true,
-        setup: function(editor){
-            editor.on("init", function(){
-                callElementsByClass(".tox.tox-silver-sink.tox-tinymce-aux", tinymceElements=>{
-                    tinymceElements.forEach(function(tinymceElement){
+        setup: function (editor) {
+            editor.on("init", function () {
+                callElementsByClass(".tox.tox-silver-sink.tox-tinymce-aux", tinymceElements => {
+                    tinymceElements.forEach(function (tinymceElement) {
                         tinymceElement.style.position = "fixed";
                     });
                 });
-                callElementsByClass(".tox.tox-tinymce", tinymceElements=>{
-                    tinymceElements.forEach(function(tinymceElement){
+                callElementsByClass(".tox.tox-tinymce", tinymceElements => {
+                    tinymceElements.forEach(function (tinymceElement) {
                         tinymceElement.classList.add("form_input_border");
                     });
                 });
@@ -162,20 +150,20 @@ function initEditMce(mceInputId, initCallBack, fullChangeBack){
     });
 }
 
-function onTextAddFullChange(){
+function onTextAddFullChange() {
     /*当编辑器的全屏进入/退出*/
-    callElement("text_add_mce_field", fieldElement=>{
+    callElement("text_add_mce_field", fieldElement => {
         let tinymceElement = fieldElement.nextElementSibling;
-        if(tinymceElement && tinymceElement.classList.contains("tox-tinymce")){
-            callElement("text_add_popup_overlay", overlayElement=>{
-                if(!isHidden(overlayElement)){
+        if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")) {
+            callElement("text_add_popup_overlay", overlayElement => {
+                if (!isHidden(overlayElement)) {
                     let fullscreenElement = (
                         document.fullscreenElement || document.mozFullScreenElement ||
                         document.webkitFullscreenElement || document.msFullscreenElement
                     );
-                    if (fullscreenElement){
+                    if (fullscreenElement) {
                         tinymceElement.style.borderRadius = "0px";
-                    }else{
+                    } else {
                         tinymceElement.style.borderRadius = "inherit";
                     }
                 }
@@ -184,56 +172,55 @@ function onTextAddFullChange(){
     });
 }
 
-function bindClickText(fileItem, element, fileData){
+function bindClickText(fileItem, element, fileData) {
     /*绑定点击富文本事件*/
-    element.addEventListener("click", function(event){
+    element.addEventListener("click", function (event) {
         sessionStorage.setItem("nowDisplayId", fileData.id);
         sessionStorage.setItem("nowControlData", JSON.stringify(fileData));
-        callElement("text_display_mce_field", async function(fieldElement){
+        callElement("text_display_mce_field", async function (fieldElement) {
             let tinymceElement = fieldElement.nextElementSibling;
             let spinner = createSpinnerByElement(fileItem, "spin_panel_light");
-            try{
+            try {
                 let fileId = sessionStorage.getItem("nowDisplayId");
                 let textData = await getJsonWithAuth(`/texts/${fileId}`);
-                callElement("text_display_name", nameElement=>{
+                callElement("text_display_name", nameElement => {
                     text_display_name.value = textData.name;
                 });
-                if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")){
+                if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")) {
                     displayElementById("text_display_popup_overlay");
                     tinymce.get("text_display_mce_field").setContent(textData.content);
                     bindMceClickHref("text_display_mce_field");
-                    spinner.remove();
-                }else{
+                } else {
                     initDisplayMce(
                         "text_display_mce_field",
-                        function(){
+                        function () {
                             displayElementById("text_display_popup_overlay");
                             tinymce.get("text_display_mce_field").setContent(textData.content);
                             bindMceClickHref("text_display_mce_field");
-                            spinner.remove();
                         }
                     );
                 }
             }
-            catch (error){
+            catch (error) {
                 displayError(error);
+            } finally {
                 spinner.remove();
             }
         });
     });
 }
 
-function bindMceClickHref(mceId){
+function bindMceClickHref(mceId) {
     /*给mce内容中的a元素绑定点击事件*/
     let editor = tinymce.get("text_display_mce_field");
-    if(editor){
+    if (editor) {
         let contentDoc = editor.getDoc();
         let aElements = contentDoc.getElementsByTagName("a");
         let prefixUrl = getFullDomain();
-        for(let i = 0; i< aElements.length; i++){
+        for (let i = 0; i < aElements.length; i++) {
             let href = aElements[i].href;
-            if(href&&href.startsWith(prefixUrl)){
-                aElements[i].addEventListener("click", function(event){
+            if (href && href.startsWith(prefixUrl)) {
+                aElements[i].addEventListener("click", function (event) {
                     let accessToken = localStorage.getItem("accessToken");
                     downloadByA(`${href}?token=${accessToken}`);
                     event.preventDefault();
@@ -244,7 +231,7 @@ function bindMceClickHref(mceId){
     }
 }
 
-function initDisplayMce(mceInputId, initCallBack){
+function initDisplayMce(mceInputId, initCallBack) {
     /*初始化富文本编辑框*/
     tinymce.init({
         selector: `#${mceInputId}`,
@@ -266,15 +253,15 @@ function initDisplayMce(mceInputId, initCallBack){
         promotion: false,
         license_key: "gpl",
         fullscreen_native: true,
-        setup: function(editor){
-            editor.on("init", function(){
-                callElementsByClass(".tox.tox-silver-sink.tox-tinymce-aux", tinymceElements=>{
-                    tinymceElements.forEach(function(tinymceElement){
+        setup: function (editor) {
+            editor.on("init", function () {
+                callElementsByClass(".tox.tox-silver-sink.tox-tinymce-aux", tinymceElements => {
+                    tinymceElements.forEach(function (tinymceElement) {
                         tinymceElement.style.position = "fixed";
                     });
                 });
-                callElementsByClass(".tox.tox-tinymce", tinymceElements=>{
-                    tinymceElements.forEach(function(tinymceElement){
+                callElementsByClass(".tox.tox-tinymce", tinymceElements => {
+                    tinymceElements.forEach(function (tinymceElement) {
                         tinymceElement.classList.add("form_input_border");
                     });
                 });
@@ -284,27 +271,27 @@ function initDisplayMce(mceInputId, initCallBack){
     });
 }
 
-function onPopupEditText(textId, callback){
-    callElement("text_add_mce_field", async function(fieldElement){
+function onPopupEditText(textId, callback) {
+    callElement("text_add_mce_field", async function (fieldElement) {
         let tinymceElement = fieldElement.nextElementSibling;
-        try{
-            callElement("text_add_title", titleElement=>{
-                titleElement.textContent="编辑文本";
+        try {
+            callElement("text_add_title", titleElement => {
+                titleElement.textContent = "编辑文本";
             });
             let textData = await getJsonWithAuth(`/texts/${textId}`);
-            callElement("text_add_name", nameElement=>{
+            callElement("text_add_name", nameElement => {
                 nameElement.value = textData.name;
             });
             let nowControlData = parseSessionJson("nowControlData");
             loadFolderSelect("text_add_folder_select", nowControlData.parentId);
-            if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")){
+            if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")) {
                 displayElementById("text_add_popup_overlay");
                 tinymce.get("text_add_mce_field").setContent(textData.content);
                 callback?.();
-            }else{
+            } else {
                 initEditMce(
                     "text_add_mce_field",
-                    function(){
+                    function () {
                         displayElementById("text_add_popup_overlay");
                         tinymce.get("text_add_mce_field").setContent(textData.content);
                         callback?.();
@@ -313,7 +300,7 @@ function onPopupEditText(textId, callback){
                 );
             }
         }
-        catch (error){
+        catch (error) {
             displayError(error);
         }
     });

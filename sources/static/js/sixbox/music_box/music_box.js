@@ -1,4 +1,4 @@
-window.addEventListener("load",function () {
+window.addEventListener("load", function () {
     /*检查并初始化存储数据*/
     checkLocalStorage();
 
@@ -8,7 +8,7 @@ window.addEventListener("load",function () {
 
     /*页面调整*/
     setNavigationBarTitle("音乐盒");
-    loadUserInfo(function(){
+    loadUserInfo(function () {
         initBackground();
     });
     resizeFullScreen();
@@ -19,22 +19,22 @@ window.addEventListener("load",function () {
     window.addEventListener("resize", throttle(function () {
         resizeFullScreen("bodyContainer");
     }), 200);
-    registryFixedElement("music_box_container","music_collect_menu","music_menu_pop_button",950);
+    registryFixedElement("music_box_container", "music_collect_menu", "music_menu_pop_button", 950);
 });
 
-function initMusicBar(){
+function initMusicBar() {
     /*初始化页面元素*/
-    callElement("music_bar_volume", element=>{
+    callElement("music_bar_volume", element => {
         let nowPlayVolume = localStorage.getItem("nowPlayVolume");
         element.value = nowPlayVolume;
     });
-    callElement("music_bar_order_button", element=>{
+    callElement("music_bar_order_button", element => {
         let nowPlayMode = sessionStorage.getItem("nowPlayMode");
-        if (nowPlayMode === "order"){
+        if (nowPlayMode === "order") {
             element.src = "/static/icons/order_play.png";
-        } else if (nowPlayMode === "random"){
+        } else if (nowPlayMode === "random") {
             element.src = "/static/icons/random_order.png";
-        } else{
+        } else {
             element.src = "/static/icons/only_play.png";
         }
     });
@@ -52,26 +52,26 @@ function checkLocalStorage() {
     checkSessionDefault("nowPlayMode", "order");
 }
 
-async function updateMusicList(){
+async function updateMusicList() {
     /*更新并显示当前音频合集*/
-    try{
+    try {
         let nowMscSetId = sessionStorage.getItem("nowMscSetId");
         let searchInput = document.getElementById("music_search_input");
         let data = null;
 
-        if (searchInput.value !== ""){
+        if (searchInput.value !== "") {
             data = await getJsonWithAuth(`/musics?_page=0&_limit=999&nameLike=${searchInput.value}`);
-            callElement("music_control_title_text", titleElement=>{
+            callElement("music_control_title_text", titleElement => {
                 titleElement.textContent = "搜索";
             });
-        } else{
+        } else {
             data = await getJsonWithAuth(`/musicSets/${nowMscSetId}?_page=0&_limit=999`);
-            callElement("music_control_title_text", titleElement=>{
+            callElement("music_control_title_text", titleElement => {
                 titleElement.textContent = data.name;
             });
         }
         let contents = data.contents;
-        callElement("music_content_row", rowElement=>{
+        callElement("music_content_row", rowElement => {
             rowElement.innerHTML = null;
             contents.forEach(content => {
                 rowElement.appendChild(createMusicItem(content, data));
@@ -79,12 +79,12 @@ async function updateMusicList(){
         });
 
 
-    } catch(error){
+    } catch (error) {
         displayError(error);
     }
 }
 
-function createMusicItem(content, setData){
+function createMusicItem(content, setData) {
     /*创建单行音频元素*/
     let musicItem = document.createElement("div");
     musicItem.classList.add("music_content");
@@ -135,22 +135,22 @@ function createMusicItem(content, setData){
     return musicItem;
 }
 
-async function updateCollectList(){
+async function updateCollectList() {
     /*更新合集列表*/
-    try{
+    try {
         let data = await getJsonWithAuth("/musicSets?_page=0&_limit=999");
         clearElementByStart("music_menu_dl");
-        callElement("music_menu_dl", menuElement=>{
+        callElement("music_menu_dl", menuElement => {
             data.forEach(content => {
                 menuElement.appendChild(createMusicMenuItem(content));
             });
         });
-    } catch(error){
+    } catch (error) {
         displayError(error);
     }
 }
 
-function createMusicMenuItem(content){
+function createMusicMenuItem(content) {
     /*创建合集元素*/
     let menuItemDiv = document.createElement("div");
     menuItemDiv.classList.add("music_menu_item", "clickable");
@@ -173,7 +173,7 @@ function createMusicMenuItem(content){
     return menuItemDiv;
 }
 
-callElement("music_search_input", element=>{
+callElement("music_search_input", element => {
     element.addEventListener("keydown", function (event) {
         /*输入搜索文件*/
         if (event.key === "Enter" || event.keyCode === 13) {
