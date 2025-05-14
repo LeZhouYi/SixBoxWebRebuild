@@ -1,8 +1,41 @@
+let confirmPopup = new ConfirmPopup();
+
 window.addEventListener("load",function () {
     clickOverlayHidden("music_add_overlay", "music_add_content");
     clickOverlayHidden("music_edit_overlay", "music_edit_content");
-    clickOverlayHidden("confirm_popup_overlay", "confirm_popup_content");
+    confirmPopup.init();
+    confirmPopup.bindEvent("onConfirm",onConfirmDelete);
 });
+
+function onConfirmDelete(event){
+    /*确认删除*/
+    let nowControlData = parseSessionJson("nowControlData");
+    if (nowControlData.type){
+        if(nowControlData.type==="musicSet"){
+            let deleteUrl = `/musicSets/${nowControlData.id}`;
+            deleteJsonWithAuth(deleteUrl).then(data => {
+                displayMessage(data.message);
+                confirmPopup.hide();
+                sessionStorage.setItem("nowMscSetId", "1");
+                updateCollectList();
+                updateMusicList();
+            })
+            .catch(error =>{
+                displayError(error);
+            });
+        }
+    }else{
+        let deleteUrl = `/musics/${nowControlData.id}`;
+        deleteJsonWithAuth(deleteUrl).then(data => {
+            displayMessage(data.message);
+            confirmPopup.hide();
+            updateMusicList();
+        })
+        .catch(error =>{
+            displayError(error);
+        });
+    }
+}
 
 callElement("add_music_button", element=>{
     /*点击新增歌曲弹窗*/
@@ -116,9 +149,9 @@ callElement("music_edit_form", element=>{
 callElement("music_delete_button", element=>{
     /*点击删除*/
     element.addEventListener("click", function(event){
-        document.getElementById("confirm_pop_text").textContent = "确认删除？";
         hiddenElementById("music_control_overlay");
-        displayElementById("confirm_popup_overlay");
+        confirmPopup.displayText = "确认删除？";
+        confirmPopup.display();
     });
 });
 

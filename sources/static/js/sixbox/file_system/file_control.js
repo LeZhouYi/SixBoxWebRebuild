@@ -1,13 +1,16 @@
+let confirmPopup = new ConfirmPopup();
+
 window.addEventListener("load",function () {
     clickOverlayHidden("file_control_overlay", "file_control_content");
-    clickOverlayHidden("confirm_popup_overlay", "confirm_popup_content");
+    confirmPopup.init();
+    confirmPopup.bindEvent("onConfirm",onConfirmDelete);
 });
 
 callElement("set_background_button", element=>{
     element.addEventListener("click", async function (event) {
         /*点击设置背景*/
+        let spinner = createSpinner("set_background_button");
         try{
-            let spinner = createSpinner("set_background_button");
             let nowControlData = parseSessionJson("nowControlData");
             let userInfo = parseLocalJson("userInfo");
             let content = await putJsonWithAuth(`/users/${userInfo.id}`, {
@@ -27,48 +30,39 @@ callElement("set_background_button", element=>{
     });
 });
 
-callElement("cancel_popup_button", element=>{
-    element.addEventListener("click", function (event) {
-        /*点击取消*/
-        hiddenElementById("confirm_popup_overlay");
-    });
-});
-
-callElement("confirm_popup_button", element=>{
-    element.addEventListener("click", function (event) {
-        /*点击确认删除*/
-        let nowControlData = parseSessionJson("nowControlData");
-        let spinner = createSpinner("confirm_spin_panel");
+function onConfirmDelete(event){
+    /*点击确认删除*/
+    let nowControlData = parseSessionJson("nowControlData");
+    let spinner = createSpinner("confirm_spin_panel");
+    try{
         if (nowControlData.type === "0") {
             let deleteUrl = `/folders/${nowControlData.id}`;
             deleteJsonWithAuth(deleteUrl).then(data => {
                 displayMessage(data.message);
-                hiddenElementById("confirm_popup_overlay");
+                confirmPopup.hide();
                 updateFileList();
-            })
-            .finally(()=>{
-                spinner?.remove();
             });
         } else {
             let deleteUrl = `/files/${nowControlData.id}`;
             deleteJsonWithAuth(deleteUrl).then(data => {
                 displayMessage(data.message);
-                hiddenElementById("confirm_popup_overlay");
+                confirmPopup.hide();
                 updateFileList();
-            })
-            .finally(()=>{
-                spinner?.remove();
             });
         }
-    });
-});
+    } catch(error){
+        displayErrorMessage(error);
+    } finally{
+        spinner?.remove();
+    }
+}
 
 callElement("file_delete_button", element=>{
 	element.addEventListener("click", function (event) {
         /*点击弹出删除文件确认窗口*/
-        displayElementById("confirm_popup_overlay");
+        confirmPopup.displayText = "确认删除？";
+        confirmPopup.display();
         hiddenElementById("file_control_overlay");
-        document.getElementById("confirm_pop_text").textContent = "确认删除？";
     });
 });
 

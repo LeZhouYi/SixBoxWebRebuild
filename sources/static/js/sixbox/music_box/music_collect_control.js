@@ -78,8 +78,8 @@ callElement("delete_music_set_button", element=>{
                 "id": nowMscSetId,
                 "type": "musicSet"
             }));
-            document.getElementById("confirm_pop_text").textContent = "确认删除？";
-            displayElementById("confirm_popup_overlay");
+            confirmPopup.displayText = "确认删除？";
+            confirmPopup.display();
         }
     });
 });

@@ -64,7 +64,7 @@ window.addEventListener("load",function () {
     window.addEventListener("resize", throttle(function () {
         resizeFullScreen("bodyContainer");
     }), 200);
-    registerFixedElement("file_sys_container","file_sys_menu","file_menu_pop_button",999);
+    registryFixedElement("file_sys_container","file_sys_menu","file_menu_pop_button",999);
 });
 
 callElement("all_file_button", element=>{

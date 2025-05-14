@@ -298,7 +298,7 @@ function createSpinnerByElement(target, className="spin_panel"){
     }
 }
 
-function registerFixedElement(containerId, elementId, popButtonId,maxWidth,displayStyle="grid",interval=2000){
+function registryFixedElement(containerId, elementId, popButtonId,maxWidth,displayStyle="grid",interval=2000){
     /*
     注册元素，使元素在页面低于width时，以fixed的形式浮动显示，并有相关的控制显示隐藏;
     containerId，包含要浮动的元素的上级元素，当点击在浮动元素外的位置时，隐藏浮动元素;
