@@ -6,9 +6,9 @@ callElement("tidy_up_button", element => {
             let result = await getJsonWithAuth("/filesTidyUp");
             displayMessage(result.message);
             updateFileList();
+            spinner?.remove();
         } catch (error) {
             displayError(error);
-        } finally {
             spinner?.remove();
         }
     });

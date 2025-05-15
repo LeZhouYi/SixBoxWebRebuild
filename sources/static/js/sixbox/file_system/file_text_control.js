@@ -14,7 +14,6 @@ callElement("text_edit_button", editElement => {
             });
         } catch (error) {
             displayError(error);
-        } finally {
             spinner?.remove();
         }
     });
@@ -44,6 +43,7 @@ callElement("text_add_form", element => {
                     displayMessage(data.message);
                     hiddenElementById("text_add_popup_overlay");
                     updateFileList();
+                    spinner?.remove();
                 });
             } else {
                 let nowControlData = parseSessionJson("nowControlData");
@@ -51,11 +51,11 @@ callElement("text_add_form", element => {
                     displayMessage(data.message);
                     hiddenElementById("text_add_popup_overlay");
                     updateFileList();
+                    spinner?.remove();
                 });
             }
         } catch (error) {
             displayError(error);
-        } finally {
             spinner?.remove();
         }
     });
@@ -86,19 +86,20 @@ callElement("add_text_button", element => {
                 if (tinymceElement && tinymceElement.classList.contains("tox-tinymce")) {
                     displayElementById("text_add_popup_overlay");
                     hiddenFixedElement("file_sys_menu", 999);
+                    spinner?.remove();
                 } else {
                     initEditMce(
                         "text_add_mce_field",
                         function () {
                             displayElementById("text_add_popup_overlay");
                             hiddenFixedElement("file_sys_menu", 999);
+                            spinner?.remove();
                         },
                         onTextAddFullChange
                     );
                 }
             } catch (error) {
                 displayError(error);
-            } finally {
                 spinner?.remove();
             }
         });
@@ -190,6 +191,7 @@ function bindClickText(fileItem, element, fileData) {
                     displayElementById("text_display_popup_overlay");
                     tinymce.get("text_display_mce_field").setContent(textData.content);
                     bindMceClickHref("text_display_mce_field");
+                    spinner.remove();
                 } else {
                     initDisplayMce(
                         "text_display_mce_field",
@@ -197,13 +199,13 @@ function bindClickText(fileItem, element, fileData) {
                             displayElementById("text_display_popup_overlay");
                             tinymce.get("text_display_mce_field").setContent(textData.content);
                             bindMceClickHref("text_display_mce_field");
+                            spinner.remove();
                         }
                     );
                 }
             }
             catch (error) {
                 displayError(error);
-            } finally {
                 spinner.remove();
             }
         });

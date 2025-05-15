@@ -25,8 +25,6 @@ callElement("login_form", element => {
         })
             .catch(error => {
                 displayError(error);
-            })
-            .finally(() => {
                 spinner?.remove();
             });
     });

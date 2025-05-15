@@ -36,6 +36,7 @@
                 "css/common/comp_navigation_bar.css",
                 "css/common/comp_popup_form.css",
                 "css/common/comp_popup_message.css",
+                "css/common/comp_spinner.css",
                 "css/page/page_music_box.css",
                 "css/styles.css"
             ]

@@ -338,22 +338,26 @@ callElement("msc_add_set_cancel", element => {
 callElement("msc_add_set_form", element => {
     element.addEventListener("submit", function (event) {
         event.preventDefault();
-        let nowControlData = parseSessionJson("nowControlData");
-        let formData = {
-            "music_id": nowControlData.id
-        }
-        let setId = document.getElementById("msc_add_set_name").value;
-        let postUrl = `/musicSets/${setId}/add`;
-        let nowMscSetId = sessionStorage.getItem("nowMscSetId");
-        postJsonWithAuth(postUrl, formData).then(data => {
-            displayMessage(data.message);
-            if (setId === nowMscSetId) {
-                updateMusicList();
+        let spinner = createSpinner("msc_add_set_button_panel");
+        try{
+            let nowControlData = parseSessionJson("nowControlData");
+            let formData = {
+                "music_id": nowControlData.id
             }
-            hiddenElementById("msc_add_set_overlay");
-        })
-            .catch(error => {
-                displayError(error);
+            let setId = document.getElementById("msc_add_set_name").value;
+            let postUrl = `/musicSets/${setId}/add`;
+            let nowMscSetId = sessionStorage.getItem("nowMscSetId");
+            postJsonWithAuth(postUrl, formData).then(data => {
+                displayMessage(data.message);
+                if (setId === nowMscSetId) {
+                    updateMusicList();
+                }
+                hiddenElementById("msc_add_set_overlay");
+                spinner?.remove();
             });
+        } catch(error){
+            displayError(error);
+            spinner?.remove();
+        };
     });
 });

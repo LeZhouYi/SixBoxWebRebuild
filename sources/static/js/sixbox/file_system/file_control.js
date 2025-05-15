@@ -25,7 +25,6 @@ callElement("set_background_button", element => {
             displayMessage(content.message);
         } catch (error) {
             displayError(error);
-        } finally {
             spinner?.remove();
         }
     });
@@ -42,6 +41,7 @@ function onConfirmDelete(event) {
                 displayMessage(data.message);
                 confirmPopup.hide();
                 updateFileList();
+                spinner?.remove();
             });
         } else {
             let deleteUrl = `/files/${nowControlData.id}`;
@@ -49,11 +49,11 @@ function onConfirmDelete(event) {
                 displayMessage(data.message);
                 confirmPopup.hide();
                 updateFileList();
+                spinner?.remove();
             });
         }
     } catch (error) {
         displayError(error);
-    } finally {
         spinner?.remove();
     }
 }

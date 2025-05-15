@@ -147,6 +147,7 @@ async function updateFileList() {
                 });
             });
             setTotalPage(data.total, "page_text_id", nowLimit);
+            spinner?.remove();
             return;
         }
 
@@ -167,8 +168,8 @@ async function updateFileList() {
                 addFilePathElement("file_path_bar", parentData.name, parentData.id);
             });
             addFilePathElement("file_path_bar", data.name, data.id);
-        }
-        catch (error) {
+            spinner?.remove();
+        } catch (error) {
             if (sessionStorage.getItem("nowFolderId") !== "1") {
                 sessionStorage.setItem("nowFolderId", "1")
                 updateFileList();
@@ -177,7 +178,6 @@ async function updateFileList() {
         }
     } catch (error) {
         displayError(error);
-    } finally {
         spinner?.remove();
     }
 }

@@ -86,10 +86,10 @@ function bindClickVideo(fileItem, element, fileData) {
             sessionStorage.setItem("nowDisplayId", fileData.id);
             initVideo("video_display_panel", fileData.id, fileData.mimeType, function () {
                 displayElementById("video_display_overlay");
+                spinner?.remove();
             });
         } catch (error) {
             displayError(error);
-        } finally {
             spinner?.remove();
         }
     });

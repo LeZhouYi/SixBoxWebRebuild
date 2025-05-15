@@ -118,10 +118,10 @@ callElement("folder_add_form", element => {
                 displayMessage(data.message);
                 hiddenElementById("file_add_popup_overlay");
                 updateFileList();
+                spinner?.remove();
             });
         } catch (error) {
             displayError(error);
-        } finally {
             spinner?.remove();
         }
     });
@@ -145,12 +145,12 @@ callElement("file_add_form", element => {
                 displayMessage(data.message);
                 hiddenElementById("file_add_popup_overlay");
                 updateFileList();
+                spinner?.remove();
             });
         } catch (error) {
             displayError(error);
-        } finally {
             spinner?.remove();
-        };
+        }
     });
 });
 
@@ -177,17 +177,18 @@ callElement("file_edit_form", element => {
                     displayMessage(data.message);
                     hiddenElementById("file_edit_popup_overlay");
                     updateFileList();
+                    spinner?.remove();
                 });
             } else {
                 putJsonWithAuth(`/files/${nowControlData.id}`, formData).then(data => {
                     displayMessage(data.message);
                     hiddenElementById("file_edit_popup_overlay");
                     updateFileList();
+                    spinner?.remove();
                 });
             }
         } catch (error) {
             displayError(error);
-        } finally {
             spinner?.remove();
         }
 

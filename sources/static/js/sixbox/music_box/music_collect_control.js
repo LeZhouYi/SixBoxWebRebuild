@@ -7,6 +7,7 @@ callElement("add_collect_button", element => {
     /*点击新增合集弹窗*/
     element.addEventListener("click", function (event) {
         displayElementById("msc_collect_add_overlay");
+        hiddenFixedElement("music_collect_menu",950);
     });
 });
 
@@ -21,17 +22,21 @@ callElement("msc_collect_add_form", formElement => {
     /*提交新增合集*/
     formElement.addEventListener("submit", function (event) {
         event.preventDefault();
-        let formData = {
-            name: document.getElementById("msc_collect_add_name").value
-        };
-        postJsonWithAuth("/musicSets", formData).then(data => {
-            displayMessage(data.message);
-            hiddenElementById("msc_collect_add_overlay");
-            updateCollectList();
-        })
-            .catch(error => {
-                displayError(error);
+        try{
+            let spinner = createSpinner("msc_collect_add_button_panel");
+            let formData = {
+                name: document.getElementById("msc_collect_add_name").value
+            };
+            postJsonWithAuth("/musicSets", formData).then(data => {
+                displayMessage(data.message);
+                hiddenElementById("msc_collect_add_overlay");
+                updateCollectList();
             });
+        } catch (error){
+            displayError(error);
+            spinner?.remove();
+        }
+
     });
 });
 
@@ -88,21 +93,25 @@ callElement("msc_collect_edit_form", element => {
     element.addEventListener("submit", function (event) {
         /*点击编辑合集*/
         event.preventDefault();
-        let nowMscSetId = sessionStorage.getItem("nowMscSetId");
-        let formData = {
-            name: document.getElementById("msc_collect_edit_name").value
-        };
-        putJsonWithAuth(`/musicSets/${nowMscSetId}`, formData).then(data => {
-            displayMessage(data.message);
-            callElement("music_control_title_text", inputElement => {
-                inputElement.textContent = formData.name;
+        let spinner = createSpinner("msc_collect_edit_button_panel");
+        try{
+            let nowMscSetId = sessionStorage.getItem("nowMscSetId");
+            let formData = {
+                name: document.getElementById("msc_collect_edit_name").value
+            };
+            putJsonWithAuth(`/musicSets/${nowMscSetId}`, formData).then(data => {
+                displayMessage(data.message);
+                callElement("music_control_title_text", inputElement => {
+                    inputElement.textContent = formData.name;
+                });
+                hiddenElementById("msc_collect_edit_overlay");
+                updateCollectList();
+                spinner?.remove();
             });
-            hiddenElementById("msc_collect_edit_overlay");
-            updateCollectList();
-        })
-            .catch(error => {
-                displayError(error);
-            });
+        }catch(error){
+            displayError(error);
+            spinner?.remove();
+        }
     });
 });
 
@@ -111,6 +120,7 @@ function binkClickMenuItem(menuItem, data) {
     menuItem.addEventListener("click", function (event) {
         let nowMscSetId = sessionStorage.getItem("nowMscSetId");
         let searchInput = document.getElementById("music_search_input");
+        hiddenFixedElement("music_collect_menu",950);
         if (nowMscSetId === data.id && searchInput.value === "") {
             return;
         }
