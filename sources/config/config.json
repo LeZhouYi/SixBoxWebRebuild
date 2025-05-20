@@ -26,7 +26,8 @@
         "user_db": "data/db/user.json",
         "session_db": "data/db/session.json",
         "music_db": "data/db/music.json",
-        "music_set_db": "data/db/music_set.json"
+        "music_set_db": "data/db/music_set.json",
+        "steam_card_db": "data/db/steam_card.json"
     },
     "jwt": {
         "secret_key": "vU7yZ4iH8pP7",

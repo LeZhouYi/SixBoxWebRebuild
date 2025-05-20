@@ -12,24 +12,27 @@ from core.common.route_utils import get_bearer_token, is_str_empty, gen_fail_res
 from core.config.config import get_config_path
 from core.database.file_system import FileSystemServer, FileType
 from core.database.music import MusicServer, MusicSetServer
+from core.database.steam_card import SteamCardServer
 from core.database.user import SessionServer
 from core.database.user import UserServer
 
 ReportInfo = load_json_data(get_config_path("lang_config"))
 
-DbConfig = load_json_data(get_config_path("database_config"))
+DataBaseConfig = load_json_data(get_config_path("database_config"))
 
-FsConfig = load_json_data(get_config_path("file_sys_config"))
-FsServer = FileSystemServer(get_config_path("file_sys_db"), FsConfig)
+FileSystemConfig = load_json_data(get_config_path("file_sys_config"))
+FileSystemDB = FileSystemServer(get_config_path("file_sys_db"), FileSystemConfig)
 
-UsrServer = UserServer(get_config_path("user_db"), DbConfig)
+UserDB = UserServer(get_config_path("user_db"), DataBaseConfig)
 
-SessServer = SessionServer(get_config_path("session_db"))
+SessionDB = SessionServer(get_config_path("session_db"))
 
-MscServer = MusicServer(get_config_path("music_db"))
-MscSetServer = MusicSetServer(get_config_path("music_set_db"), DbConfig)
+MusicDB = MusicServer(get_config_path("music_db"))
+MusicSetDB = MusicSetServer(get_config_path("music_set_db"), DataBaseConfig)
 
 API_PREFIX = "/api/v1"
+
+SteamCardDB = SteamCardServer(get_config_path("steam_card_db"))
 
 
 def gen_prefix_api(api_str: str) -> str:
@@ -40,7 +43,7 @@ def gen_prefix_api(api_str: str) -> str:
 def get_ext_key(file_ext: str) -> Optional[str]:
     """获取后缀对应文件类型键值"""
     file_ext = file_ext.lower()
-    for ext_key, ext_list in FsConfig["file_white_list"].items():
+    for ext_key, ext_list in FileSystemConfig["file_white_list"].items():
         if file_ext in ext_list:
             if not re.match(r"^\d+$", ext_key):
                 return FileType.FILE
@@ -53,7 +56,7 @@ def check_file_ext(file: FileStorage) -> bool:
     :param file:
     :return: False表示文件不符合要求
     """
-    white_list = FsConfig["file_white_list"]
+    white_list = FileSystemConfig["file_white_list"]
     if file.filename is None:
         return False
     file_ext = get_file_ext(file.filename).lower()
@@ -71,7 +74,7 @@ def verify_token(request_in: flask.request) -> tuple[Response, int] | tuple[str,
     if is_str_empty(token):
         return gen_fail_response(ReportInfo["010"], 401)
     client_ip = get_client_ip(request_in)
-    result, data_or_info = SessServer.verify(token, client_ip)
+    result, data_or_info = SessionDB.verify(token, client_ip)
     if result is False:
         if data_or_info == "TOKEN INVALID":
             return gen_fail_response(ReportInfo["010"], 401)
@@ -82,7 +85,7 @@ def verify_token(request_in: flask.request) -> tuple[Response, int] | tuple[str,
 
 def is_default_folder(folder_id: str) -> bool:
     """判断是否是默认文件夹"""
-    for data in FsConfig["default_folders"]:
+    for data in FileSystemConfig["default_folders"]:
         if folder_id in data:
             return True
     return False

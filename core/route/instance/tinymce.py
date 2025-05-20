@@ -18,7 +18,7 @@ def add_text():
     if is_key_str_empty(data, "parentId"):
         return gen_fail_response(ReportInfo["009"])
     parent_id = data["parentId"]
-    if not FsServer.is_folder_exist(parent_id):
+    if not FileSystemDB.is_folder_exist(parent_id):
         return gen_fail_response(ReportInfo["009"])
     if is_key_str_empty(data, "content"):
         return gen_fail_response(ReportInfo["024"])
@@ -31,8 +31,8 @@ def add_text():
     except Exception as e:
         logger.error("保存文件%s失败：%s" % (filepath, e))
         return gen_fail_response(ReportInfo["025"])
-    db_data = FsServer.gen_add_dict(data["name"], FileType.MCE_TEXT, parent_id, filepath)
-    FsServer.add(db_data)
+    db_data = FileSystemDB.gen_add_dict(data["name"], FileType.MCE_TEXT, parent_id, filepath)
+    FileSystemDB.add(db_data)
     return gen_success_response(ReportInfo["006"])
 
 
@@ -40,11 +40,11 @@ def add_text():
 @token_required
 def get_text(file_id: str):
     """获取文本"""
-    if is_str_empty(file_id) or not FsServer.is_file_exist(file_id):
+    if is_str_empty(file_id) or not FileSystemDB.is_file_exist(file_id):
         return gen_fail_response(ReportInfo["012"])
-    data = FsServer.get_data(file_id)
+    data = FileSystemDB.get_data(file_id)
     filepath = get_real_filepath(data["path"])
-    data = extra_data_by_list(data, FsServer.key_list)
+    data = extra_data_by_list(data, FileSystemDB.key_list)
     try:
         with open(filepath, "r", encoding="utf-8") as file:
             data["content"] = file.read()
@@ -58,9 +58,9 @@ def get_text(file_id: str):
 @token_required
 def edit_text(file_id: str):
     """编辑文本"""
-    if is_str_empty(file_id) or not FsServer.is_file_exist(file_id):
+    if is_str_empty(file_id) or not FileSystemDB.is_file_exist(file_id):
         return gen_fail_response(ReportInfo["012"])
-    before_data = FsServer.get_data(file_id)
+    before_data = FileSystemDB.get_data(file_id)
     filepath = get_real_filepath(before_data["path"])
     if not os.path.exists(filepath):
         return gen_fail_response(ReportInfo["012"])
@@ -70,7 +70,7 @@ def edit_text(file_id: str):
     if is_key_str_empty(now_data, "parentId"):
         return gen_fail_response(ReportInfo["009"])
     parent_id = now_data["parentId"]
-    if not FsServer.is_folder_exist(parent_id):
+    if not FileSystemDB.is_folder_exist(parent_id):
         return gen_fail_response(ReportInfo["009"])
     if is_key_str_empty(now_data, "content"):
         return gen_fail_response(ReportInfo["024"])
@@ -81,7 +81,7 @@ def edit_text(file_id: str):
     except Exception as e:
         logger.error("写入文件%s失败：%s" % (filepath, e))
         return gen_fail_response(ReportInfo["027"])
-    FsServer.edit_file(file_id, {
+    FileSystemDB.edit_file(file_id, {
         "name": now_data["name"],
         "parentId": parent_id,
         "size": file_size

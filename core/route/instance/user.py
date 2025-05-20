@@ -21,13 +21,13 @@ def login():
         return gen_fail_response(ReportInfo["001"])
     if is_key_str_empty(data, "password"):
         return gen_fail_response(ReportInfo["002"])
-    user_id = UsrServer.is_user_exist(data["account"], data["password"])
+    user_id = UserDB.is_user_exist(data["account"], data["password"])
     if user_id is None:
         return gen_fail_response(ReportInfo["003"])
 
     # 生成Token
     client_ip = get_client_ip(request)
-    response = SessServer.add_data({
+    response = SessionDB.add_data({
         "userId": user_id,
         "clientIp": client_ip
     })
@@ -40,7 +40,7 @@ def logout():
     verify_result = verify_token(request)
     if isinstance(verify_result[0], Response):
         return verify_result
-    SessServer.delete(user_id=verify_result[0], client_ip=verify_result[1])
+    SessionDB.delete(user_id=verify_result[0], client_ip=verify_result[1])
     return gen_success_response("登出成功")
 
 
@@ -51,7 +51,7 @@ def refresh():
     if is_key_str_empty(data, "refreshToken"):
         return gen_fail_response(ReportInfo["010"])
     client_ip = get_client_ip(request)
-    result, data_or_info = SessServer.verify_refresh(data["refreshToken"], client_ip)
+    result, data_or_info = SessionDB.verify_refresh(data["refreshToken"], client_ip)
     if result is False:
         if data_or_info == "TOKEN INVALID":
             return gen_fail_response(ReportInfo["010"], 400)
@@ -61,7 +61,7 @@ def refresh():
 @UserBp.route(gen_prefix_api("/usersTidyUp"), methods=["GET"])
 @token_required
 def tidy_up_data():
-    UsrServer.tidy_up_data()
+    UserDB.tidy_up_data()
     return gen_success_response(ReportInfo["022"])
 
 
@@ -70,7 +70,7 @@ def get_user_detail():
     verify_result = verify_token(request)
     if isinstance(verify_result[0], Response):
         return verify_result
-    data = UsrServer.get_user(verify_result[0])
+    data = UserDB.get_user(verify_result[0])
     if data is not None:
         return jsonify(data)
     return gen_fail_response(ReportInfo["028"])
@@ -79,7 +79,7 @@ def get_user_detail():
 @UserBp.route(gen_prefix_api("/users/<user_id>"), methods=["PUT"])
 @token_required
 def edit_user(user_id: str):
-    user_data = UsrServer.get_user(user_id)
+    user_data = UserDB.get_user(user_id)
     if user_data is None:
         return gen_fail_response(ReportInfo["028"])
     edit_data = request.json
@@ -87,5 +87,5 @@ def edit_user(user_id: str):
         return gen_fail_response(ReportInfo["029"])
     if "background" not in edit_data:
         return gen_fail_response(ReportInfo["030"])
-    UsrServer.edit_user(user_id, edit_data)
+    UserDB.edit_user(user_id, edit_data)
     return gen_success_response(ReportInfo["022"])

@@ -38,9 +38,9 @@ def download_file(file_id: str):
     """下载文件"""
     if is_str_empty(file_id):
         return gen_fail_response(ReportInfo["012"])
-    if not FsServer.is_file_exist(file_id):
+    if not FileSystemDB.is_file_exist(file_id):
         return gen_fail_response(ReportInfo["012"])
-    data = FsServer.get_data(file_id)
+    data = FileSystemDB.get_data(file_id)
     filepath = get_real_filepath(data["path"])
     filename = "%s.%s" % (data["name"], get_file_ext(filepath))
     if os.path.exists(filepath) and os.path.isfile(filepath):
@@ -60,9 +60,9 @@ def play_video(file_id: str):
     """播放视频"""
     if is_str_empty(file_id):
         return gen_fail_response(ReportInfo["012"])
-    if not FsServer.is_file_exist(file_id):
+    if not FileSystemDB.is_file_exist(file_id):
         return gen_fail_response(ReportInfo["012"])
-    data = FsServer.get_data(file_id)
+    data = FileSystemDB.get_data(file_id)
     filepath = data["path"]
     filename = "%s.%s" % (data["name"], get_file_ext(filepath))
     if os.path.exists(filepath) and os.path.isfile(filepath):
@@ -85,7 +85,7 @@ def add_file():
     if not check_file_ext(file):
         return gen_fail_response(ReportInfo["008"])
     parent_id = request.form.get("parentId")
-    if not FsServer.is_folder_exist(parent_id):
+    if not FileSystemDB.is_folder_exist(parent_id):
         return gen_fail_response(ReportInfo["009"])
     filename = request.form.get("name")
     if is_str_empty(filename):
@@ -103,8 +103,8 @@ def add_file():
 
     ext_key = get_ext_key(file_ext)
 
-    db_data = FsServer.gen_add_dict(filename, ext_key, parent_id, filepath)
-    FsServer.add(db_data)
+    db_data = FileSystemDB.gen_add_dict(filename, ext_key, parent_id, filepath)
+    FileSystemDB.add(db_data)
     return gen_success_response(ReportInfo["006"])
 
 
@@ -118,14 +118,14 @@ def add_folder():
     if is_key_str_empty(data, "parentId"):
         return gen_fail_response(ReportInfo["009"])
     parent_id = data["parentId"]
-    if not FsServer.is_folder_exist(parent_id):
+    if not FileSystemDB.is_folder_exist(parent_id):
         return gen_fail_response(ReportInfo["009"])
     db_data = {
         "name": data["name"],
         "type": FileType.FOLDER,
         "parentId": parent_id
     }
-    FsServer.add(db_data)
+    FileSystemDB.add(db_data)
     return gen_success_response(ReportInfo["006"])
 
 
@@ -136,13 +136,13 @@ def edit_folder(folder_id: str):
     data = request.json
     if is_key_str_empty(data, "name"):
         return gen_fail_response(ReportInfo["013"])
-    if is_str_empty(folder_id) or not FsServer.is_folder_exist(folder_id):
+    if is_str_empty(folder_id) or not FileSystemDB.is_folder_exist(folder_id):
         return gen_fail_response(ReportInfo["009"])
-    if is_key_str_empty(data, "parentId") or not FsServer.is_folder_exist(data["parentId"]):
+    if is_key_str_empty(data, "parentId") or not FileSystemDB.is_folder_exist(data["parentId"]):
         return gen_fail_response(ReportInfo["009"])
     if data["parentId"] == folder_id:
         return gen_fail_response(ReportInfo["015"])
-    FsServer.edit_folder(folder_id, data)
+    FileSystemDB.edit_folder(folder_id, data)
     return gen_success_response(ReportInfo["014"])
 
 
@@ -153,11 +153,11 @@ def edit_file(file_id: str):
     data = request.json
     if is_key_str_empty(data, "name"):
         return gen_fail_response(ReportInfo["013"])
-    if is_str_empty(file_id) or not FsServer.is_file_exist(file_id):
+    if is_str_empty(file_id) or not FileSystemDB.is_file_exist(file_id):
         return gen_fail_response(ReportInfo["012"])
-    if is_key_str_empty(data, "parentId") or not FsServer.is_folder_exist(data["parentId"]):
+    if is_key_str_empty(data, "parentId") or not FileSystemDB.is_folder_exist(data["parentId"]):
         return gen_fail_response(ReportInfo["009"])
-    FsServer.edit_file(file_id, data)
+    FileSystemDB.edit_file(file_id, data)
     return gen_success_response(ReportInfo["014"])
 
 
@@ -166,21 +166,21 @@ def edit_file(file_id: str):
 @page_args_required
 def get_folder_content(folder_id: str):
     """获取文件夹"""
-    if is_str_empty(folder_id) or not FsServer.is_folder_exist(folder_id):
+    if is_str_empty(folder_id) or not FileSystemDB.is_folder_exist(folder_id):
         return gen_fail_response(ReportInfo["009"])
     search_type = request.args.get("type")
     page = int(request.args.get("_page"))
     limit = int(request.args.get("_limit"))
-    return jsonify(FsServer.get_folder_detail(folder_id, search_type, page, limit))
+    return jsonify(FileSystemDB.get_folder_detail(folder_id, search_type, page, limit))
 
 
 @FileSystemBp.route(gen_prefix_api("/files/<file_id>"), methods=["DELETE"])
 @token_required
 def delete_file(file_id: str):
     """删除文件"""
-    if is_str_empty(file_id) or not FsServer.is_file_exist(file_id):
+    if is_str_empty(file_id) or not FileSystemDB.is_file_exist(file_id):
         return gen_fail_response(ReportInfo["012"])
-    FsServer.delete_file(file_id)
+    FileSystemDB.delete_file(file_id)
     return gen_success_response(ReportInfo["016"])
 
 
@@ -188,11 +188,11 @@ def delete_file(file_id: str):
 @token_required
 def delete_folder(folder_id: str):
     """删除文件夹"""
-    if is_str_empty(folder_id) or not FsServer.is_folder_exist(folder_id):
+    if is_str_empty(folder_id) or not FileSystemDB.is_folder_exist(folder_id):
         return gen_fail_response(ReportInfo["009"])
     if is_default_folder(folder_id):
         return gen_fail_response(ReportInfo["031"])
-    FsServer.delete_folder(folder_id)
+    FileSystemDB.delete_folder(folder_id)
     return gen_success_response(ReportInfo["016"])
 
 
@@ -206,17 +206,17 @@ def search_file():
     search_name = request.args.get("nameLike")
     if is_str_empty(search_name):
         return gen_fail_response(ReportInfo["021"])
-    return jsonify(FsServer.search_file(search_name, page, limit))
+    return jsonify(FileSystemDB.search_file(search_name, page, limit))
 
 
 @FileSystemBp.route(gen_prefix_api("/filesTidyUp"), methods=["GET"])
 @token_required
 def tidy_up_file():
     """整理文件，调整文件类型"""
-    FsServer.tidy_up_data(FsConfig["file_white_list"])
+    FileSystemDB.tidy_up_data(FileSystemConfig["file_white_list"])
     folder_path = get_config_path("file_save")
     for file_name in os.listdir(folder_path):
-        if not FsServer.is_exist_by_filename(file_name):
+        if not FileSystemDB.is_exist_by_filename(file_name):
             os.remove(os.path.join(folder_path, file_name))
     return gen_success_response(ReportInfo["022"])
 
@@ -227,6 +227,6 @@ def get_near_file(file_id: str):
     """获取相邻同类型的文件"""
     if is_str_empty(file_id):
         return gen_fail_response(ReportInfo["012"])
-    if not FsServer.is_file_exist(file_id):
+    if not FileSystemDB.is_file_exist(file_id):
         return gen_fail_response(ReportInfo["012"])
-    return jsonify(FsServer.get_near_file(file_id))
+    return jsonify(FileSystemDB.get_near_file(file_id))

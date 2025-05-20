@@ -33,7 +33,7 @@ def add_music():
     set_id = request.form.get("setId")
     if is_str_empty(set_id):
         return gen_fail_response(ReportInfo["033"])
-    if not MscSetServer.is_exist(set_id):
+    if not MusicSetDB.is_exist(set_id):
         return gen_fail_response(ReportInfo["034"])
     album = request.form.get("album")
     tags = request.form.get("tags")
@@ -49,13 +49,13 @@ def add_music():
         return gen_fail_response(ReportInfo["004"])
 
     filename = "%s-%s" % (singer, music_name)
-    db_data = FsServer.gen_add_dict(
-        filename, ext_key, FsConfig["music_folder_id"], filepath
+    db_data = FileSystemDB.gen_add_dict(
+        filename, ext_key, FileSystemConfig["music_folder_id"], filepath
     )
-    file_id = FsServer.add(db_data)
-    music_data = MscServer.gen_add_dict(music_name, file_id, singer, album, tags)
-    music_id = MscServer.add(music_data)
-    MscSetServer.add_music(set_id, music_id)
+    file_id = FileSystemDB.add(db_data)
+    music_data = MusicDB.gen_add_dict(music_name, file_id, singer, album, tags)
+    music_id = MusicDB.add(music_data)
+    MusicSetDB.add_music(set_id, music_id)
     return gen_success_response(ReportInfo["006"])
 
 
@@ -66,13 +66,13 @@ def get_music_set(set_id: str):
     """获取合集详情"""
     if is_str_empty(set_id):
         return gen_fail_response(ReportInfo["033"])
-    if not MscSetServer.is_exist(set_id):
+    if not MusicSetDB.is_exist(set_id):
         return gen_fail_response(ReportInfo["034"])
 
     page = int(request.args.get("_page"))
     limit = int(request.args.get("_limit"))
 
-    music_set_data = MscSetServer.get_data(set_id)
+    music_set_data = MusicSetDB.get_data(set_id)
 
     if is_key_str_empty(music_set_data, "list"):
         music_list = []
@@ -83,7 +83,7 @@ def get_music_set(set_id: str):
 
     music_set_data["contents"] = []
     for music_id in music_list:
-        data = MscServer.get_data(music_id)
+        data = MusicDB.get_data(music_id)
         if data is not None:
             music_set_data["contents"].append(data)
     music_set_data = extra_data_by_list(music_set_data, ["id", "name", "total", "contents"])
@@ -97,7 +97,7 @@ def get_music_sets():
     """获取合集列表"""
     page = int(request.args.get("_page"))
     limit = int(request.args.get("_limit"))
-    data, total = MscSetServer.search_data(page, limit)
+    data, total = MusicSetDB.search_data(page, limit)
     return jsonify(data), 200, {
         "X-Total-Count": total
     }
@@ -110,7 +110,7 @@ def add_collect():
     data = request.json
     if is_key_str_empty(data, "name"):
         return gen_fail_response(ReportInfo["035"])
-    MscSetServer.add_data(data)
+    MusicSetDB.add_data(data)
     return gen_success_response(ReportInfo["006"])
 
 
@@ -121,9 +121,9 @@ def edit_collect(collect_id: str):
     input_data = request.json
     if is_key_str_empty(input_data, "name"):
         return gen_fail_response(ReportInfo["035"])
-    if not MscSetServer.is_exist(collect_id):
+    if not MusicSetDB.is_exist(collect_id):
         return gen_fail_response(ReportInfo["034"])
-    MscSetServer.edit_data(collect_id, input_data)
+    MusicSetDB.edit_data(collect_id, input_data)
     return gen_success_response(ReportInfo["014"])
 
 
@@ -136,15 +136,15 @@ def edit_music(music_id: str):
         return gen_fail_response(ReportInfo["005"])
     if is_key_str_empty(input_data, "singer"):
         return gen_fail_response(ReportInfo["032"])
-    if is_str_empty(music_id) or not MscServer.is_exist(music_id):
+    if is_str_empty(music_id) or not MusicDB.is_exist(music_id):
         return gen_fail_response(ReportInfo["036"])
 
-    music_data = MscServer.get_data(music_id)
+    music_data = MusicDB.get_data(music_id)
     file_id = music_data["fileId"]
-    file_data = FsServer.get_data(file_id)
+    file_data = FileSystemDB.get_data(file_id)
     file_data["name"] = "%s-%s" % (input_data["singer"], input_data["name"])
-    FsServer.edit_file(file_id, file_data)
-    MscServer.edit_data(music_id, input_data)
+    FileSystemDB.edit_file(file_id, file_data)
+    MusicDB.edit_data(music_id, input_data)
     return gen_success_response(ReportInfo["014"])
 
 
@@ -152,14 +152,14 @@ def edit_music(music_id: str):
 @token_required
 def delete_music(music_id: str):
     """删除音频"""
-    if is_str_empty(music_id) or not MscServer.is_exist(music_id):
+    if is_str_empty(music_id) or not MusicDB.is_exist(music_id):
         return gen_fail_response(ReportInfo["036"])
-    music_data = MscServer.get_data(music_id)
+    music_data = MusicDB.get_data(music_id)
     file_id = music_data["fileId"]
-    if FsServer.is_file_exist(file_id):
-        FsServer.delete_file(file_id)
-    MscServer.delete_data(music_id)
-    MscSetServer.clear_by_music(music_id)
+    if FileSystemDB.is_file_exist(file_id):
+        FileSystemDB.delete_file(file_id)
+    MusicDB.delete_data(music_id)
+    MusicSetDB.clear_by_music(music_id)
     return gen_success_response(ReportInfo["016"])
 
 
@@ -169,9 +169,9 @@ def delete_collect(collect_id: str):
     """删除合集"""
     if is_str_empty(collect_id):
         return gen_fail_response(ReportInfo["034"])
-    if not MscSetServer.is_exist(collect_id):
+    if not MusicSetDB.is_exist(collect_id):
         return gen_fail_response(ReportInfo["034"])
-    MscSetServer.delete_data(collect_id)
+    MusicSetDB.delete_data(collect_id)
     return gen_success_response(ReportInfo["016"])
 
 
@@ -181,15 +181,15 @@ def add_music_in_set(collect_id: str):
     """添加音频到合集"""
     if is_str_empty(collect_id):
         return gen_fail_response(ReportInfo["034"])
-    if not MscSetServer.is_exist(collect_id):
+    if not MusicSetDB.is_exist(collect_id):
         return gen_fail_response(ReportInfo["034"])
     input_data = request.json
     if is_key_str_empty(input_data, "music_id"):
         return gen_fail_response(ReportInfo["037"])
     music_id = input_data["music_id"]
-    if not MscServer.is_exist(music_id):
+    if not MusicDB.is_exist(music_id):
         return gen_fail_response(ReportInfo["036"])
-    MscSetServer.add_music(collect_id, music_id)
+    MusicSetDB.add_music(collect_id, music_id)
     return gen_success_response(ReportInfo["022"])
 
 
@@ -199,15 +199,15 @@ def remove_music_out_set(collect_id: str):
     """添加音频到合集"""
     if is_str_empty(collect_id):
         return gen_fail_response(ReportInfo["034"])
-    if not MscSetServer.is_exist(collect_id):
+    if not MusicSetDB.is_exist(collect_id):
         return gen_fail_response(ReportInfo["034"])
     input_data = request.json
     if is_key_str_empty(input_data, "music_id"):
         return gen_fail_response(ReportInfo["037"])
     music_id = input_data["music_id"]
-    if not MscServer.is_exist(music_id):
+    if not MusicDB.is_exist(music_id):
         return gen_fail_response(ReportInfo["036"])
-    MscSetServer.remove_music(collect_id, music_id)
+    MusicSetDB.remove_music(collect_id, music_id)
     return gen_success_response(ReportInfo["022"])
 
 
@@ -221,15 +221,15 @@ def search_music():
     search_name = request.args.get("nameLike")
     if is_str_empty(search_name):
         return gen_fail_response(ReportInfo["021"])
-    return jsonify(MscServer.search_data(page, limit, search_name))
+    return jsonify(MusicDB.search_data(page, limit, search_name))
 
 @MusicBoxBp.route(gen_prefix_api("/musicsTidyUp"), methods=["GET"])
 @token_required
 def tidy_up_musics():
     """整理音频数据"""
-    all_music_data = MscServer.db.all()
+    all_music_data = MusicDB.db.all()
     for music_data in all_music_data:
-        if not FsServer.is_file_exist(music_data["fileId"]):
-            MscServer.delete_data(music_data["id"])
-            MscSetServer.clear_by_music(music_data["id"])
+        if not FileSystemDB.is_file_exist(music_data["fileId"]):
+            MusicDB.delete_data(music_data["id"])
+            MusicSetDB.clear_by_music(music_data["id"])
     return gen_success_response(ReportInfo["022"])
