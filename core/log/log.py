@@ -15,7 +15,7 @@ def init_logger():
         format=logger_config["format"],
         handlers=[
             TimedRotatingFileHandler(
-                filename="%s/log.log" % logger_config["save_path"],
+                filename="%s/%s" % (logger_config["save_path"], logger_config["filename"]),
                 when=logger_config["when"],
                 interval=logger_config["interval"],
                 backupCount=logger_config["backup_count"],

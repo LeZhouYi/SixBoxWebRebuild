@@ -11,7 +11,8 @@
         "backup_count": 7,
         "encoding": "utf-8",
         "delay": false,
-        "utc": false
+        "utc": false,
+        "filename": "log.log"
     },
     "path": {
         "logger_save": "data/log",

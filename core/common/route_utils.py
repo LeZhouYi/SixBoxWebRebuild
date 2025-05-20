@@ -40,6 +40,14 @@ def is_key_str_empty(data: dict, key: str) -> bool:
     return key not in data or str(data[key]).strip() == ""
 
 
+def is_key_list_empty(data: dict, key: str) -> bool:
+    """判断字典是否存在某数组且为空"""
+    if key in data:
+        value = data[key]
+        return not isinstance(value, list) or len(value) == 0
+    return True
+
+
 def get_client_ip(request: flask.request) -> str:
     """获取用户端IP"""
     forwarded_for = request.headers.get('X-Forwarded-For')
