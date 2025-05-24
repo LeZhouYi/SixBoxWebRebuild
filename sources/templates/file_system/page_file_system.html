@@ -25,7 +25,7 @@
                     </div>
                     <div class="file_sys_menu_item clickable spin_holder" id="tidy_up_button">
                         <div class="file_sys_menu_icon">
-                            <img src="{{ url_for('static', filename='icons/next_page_blue.png') }}">
+                            <img src="{{ url_for('static', filename='icons/tidy_up.png') }}">
                         </div>
                         <a class="file_sys_menu_text clickable">整理文件</a>
                     </div>
@@ -35,9 +35,10 @@
         <div class="file_sys_panel">
             <div class="file_sys_search_bar">
                 <div class="file_path_bar" id="file_path_bar">
-                    <img src="{{ url_for('static', filename='icons/open_folder.png') }}" class="file_search_icon">
+                    <img src="{{ url_for('static', filename='icons/all_file.png') }}" class="file_search_icon">
                 </div>
-                <img class="file_control_img only999" src="{{ url_for('static', filename='icons/dashboard.png') }}" id="file_menu_pop_button">
+                <img class="file_control_img only999" src="{{ url_for('static', filename='icons/dashboard.png') }}"
+                     id="file_menu_pop_button">
                 <form class="file_search_bar">
                     <img src="{{ url_for('static', filename='icons/magnifier.png') }}" class="file_search_icon">
                     <input placeholder="输入文本搜索" class="file_search_input" id="file_search_input">

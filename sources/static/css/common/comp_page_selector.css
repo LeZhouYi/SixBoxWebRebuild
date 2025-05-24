@@ -14,7 +14,7 @@
     margin-left: calc( var(--element-margin) / 2);
     margin-right: calc( var(--element-margin) / 2);
     box-sizing: border-box;
-    border: 2px solid var(--text-remark-color);
+    border: 2px solid transparent;
     border-radius: var(--border-min-radius);
     background-color: transparent;
     transition: border-color 1s ease, background-color 1s ease;

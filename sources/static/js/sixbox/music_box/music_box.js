@@ -159,7 +159,7 @@ function createMusicMenuItem(content) {
     menuItemIconDiv.classList.add("music_menu_image_div");
     let menuItemIcon = document.createElement("img");
     menuItemIcon.classList.add("music_menu_image");
-    menuItemIcon.src = "/static/icons/music.png";
+    menuItemIcon.src = "/static/icons/set.png";
     menuItemIconDiv.appendChild(menuItemIcon);
 
     menuItemDiv.appendChild(menuItemIconDiv);

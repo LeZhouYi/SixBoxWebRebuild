@@ -1,12 +1,14 @@
 {
     "file_white_list": {
         "2": ["png","jpg","jpeg","gif","svg","bmp","tiff"],
-        "data": ["zip","rar","7z","json"],
+        "data": ["rar","7z","json"],
         "3": ["mp3"],
         "4": ["mp4","mov"],
         "5": ["html"],
+        "6": ["pdf"],
+        "7": ["zip"],
         "code": ["py","jar"],
-        "text": ["yaml","xlsx","xls","docx","pdf","txt","csv"],
+        "text": ["yaml","xlsx","xls","docx","txt","csv"],
         "app": ["exe","dmg"]
     },
     "default_folders": [

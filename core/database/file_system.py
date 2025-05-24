@@ -22,6 +22,8 @@ class FileType:
     MUSIC = "3"
     VIDEO = "4"
     MCE_TEXT = "5"
+    PDF = "6"
+    ZIP = "7"
 
     @staticmethod
     def is_exits(value: str) -> bool:

@@ -78,9 +78,9 @@ callElement("file_add_icon", element => {
         let addFormElement = document.getElementById("file_add_form");
         let hoverElement = event.target;
         if (isHidden(addFormElement)) {
-            hoverElement.src = "/static/icons/add_file_blue.png";
+            hoverElement.src = "/static/icons/add_file.png";
         } else {
-            hoverElement.src = "/static/icons/add_folder_blue.png";
+            hoverElement.src = "/static/icons/add_folder.png";
         }
     });
 });

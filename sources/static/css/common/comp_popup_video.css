@@ -22,7 +22,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--theme-main-color);
+    background: white;
     overflow-x: auto;
     white-space: nowrap;
 }

@@ -5,6 +5,3 @@ pyinstaller==6.11.1
 Flask-Assets==2.1.0
 cssmin==0.2.0
 jsmin==3.0.1
-PyYAML==6.0.2
-pyyaml-include==2.2
-selenium==4.32.0

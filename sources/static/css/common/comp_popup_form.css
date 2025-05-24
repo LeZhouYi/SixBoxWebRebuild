@@ -140,9 +140,14 @@
     height: var(--header-icon-size);
     margin-left: var(--element-margin);
     box-sizing: border-box;
-    border: var(--border-base-width) solid var(--theme-part-color);
-    border-radius: var(--border-icon-radius);
+    border: var(--border-base-width) solid transparent;
+    border-radius: 12px;
 }
+.form_icon_button:hover{
+    background-color: var(--theme-active-color);
+    border-color: var(--theme-part-color);
+}
+
 .form_file_select_item{
     display: flex;
     grid-template-columns: 1fr 204px;
