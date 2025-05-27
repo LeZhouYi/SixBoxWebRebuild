@@ -86,6 +86,7 @@
                 "js/sixbox/common/sidebar.js",
                 "js/sixbox/common/theme.js",
                 "js/sixbox/common/navigation_bar.js",
+                "js/sixbox/common/progress_bar.js",
                 "js/spinner/spinner.js",
                 "js/sixbox/music_box/music_collect_control.js",
                 "js/sixbox/music_box/music_file_control.js",

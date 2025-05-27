@@ -74,14 +74,18 @@
             </div>
             <div class="music_play_progress_bar">
                 <div class="music_play_progress_text" id="music_bar_start_text">00:00</div>
-                <input type="range" min="0" max="100" step="1" value="0" class="music_play_progress" id="music_bar_play_progress">
+                <div class="music_progress_container" id="music_play_progress">
+                    <div class="music_play_progress" id="music_bar_play_progress"></div>
+                </div>
                 <div class="music_play_progress_text" id="music_bar_end_text">00:00</div>
             </div>
             <div class="music_play_volume_bar">
                 <div class="music_play_image_div clickable">
                     <img src="/static/icons/volume_trans.png" class="music_play_image">
                 </div>
-                <input type="range" min="0" max="100" step="1" value="50" class="music_play_progress" id="music_bar_volume">
+                <div class="music_progress_container" id="music_volume_progress">
+                    <div class="music_play_progress" id="music_bar_volume"></div>
+                </div>
             </div>
         </div>
     </div>

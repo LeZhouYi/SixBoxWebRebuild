@@ -74,8 +74,18 @@
     grid-template-columns: 48px 1fr 48px;
     grid-gap: 10px;
 }
+.music_progress_container{
+    height: 20px;
+    border-radius: 10px;
+    background-color: #FFFFFF;
+    border: 2px solid #363B64;
+}
 .music_play_progress{
-    margin: 0px;
+    height: 100%;
+    width: 0%;
+    background-color: #90CAF8;
+    transition: width 0.5s ease;
+    border-radius: 8px;
 }
 .music_play_progress_text{
     display: grid;
@@ -85,6 +95,7 @@
     display: grid;
     grid-template-columns: 48px 1fr;
     grid-gap: 10px;
+    align-items: center;
 }
 .music_collect_menu{
     width: 100%;
